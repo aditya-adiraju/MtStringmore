@@ -12,6 +12,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float moveAcceleration;
     [SerializeField] private float maxFallSpeed;
     [SerializeField] private float fallAcceleration;
+    [SerializeField] private float swingVelocityMultiplier;
     
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
@@ -87,7 +88,7 @@ public class PlayerScript : MonoBehaviour
 
     private void HandleDirection()
     {
-        if (!_isSwinging)
+        if (_grounded)
         {
             _velocity.x = Mathf.MoveTowards(_velocity.x, maxMoveSpeed, moveAcceleration * Time.fixedDeltaTime);
         }
@@ -111,28 +112,27 @@ public class PlayerScript : MonoBehaviour
         {
             _isSwinging = true;
             _doButtonPressed = false;
-            _swingRadius = Vector3.Distance(_swingArea.transform.position, transform.position);
+            _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
             Debug.Log("Swing started with radius " + _swingRadius);
+            Debug.Log($"swing pos: {_swingArea.transform.position} my pos: {transform.position}");
         }
 
         if (_isSwinging && (_swingArea is null || !_isButtonHeld))
         {
             _isSwinging = false;
             Debug.Log("Swing stopped");
+            // boost velocity after letting go
+            _velocity *= swingVelocityMultiplier;
         }
 
         if (_isSwinging)
         {
-            Debug.DrawLine(transform.position, _swingArea.transform.position);
-            
-            // TODO fix physics
-            Vector2 relPos = transform.InverseTransformPoint(_swingArea.transform.position);
+            Debug.DrawLine(transform.position, _swingArea.transform.position, Color.blue);
+            Vector2 relPos = transform.position - _swingArea.transform.position;
             Vector2 testPos = relPos + _velocity * Time.fixedDeltaTime;
-            if (testPos.magnitude > _swingRadius)
-            {
-                testPos = testPos.normalized * _swingRadius;
-                _velocity = relPos - testPos;
-            }
+            Vector2 newPos = testPos.normalized * _swingRadius;
+            _velocity = (newPos - relPos) / Time.fixedDeltaTime;
+            Debug.Log("rel pos: " + relPos + " test pos: " + testPos + " new pos: " + newPos);
         }
         
     }
@@ -140,5 +140,6 @@ public class PlayerScript : MonoBehaviour
     private void ApplyMovement()
     {
         _rb.velocity = _velocity;
+        Debug.DrawRay(transform.position, _velocity, Color.magenta);
     }
 }
