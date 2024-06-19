@@ -3,7 +3,7 @@ using TMPro.EditorUtilities;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [Header("Collisions")]
     [SerializeField] private LayerMask collisionLayer;
