@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 60102485}
   m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -221,12 +221,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   collisionDistance: 0.05
-  jumpPower: 30
   maxMoveSpeed: 10
   moveAcceleration: 20
+  jumpPower: 30
   maxFallSpeed: 30
   fallAcceleration: 70
-  swingVelocityMultiplier: 1.5
+  swingBoostMultiplier: 1
+  maxSwingSpeed: 40
+  swingAcceleration: 50
 --- !u!4 &60102484
 Transform:
   m_ObjectHideFlags: 0

@@ -5,14 +5,20 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Collisions")]
     [SerializeField] private LayerMask collisionLayer;
     [SerializeField] private float collisionDistance;
-    [SerializeField] private float jumpPower;
+    [Header("Ground")]
     [SerializeField] private float maxMoveSpeed;
     [SerializeField] private float moveAcceleration;
+    [Header("Air")]
+    [SerializeField] private float jumpPower;
     [SerializeField] private float maxFallSpeed;
     [SerializeField] private float fallAcceleration;
-    [SerializeField] private float swingVelocityMultiplier;
+    [Header("Swinging")]
+    [SerializeField] private float swingBoostMultiplier;
+    [SerializeField] private float maxSwingSpeed;
+    [SerializeField] private float swingAcceleration;
     
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
@@ -113,26 +119,30 @@ public class PlayerScript : MonoBehaviour
             _isSwinging = true;
             _doButtonPressed = false;
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
-            Debug.Log("Swing started with radius " + _swingRadius);
-            Debug.Log($"swing pos: {_swingArea.transform.position} my pos: {transform.position}");
+            // Debug.Log("Swing started with radius " + _swingRadius);
+            // Debug.Log($"swing pos: {_swingArea.transform.position} my pos: {transform.position}");
         }
 
         if (_isSwinging && (_swingArea is null || !_isButtonHeld))
         {
             _isSwinging = false;
-            Debug.Log("Swing stopped");
+            // Debug.Log("Swing stopped");
             // boost velocity after letting go
-            _velocity *= swingVelocityMultiplier;
+            _velocity *= swingBoostMultiplier;
         }
 
-        if (_isSwinging)
+        if (_isSwinging && _swingArea is not null)
         {
             Debug.DrawLine(transform.position, _swingArea.transform.position, Color.blue);
-            Vector2 relPos = transform.position - _swingArea.transform.position;
-            Vector2 testPos = relPos + _velocity * Time.fixedDeltaTime;
+            Vector2 relPos = transform.position - _swingArea.transform.position;  // pos relative to centre of swing area
+
+            Vector2 boostedVelocity = _velocity.normalized * Mathf.MoveTowards(_velocity.magnitude, maxSwingSpeed,
+                swingAcceleration * Time.fixedDeltaTime);
+            Vector2 testPos = relPos + boostedVelocity * Time.fixedDeltaTime;
             Vector2 newPos = testPos.normalized * _swingRadius;
             _velocity = (newPos - relPos) / Time.fixedDeltaTime;
-            Debug.Log("rel pos: " + relPos + " test pos: " + testPos + " new pos: " + newPos);
+            // Debug.Log($"Swing speed: {boostedVelocity.magnitude}");
+            // Debug.Log("rel pos: " + relPos + " test pos: " + testPos + " new pos: " + newPos);
         }
         
     }
