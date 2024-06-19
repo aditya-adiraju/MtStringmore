@@ -15,7 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpPower;
     [SerializeField] private float maxFallSpeed;
     [SerializeField] private float fallAcceleration;
-    [Header("Swinging")]
+    [Header("Swinging")] 
+    [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private float swingBoostMultiplier;
     [SerializeField] private float maxSwingSpeed;
     [SerializeField] private float swingAcceleration;
@@ -121,6 +122,9 @@ public class PlayerController : MonoBehaviour
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
             // Debug.Log("Swing started with radius " + _swingRadius);
             // Debug.Log($"swing pos: {_swingArea.transform.position} my pos: {transform.position}");
+            
+            SetRope(transform.position, _swingArea.transform.position);
+            ropeRenderer.enabled = true;
         }
 
         if (_isSwinging && (_swingArea is null || !_isButtonHeld))
@@ -129,13 +133,14 @@ public class PlayerController : MonoBehaviour
             // Debug.Log("Swing stopped");
             // boost velocity after letting go
             _velocity *= swingBoostMultiplier;
+            ropeRenderer.enabled = false;
         }
 
         if (_isSwinging && _swingArea is not null)
         {
-            Debug.DrawLine(transform.position, _swingArea.transform.position, Color.blue);
+            SetRope(transform.position, _swingArea.transform.position);
+            
             Vector2 relPos = transform.position - _swingArea.transform.position;  // pos relative to centre of swing area
-
             Vector2 boostedVelocity = _velocity.normalized * Mathf.MoveTowards(_velocity.magnitude, maxSwingSpeed,
                 swingAcceleration * Time.fixedDeltaTime);
             Vector2 testPos = relPos + boostedVelocity * Time.fixedDeltaTime;
@@ -144,7 +149,12 @@ public class PlayerController : MonoBehaviour
             // Debug.Log($"Swing speed: {boostedVelocity.magnitude}");
             // Debug.Log("rel pos: " + relPos + " test pos: " + testPos + " new pos: " + newPos);
         }
-        
+    }
+
+    private void SetRope(Vector3 pos1, Vector3 pos2)
+    {
+        ropeRenderer.SetPosition(0, pos1);
+        ropeRenderer.SetPosition(1, pos2);
     }
 
     private void ApplyMovement()
