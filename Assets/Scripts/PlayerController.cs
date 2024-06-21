@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private bool _rightWallSliding;
     
     private Collider2D _swingArea;
+    private bool _inSwingArea;
     private bool _isSwinging;
     private float _swingRadius;
     
@@ -73,6 +74,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("SwingArea"))
         {
             _swingArea = other;
+            _inSwingArea = true;
         }
     }
 
@@ -80,7 +82,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("SwingArea"))
         {
-            _swingArea = null;
+            _inSwingArea = false;
         }
     }
 
@@ -162,8 +164,9 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSwing()
     {
-        if (!_isSwinging && CanUseButton() && _swingArea is not null)
+        if (!_isSwinging && CanUseButton() && _inSwingArea)
         {
+            // start swing
             _isSwinging = true;
             _buttonUsed = true;
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
@@ -171,22 +174,26 @@ public class PlayerController : MonoBehaviour
             // Debug.Log($"swing pos: {_swingArea.transform.position} my pos: {transform.position}");
             ropeRenderer.enabled = true;
         }
-
-        if (_isSwinging && (_swingArea is null || !_isButtonHeld))
+        
+        if (_isSwinging && !_isButtonHeld)
         {
+            // stop swing
             _isSwinging = false;
-            // Debug.Log("Swing stopped");
-            // boost velocity after letting go
-            _velocity *= swingBoostMultiplier;
             ropeRenderer.enabled = false;
+            // boost velocity if going up
+            if (_velocity.y >= 0f) _velocity *= swingBoostMultiplier;
         }
 
-        if (_isSwinging && _swingArea is not null)
+        if (_isSwinging)
         {
-            Vector2 relPos = transform.position - _swingArea.transform.position;  // pos relative to centre of swing area
-            Vector2 boostedVelocity = _velocity.normalized * Mathf.MoveTowards(_velocity.magnitude, maxSwingSpeed,
-                swingAcceleration * Time.fixedDeltaTime);
-            Vector2 testPos = relPos + boostedVelocity * Time.fixedDeltaTime;
+            Vector2 relPos = transform.position - _swingArea.transform.position;
+            // if going down, accelerate to target swing speed
+            if (_velocity.y <= 0f && _velocity.magnitude <= maxSwingSpeed)
+            {
+                _velocity = _velocity.normalized * Mathf.MoveTowards(_velocity.magnitude, maxSwingSpeed, 
+                    swingAcceleration * Time.fixedDeltaTime);
+            }
+            Vector2 testPos = relPos + _velocity * Time.fixedDeltaTime;
             Vector2 newPos = testPos.normalized * _swingRadius;
             _velocity = (newPos - relPos) / Time.fixedDeltaTime;
             // Debug.Log($"Swing speed: {boostedVelocity.magnitude}");
@@ -196,7 +203,7 @@ public class PlayerController : MonoBehaviour
 
     private void RedrawRope()
     {
-        if (_isSwinging && _swingArea)
+        if (_isSwinging && _inSwingArea)
         {
             ropeRenderer.SetPosition(0, transform.position);
             ropeRenderer.SetPosition(1, _swingArea.transform.position);
