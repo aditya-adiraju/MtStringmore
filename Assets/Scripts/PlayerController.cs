@@ -1,14 +1,19 @@
+using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Input")] 
+    [SerializeField] private float buttonBufferTime;
     [Header("Collisions")]
     [SerializeField] private LayerMask collisionLayer;
     [SerializeField] private float collisionDistance;
     [Header("Ground")]
-    [SerializeField] private float maxMoveSpeed;
-    [SerializeField] private float moveAcceleration;
+    [SerializeField] private float maxGroundSpeed;
+    [SerializeField] private float groundAcceleration;
     [SerializeField] private float startDirection;
+    [SerializeField] private float groundingForce;
     [Header("Air")]
     [SerializeField] private float jumpPower;
     [SerializeField] private float maxFallSpeed;
@@ -26,12 +31,13 @@ public class PlayerController : MonoBehaviour
     
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
-    
-    private bool _doButtonPressed;
+
+    private float _time;
+    private float _timeButtonPressed;
+    private bool _buttonUsed;
     private bool _isButtonHeld;
     
     private Vector2 _velocity;
-    private float _direction;
     private bool _grounded;
     private bool _leftWallSliding;
     private bool _rightWallSliding;
@@ -45,12 +51,18 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
 
-        _direction = startDirection;
+        _buttonUsed = true;
     }
 
     private void Update()
     {
-        if (Input.GetButtonDown("Jump")) _doButtonPressed = true;
+        _time += Time.deltaTime;
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            _timeButtonPressed = _time;
+            _buttonUsed = false;
+        }
         _isButtonHeld = Input.GetButton("Jump");
 
         RedrawRope();
@@ -81,8 +93,6 @@ public class PlayerController : MonoBehaviour
         HandleGravity();
         HandleSwing();
         ApplyMovement();
-        
-        _doButtonPressed = false;
     }
 
     private void CheckCollisions()
@@ -103,13 +113,12 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallJump()
     {
-        if ((_rightWallSliding || _leftWallSliding) && _doButtonPressed && !_grounded)
+        if ((_rightWallSliding || _leftWallSliding) && !_grounded && CanUseButton())
         {
             _velocity = new Vector2(Mathf.Cos(wallJumpAngle), Mathf.Sin(wallJumpAngle)) * wallJumpPower;
             if (_rightWallSliding) _velocity.x = -_velocity.x;
             
-            _direction = _leftWallSliding ? 1 : -1;
-            _doButtonPressed = false;
+            _buttonUsed = true;
             _leftWallSliding = false;
             _rightWallSliding = false;
         }
@@ -117,10 +126,10 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        if (_grounded && _doButtonPressed)
+        if (_grounded && CanUseButton())
         {
             _velocity.y = jumpPower;
-            _doButtonPressed = false;
+            _buttonUsed = true;
             _grounded = false;
         }
     }
@@ -129,7 +138,9 @@ public class PlayerController : MonoBehaviour
     {
         if (_grounded && !_leftWallSliding && !_rightWallSliding)
         {
-            _velocity.x = Mathf.MoveTowards(_velocity.x, maxMoveSpeed * _direction, moveAcceleration * Time.fixedDeltaTime);
+            float direction = Mathf.Sign(_velocity.x);
+            if (direction == 0f) direction = startDirection;
+            _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * direction, groundAcceleration * Time.fixedDeltaTime);
         }
     }
 
@@ -137,7 +148,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_grounded && _velocity.y <= 0f)
         {
-            _velocity.y = 0f;
+            _velocity.y = -groundingForce;
         }
         else if ((_leftWallSliding || _rightWallSliding) && _velocity.y <= 0f)
         {
@@ -151,10 +162,10 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSwing()
     {
-        if (!_isSwinging && _doButtonPressed && _swingArea is not null)
+        if (!_isSwinging && CanUseButton() && _swingArea is not null)
         {
             _isSwinging = true;
-            _doButtonPressed = false;
+            _buttonUsed = true;
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
             // Debug.Log("Swing started with radius " + _swingRadius);
             // Debug.Log($"swing pos: {_swingArea.transform.position} my pos: {transform.position}");
@@ -196,5 +207,10 @@ public class PlayerController : MonoBehaviour
     {
         _rb.velocity = _velocity;
         Debug.DrawRay(transform.position, _velocity, Color.magenta);
+    }
+    
+    private bool CanUseButton()
+    {
+        return !_buttonUsed && _time <= _timeButtonPressed + buttonBufferTime;
     }
 }
