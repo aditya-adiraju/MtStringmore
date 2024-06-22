@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [Header("Air")]
     [SerializeField] private float maxFallSpeed;
     [SerializeField] private float fallAcceleration;
-    // [SerializeField] private float earlyReleaseFallAcceleration;
+    [SerializeField] private float earlyReleaseFallAcceleration;
     [Header("Wall")] 
     [SerializeField] private float wallJumpAngle;
     [SerializeField] private float wallJumpPower;
@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviour
 
     private float _time;
     private float _timeButtonPressed;
-    // private float _timeJumped;
     private bool _buttonUsed;
     private bool _isButtonHeld;
     
@@ -48,6 +47,8 @@ public class PlayerController : MonoBehaviour
     private bool _leftWallSliding;
     private bool _rightWallSliding;
     private bool _canDoubleJump;
+    private bool _canReleaseEarly;
+    private bool _releasedEarly;
     
     private Collider2D _swingArea;
     private bool _inSwingArea;
@@ -103,6 +104,7 @@ public class PlayerController : MonoBehaviour
         HandleSwing();
         HandleJump();
         HandleDoubleJump();
+        HandleEarlyRelease();
         HandleWalk();
         HandleGravity();
         
@@ -140,6 +142,9 @@ public class PlayerController : MonoBehaviour
             _buttonUsed = true;
             _leftWallSliding = false;
             _rightWallSliding = false;
+            _canReleaseEarly = true;
+            _canDoubleJump = true;
+            _sprite.color = doubleJumpUnusedColor;
         }
     }
 
@@ -150,6 +155,7 @@ public class PlayerController : MonoBehaviour
             _velocity.y = jumpPower;
             _buttonUsed = true;
             _grounded = false;
+            _canReleaseEarly = true;
         }
     }
 
@@ -157,11 +163,23 @@ public class PlayerController : MonoBehaviour
     {
         if (CanUseButton() && _canDoubleJump)
         {
+            _velocity.y = doubleJumpPower;
             _buttonUsed = true;
             _canDoubleJump = false;
-            
-            _velocity.y = doubleJumpPower;
             _sprite.color = doubleJumpUsedColor;
+            _canReleaseEarly = true;
+        }
+    }
+    
+    private void HandleEarlyRelease()
+    {
+        if (!_canReleaseEarly) return;
+
+        if (!_isButtonHeld) _releasedEarly = true;
+        if (_velocity.y < 0f)
+        {
+            _canReleaseEarly = false;
+            _releasedEarly = false;
         }
     }
 
@@ -187,7 +205,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, fallAcceleration * Time.fixedDeltaTime);
+            float accel = _releasedEarly ? earlyReleaseFallAcceleration : fallAcceleration;
+            _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, accel * Time.fixedDeltaTime);
         }
     }
 

@@ -228,11 +228,12 @@ MonoBehaviour:
   groundingForce: 0.05
   jumpPower: 30
   doubleJumpPower: 30
-  maxFallSpeed: 30
+  maxFallSpeed: 40
   fallAcceleration: 70
+  earlyReleaseFallAcceleration: 110
   wallJumpAngle: 1
-  wallJumpPower: 40
-  wallSlideSpeed: 10
+  wallJumpPower: 35
+  wallSlideSpeed: 15
   wallSlideAcceleration: 30
   ropeRenderer: {fileID: 1600858386}
   swingBoostMultiplier: 1.2
