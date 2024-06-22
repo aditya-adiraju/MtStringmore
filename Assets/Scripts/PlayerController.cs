@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,10 +12,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundAcceleration;
     [SerializeField] private float startDirection;
     [SerializeField] private float groundingForce;
-    [Header("Air")]
+    [Header("Jump")]
     [SerializeField] private float jumpPower;
+    [SerializeField] private float doubleJumpPower;
+    [Header("Air")]
     [SerializeField] private float maxFallSpeed;
     [SerializeField] private float fallAcceleration;
+    // [SerializeField] private float earlyReleaseFallAcceleration;
     [Header("Wall")] 
     [SerializeField] private float wallJumpAngle;
     [SerializeField] private float wallJumpPower;
@@ -28,12 +29,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float swingBoostMultiplier;
     [SerializeField] private float maxSwingSpeed;
     [SerializeField] private float swingAcceleration;
+    [Header("Visual")] 
+    [SerializeField] private Color doubleJumpUsedColor;
+    [SerializeField] private Color doubleJumpUnusedColor;
     
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
+    private SpriteRenderer _sprite;
 
     private float _time;
     private float _timeButtonPressed;
+    // private float _timeJumped;
     private bool _buttonUsed;
     private bool _isButtonHeld;
     
@@ -41,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private bool _grounded;
     private bool _leftWallSliding;
     private bool _rightWallSliding;
+    private bool _canDoubleJump;
     
     private Collider2D _swingArea;
     private bool _inSwingArea;
@@ -51,7 +58,9 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
-
+        _sprite = GetComponent<SpriteRenderer>();
+        
+        _sprite.color = doubleJumpUnusedColor;
         _buttonUsed = true;
     }
 
@@ -89,11 +98,14 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         CheckCollisions();
+        
         HandleWallJump();
+        HandleSwing();
         HandleJump();
+        HandleDoubleJump();
         HandleWalk();
         HandleGravity();
-        HandleSwing();
+        
         ApplyMovement();
     }
 
@@ -109,7 +121,12 @@ public class PlayerController : MonoBehaviour
         _leftWallSliding = leftWallHit;
         _rightWallSliding = rightWallHit;
 
-        if (!_grounded && groundHit) _grounded = true;
+        if (!_grounded && groundHit)
+        {
+            _grounded = true;
+            _canDoubleJump = true;
+            _sprite.color = doubleJumpUnusedColor;
+        }
         else if (_grounded && !groundHit) _grounded = false;
     }
 
@@ -133,6 +150,18 @@ public class PlayerController : MonoBehaviour
             _velocity.y = jumpPower;
             _buttonUsed = true;
             _grounded = false;
+        }
+    }
+
+    private void HandleDoubleJump()
+    {
+        if (CanUseButton() && _canDoubleJump)
+        {
+            _buttonUsed = true;
+            _canDoubleJump = false;
+            
+            _velocity.y = doubleJumpPower;
+            _sprite.color = doubleJumpUsedColor;
         }
     }
 
@@ -203,7 +232,7 @@ public class PlayerController : MonoBehaviour
 
     private void RedrawRope()
     {
-        if (_isSwinging && _inSwingArea)
+        if (_isSwinging)
         {
             ropeRenderer.SetPosition(0, transform.position);
             ropeRenderer.SetPosition(1, _swingArea.transform.position);

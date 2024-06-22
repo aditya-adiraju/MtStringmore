@@ -194,7 +194,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
-  m_Material: {fileID: 6200000, guid: a081f785d315a2b43966f129ce852878, type: 2}
+  m_Material: {fileID: 6200000, guid: c3961f914daeb45c28518455342a0ef2, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -227,6 +227,7 @@ MonoBehaviour:
   startDirection: 1
   groundingForce: 0.05
   jumpPower: 30
+  doubleJumpPower: 30
   maxFallSpeed: 30
   fallAcceleration: 70
   wallJumpAngle: 1
@@ -237,6 +238,8 @@ MonoBehaviour:
   swingBoostMultiplier: 1.2
   maxSwingSpeed: 50
   swingAcceleration: 50
+  doubleJumpUsedColor: {r: 1, g: 0.40938243, b: 0.3915094, a: 1}
+  doubleJumpUnusedColor: {r: 0, g: 0.70980394, b: 1, a: 1}
 --- !u!4 &60102484
 Transform:
   m_ObjectHideFlags: 0
@@ -991,7 +994,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 2.1
+  m_Radius: 2.13
 --- !u!1 &1573863135
 GameObject:
   m_ObjectHideFlags: 0
@@ -1103,7 +1106,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
