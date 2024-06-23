@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System;
 using UnityEngine;
 
@@ -5,9 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Input")] 
     [SerializeField] private float buttonBufferTime;
-    [Header("Collisions")]
+    [Header("Collisions")] 
     [SerializeField] private LayerMask collisionLayer;
     [SerializeField] private float collisionDistance;
+    [SerializeField] private float wallCloseDistance;
     [Header("Ground")]
     [SerializeField] private float maxGroundSpeed;
     [SerializeField] private float groundAcceleration;
@@ -19,7 +21,7 @@ public class PlayerController : MonoBehaviour
     [Header("Air")]
     [SerializeField] private float maxFallSpeed;
     [SerializeField] private float fallAcceleration;
-    // [SerializeField] private float earlyReleaseFallAcceleration;
+    [SerializeField] private float earlyReleaseFallAcceleration;
     [Header("Wall")] 
     [SerializeField] private float wallJumpAngle;
     [SerializeField] private float wallJumpPower;
@@ -45,15 +47,18 @@ public class PlayerController : MonoBehaviour
 
     private float _time;
     private float _timeButtonPressed;
-    // private float _timeJumped;
     private bool _buttonUsed;
     private bool _isButtonHeld;
     
     private Vector2 _velocity;
+    private float _lastDirection;
     private bool _grounded;
     private bool _leftWallSliding;
     private bool _rightWallSliding;
+    private bool _closeToWall;
     private bool _canDoubleJump;
+    private bool _canReleaseEarly;
+    private bool _releasedEarly;
     
     private Collider2D _swingArea;
     private bool _inSwingArea;
@@ -68,6 +73,7 @@ public class PlayerController : MonoBehaviour
         
         // _sprite.color = doubleJumpUnusedColor;
         _buttonUsed = true;
+        _lastDirection = startDirection;
     }
 
     private void Update()
@@ -109,6 +115,7 @@ public class PlayerController : MonoBehaviour
         HandleSwing();
         HandleJump();
         HandleDoubleJump();
+        HandleEarlyRelease();
         HandleWalk();
         HandleGravity();
         
@@ -117,10 +124,16 @@ public class PlayerController : MonoBehaviour
 
     private void CheckCollisions()
     {
-        bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, collisionDistance, collisionLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, collisionDistance, collisionLayer);
-        bool leftWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.left, collisionDistance, collisionLayer);
-        bool rightWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.right, collisionDistance, collisionLayer);
+        bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+            Vector2.down, collisionDistance, collisionLayer);
+        bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+            Vector2.up, collisionDistance, collisionLayer);
+        bool leftWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+            Vector2.left, collisionDistance, collisionLayer);
+        bool rightWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
+            Vector2.right, collisionDistance, collisionLayer);
+        _closeToWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
+            _velocity, wallCloseDistance, collisionLayer);
         
         if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
 
@@ -131,6 +144,8 @@ public class PlayerController : MonoBehaviour
 
         _leftWallSliding = leftWallHit;
         _rightWallSliding = rightWallHit;
+        
+        // Debug.Log($"_leftWallSliding: {_leftWallSliding}, _rightWallSliding: {_rightWallSliding}, _closeToWall: {_closeToWall}");
 
         if (!_grounded && groundHit)
         {
@@ -158,6 +173,9 @@ public class PlayerController : MonoBehaviour
             _buttonUsed = true;
             _leftWallSliding = false;
             _rightWallSliding = false;
+            _canReleaseEarly = true;
+            _canDoubleJump = true;
+            // _sprite.color = doubleJumpUnusedColor;
             Jumped?.Invoke();
         }
     }
@@ -169,19 +187,32 @@ public class PlayerController : MonoBehaviour
             _velocity.y = jumpPower;
             _buttonUsed = true;
             _grounded = false;
+            _canReleaseEarly = true;
             Jumped?.Invoke();
         }
     }
 
     private void HandleDoubleJump()
     {
-        if (CanUseButton() && _canDoubleJump)
+        if (CanUseButton() && _canDoubleJump && !_closeToWall)
         {
+            _velocity.y = doubleJumpPower;
             _buttonUsed = true;
             _canDoubleJump = false;
-            
-            _velocity.y = doubleJumpPower;
             // _sprite.color = doubleJumpUsedColor;
+            _canReleaseEarly = true;
+        }
+    }
+    
+    private void HandleEarlyRelease()
+    {
+        if (!_canReleaseEarly) return;
+
+        if (!_isButtonHeld) _releasedEarly = true;
+        if (_velocity.y < 0f)
+        {
+            _canReleaseEarly = false;
+            _releasedEarly = false;
             Jumped?.Invoke();
         }
     }
@@ -190,9 +221,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_grounded && !_leftWallSliding && !_rightWallSliding)
         {
-            float direction = Mathf.Sign(_velocity.x);
-            if (direction == 0f) direction = startDirection;
-            _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * direction, groundAcceleration * Time.fixedDeltaTime);
+            _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * _lastDirection, groundAcceleration * Time.fixedDeltaTime);
         }
     }
 
@@ -205,10 +234,12 @@ public class PlayerController : MonoBehaviour
         else if ((_leftWallSliding || _rightWallSliding) && _velocity.y <= 0f)
         {
             _velocity.y = Mathf.MoveTowards(_velocity.y, -wallSlideSpeed, wallSlideAcceleration * Time.fixedDeltaTime);
+            _velocity.x = 0f;
         }
         else
         {
-            _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, fallAcceleration * Time.fixedDeltaTime);
+            float accel = _releasedEarly ? earlyReleaseFallAcceleration : fallAcceleration;
+            _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, accel * Time.fixedDeltaTime);
         }
     }
 
@@ -255,6 +286,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_isSwinging)
         {
+            ropeRenderer.positionCount = 2;
             ropeRenderer.SetPosition(0, transform.position);
             ropeRenderer.SetPosition(1, _swingArea.transform.position);
         }
@@ -263,6 +295,7 @@ public class PlayerController : MonoBehaviour
     private void ApplyMovement()
     {
         _rb.velocity = _velocity;
+        if (_velocity.x != 0f) _lastDirection = Mathf.Sign(_velocity.x);
         Debug.DrawRay(transform.position, _velocity, Color.magenta);
     }
     
