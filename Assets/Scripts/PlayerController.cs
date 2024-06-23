@@ -5,10 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Input")] 
     [SerializeField] private float buttonBufferTime;
-    [Header("Collisions")]
-    [SerializeField] private LayerMask floorLayer;
-    [SerializeField] private LayerMask ceilingLayer;
-    [SerializeField] private LayerMask wallLayer;
+    [Header("Collisions")] 
+    [SerializeField] private LayerMask collisionLayer;
     [SerializeField] private float floorCeilCollisionDistance;
     [SerializeField] private float wallCollisionDistance;
     [SerializeField] private float wallCloseDistance;
@@ -120,13 +118,13 @@ public class PlayerController : MonoBehaviour
     private void CheckCollisions()
     {
         bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.down, floorCeilCollisionDistance, floorLayer);
+            Vector2.down, floorCeilCollisionDistance, collisionLayer);
         bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.up, floorCeilCollisionDistance, ceilingLayer);
+            Vector2.up, floorCeilCollisionDistance, collisionLayer);
         RaycastHit2D leftWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.left, wallCloseDistance, wallLayer);
+            Vector2.left, wallCloseDistance, collisionLayer);
         RaycastHit2D rightWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
-            Vector2.right, wallCloseDistance, wallLayer);
+            Vector2.right, wallCloseDistance, collisionLayer);
         
         if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
         
@@ -266,6 +264,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_isSwinging)
         {
+            ropeRenderer.positionCount = 2;
             ropeRenderer.SetPosition(0, transform.position);
             ropeRenderer.SetPosition(1, _swingArea.transform.position);
         }
