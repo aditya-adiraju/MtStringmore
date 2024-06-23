@@ -150,8 +150,8 @@ Transform:
   m_GameObject: {fileID: 466291388}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.57, y: 14.71, z: 0}
-  m_LocalScale: {x: 4.0567846, y: 18.983799, z: 1}
+  m_LocalPosition: {x: 26.9392, y: 15.7484, z: 0}
+  m_LocalScale: {x: 5.0212502, y: 34.742012, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1573863136}
@@ -502,8 +502,8 @@ Transform:
   m_GameObject: {fileID: 842106013}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -15.41, y: 12.82, z: 0}
-  m_LocalScale: {x: 25.431786, y: 3.8129363, z: 1}
+  m_LocalPosition: {x: -17.0714, y: 12.7128, z: 0}
+  m_LocalScale: {x: 22.107851, y: 3.5986493, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1573863136}
@@ -778,17 +778,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 186524710179686692, guid: 9775df4ea99014f1ba5e8f2c63fca530, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 186524710179686692, guid: 9775df4ea99014f1ba5e8f2c63fca530, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1067690329322843600, guid: 9775df4ea99014f1ba5e8f2c63fca530, type: 3}
       propertyPath: m_Name
       value: Button
       objectReference: {fileID: 0}
     - target: {fileID: 5541764385215041578, guid: 9775df4ea99014f1ba5e8f2c63fca530, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.1
+      value: 8.6
       objectReference: {fileID: 0}
     - target: {fileID: 5541764385215041578, guid: 9775df4ea99014f1ba5e8f2c63fca530, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.96
+      value: 6.2
       objectReference: {fileID: 0}
     - target: {fileID: 5541764385215041578, guid: 9775df4ea99014f1ba5e8f2c63fca530, type: 3}
       propertyPath: m_LocalPosition.z

@@ -52,9 +52,8 @@ MonoBehaviour:
   collisionLayer:
     serializedVersion: 2
     m_Bits: 256
-  floorCeilCollisionDistance: 0.1
-  wallCollisionDistance: 0.1
-  wallCloseDistance: 3
+  collisionDistance: 0.1
+  wallCloseDistance: 2
   maxGroundSpeed: 20
   groundAcceleration: 20
   startDirection: 1

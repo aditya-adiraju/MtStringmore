@@ -7,8 +7,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")] 
     [SerializeField] private LayerMask collisionLayer;
-    [SerializeField] private float floorCeilCollisionDistance;
-    [SerializeField] private float wallCollisionDistance;
+    [SerializeField] private float collisionDistance;
     [SerializeField] private float wallCloseDistance;
     [Header("Ground")]
     [SerializeField] private float maxGroundSpeed;
@@ -46,6 +45,7 @@ public class PlayerController : MonoBehaviour
     private bool _isButtonHeld;
     
     private Vector2 _velocity;
+    private float _lastDirection;
     private bool _grounded;
     private bool _leftWallSliding;
     private bool _rightWallSliding;
@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour
         
         _sprite.color = doubleJumpUnusedColor;
         _buttonUsed = true;
+        _lastDirection = startDirection;
     }
 
     private void Update()
@@ -118,19 +119,20 @@ public class PlayerController : MonoBehaviour
     private void CheckCollisions()
     {
         bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.down, floorCeilCollisionDistance, collisionLayer);
+            Vector2.down, collisionDistance, collisionLayer);
         bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.up, floorCeilCollisionDistance, collisionLayer);
-        RaycastHit2D leftWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.left, wallCloseDistance, collisionLayer);
-        RaycastHit2D rightWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
-            Vector2.right, wallCloseDistance, collisionLayer);
+            Vector2.up, collisionDistance, collisionLayer);
+        bool leftWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+            Vector2.left, collisionDistance, collisionLayer);
+        bool rightWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
+            Vector2.right, collisionDistance, collisionLayer);
+        _closeToWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
+            _velocity, wallCloseDistance, collisionLayer);
         
         if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
         
-        _leftWallSliding = leftWall.collider && leftWall.distance <= wallCollisionDistance;
-        _rightWallSliding = rightWall.collider && rightWall.distance <= wallCollisionDistance;
-        _closeToWall = rightWall.collider | leftWall.collider;
+        _leftWallSliding = leftWallHit;
+        _rightWallSliding = rightWallHit;
         
         // Debug.Log($"_leftWallSliding: {_leftWallSliding}, _rightWallSliding: {_rightWallSliding}, _closeToWall: {_closeToWall}");
 
@@ -198,9 +200,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_grounded && !_leftWallSliding && !_rightWallSliding)
         {
-            float direction = Mathf.Sign(_velocity.x);
-            if (direction == 0f) direction = startDirection;
-            _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * direction, groundAcceleration * Time.fixedDeltaTime);
+            _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * _lastDirection, groundAcceleration * Time.fixedDeltaTime);
         }
     }
 
@@ -213,6 +213,7 @@ public class PlayerController : MonoBehaviour
         else if ((_leftWallSliding || _rightWallSliding) && _velocity.y <= 0f)
         {
             _velocity.y = Mathf.MoveTowards(_velocity.y, -wallSlideSpeed, wallSlideAcceleration * Time.fixedDeltaTime);
+            _velocity.x = 0f;
         }
         else
         {
@@ -273,6 +274,7 @@ public class PlayerController : MonoBehaviour
     private void ApplyMovement()
     {
         _rb.velocity = _velocity;
+        if (_velocity.x != 0f) _lastDirection = Mathf.Sign(_velocity.x);
         Debug.DrawRay(transform.position, _velocity, Color.magenta);
     }
     
