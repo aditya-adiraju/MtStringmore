@@ -153,7 +153,6 @@ public class PlayerController : MonoBehaviour
             _canDoubleJump = true;
             // _sprite.color = doubleJumpUnusedColor;
             GroundedChanged?.Invoke(true, Mathf.Abs(_velocity.y));
-            Debug.Log(_grounded);
         }
         else if (_grounded && !groundHit)
         {
@@ -177,6 +176,7 @@ public class PlayerController : MonoBehaviour
             _canDoubleJump = true;
             // _sprite.color = doubleJumpUnusedColor;
             Jumped?.Invoke();
+            GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y));
         }
     }
 
@@ -188,7 +188,9 @@ public class PlayerController : MonoBehaviour
             _buttonUsed = true;
             _grounded = false;
             _canReleaseEarly = true;
+            Debug.Log("controller jumped");
             Jumped?.Invoke();
+            GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y));
         }
     }
 

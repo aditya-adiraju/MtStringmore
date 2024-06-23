@@ -88,6 +88,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void OnJumped()
     {
+        Debug.Log("onjumped");
         _anim.SetTrigger(JumpKey);
         _anim.ResetTrigger(GroundedKey);
 
@@ -103,12 +104,13 @@ public class PlayerAnimator : MonoBehaviour
     private void OnGroundedChanged(bool grounded, float impact)
     {
         _grounded = grounded;
-        
+
         if (grounded)
         {
             DetectGroundColor();
             // SetColor(_landParticles);
 
+            _anim.ResetTrigger(JumpKey);
             _anim.SetTrigger(GroundedKey);
             _source.PlayOneShot(_footsteps[Random.Range(0, _footsteps.Length)]);
             // _moveParticles.Play();
@@ -118,6 +120,7 @@ public class PlayerAnimator : MonoBehaviour
         }
         else
         {
+            _anim.ResetTrigger(GroundedKey);
             // _moveParticles.Stop();
         }
     }
