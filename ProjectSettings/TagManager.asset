@@ -14,9 +14,9 @@ TagManager:
   - UI
   - Rope
   - Player
-  - Terrain
-  - 
-  - 
+  - Floor
+  - Ceiling
+  - Wall
   - 
   - 
   - 

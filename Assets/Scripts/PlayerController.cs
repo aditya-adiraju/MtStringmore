@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -5,8 +6,12 @@ public class PlayerController : MonoBehaviour
     [Header("Input")] 
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")]
-    [SerializeField] private LayerMask collisionLayer;
-    [SerializeField] private float collisionDistance;
+    [SerializeField] private LayerMask floorLayer;
+    [SerializeField] private LayerMask ceilingLayer;
+    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private float floorCeilCollisionDistance;
+    [SerializeField] private float wallCollisionDistance;
+    [SerializeField] private float wallCloseDistance;
     [Header("Ground")]
     [SerializeField] private float maxGroundSpeed;
     [SerializeField] private float groundAcceleration;
@@ -46,6 +51,7 @@ public class PlayerController : MonoBehaviour
     private bool _grounded;
     private bool _leftWallSliding;
     private bool _rightWallSliding;
+    private bool _closeToWall;
     private bool _canDoubleJump;
     private bool _canReleaseEarly;
     private bool _releasedEarly;
@@ -113,15 +119,22 @@ public class PlayerController : MonoBehaviour
 
     private void CheckCollisions()
     {
-        bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, collisionDistance, collisionLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, collisionDistance, collisionLayer);
-        bool leftWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.left, collisionDistance, collisionLayer);
-        bool rightWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.right, collisionDistance, collisionLayer);
+        bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+            Vector2.down, floorCeilCollisionDistance, floorLayer);
+        bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+            Vector2.up, floorCeilCollisionDistance, ceilingLayer);
+        RaycastHit2D leftWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+            Vector2.left, wallCloseDistance, wallLayer);
+        RaycastHit2D rightWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
+            Vector2.right, wallCloseDistance, wallLayer);
         
         if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
-
-        _leftWallSliding = leftWallHit;
-        _rightWallSliding = rightWallHit;
+        
+        _leftWallSliding = leftWall.collider && leftWall.distance <= wallCollisionDistance;
+        _rightWallSliding = rightWall.collider && rightWall.distance <= wallCollisionDistance;
+        _closeToWall = rightWall.collider | leftWall.collider;
+        
+        // Debug.Log($"_leftWallSliding: {_leftWallSliding}, _rightWallSliding: {_rightWallSliding}, _closeToWall: {_closeToWall}");
 
         if (!_grounded && groundHit)
         {
@@ -161,7 +174,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDoubleJump()
     {
-        if (CanUseButton() && _canDoubleJump)
+        if (CanUseButton() && _canDoubleJump && !_closeToWall)
         {
             _velocity.y = doubleJumpPower;
             _buttonUsed = true;
