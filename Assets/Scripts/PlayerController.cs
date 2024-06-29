@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [Header("Jump")]
     [SerializeField] private float jumpPower;
     [SerializeField] private float doubleJumpPower;
+    [SerializeField] private float coyoteTime;
     [Header("Air")]
     [SerializeField] private float maxFallSpeed;
     [SerializeField] private float fallAcceleration;
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
 
     private float _time;
     private float _timeButtonPressed;
+    private float _timeLeftGround;
     private bool _buttonUsed;
     private bool _isButtonHeld;
     
@@ -142,7 +144,11 @@ public class PlayerController : MonoBehaviour
             _canDoubleJump = true;
             _sprite.color = doubleJumpUnusedColor;
         }
-        else if (_grounded && !groundHit) _grounded = false;
+        else if (_grounded && !groundHit)
+        {
+            _grounded = false;
+            _timeLeftGround = _time;
+        }
     }
 
     private void HandleWallJump()
@@ -163,7 +169,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        if (_grounded && CanUseButton())
+        bool canUseCoyote = !_grounded && _time - _timeLeftGround <= coyoteTime;
+        if ((_grounded || canUseCoyote) && CanUseButton())
         {
             _velocity.y = jumpPower;
             _buttonUsed = true;

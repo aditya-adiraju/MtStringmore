@@ -60,6 +60,7 @@ MonoBehaviour:
   groundingForce: 0.05
   jumpPower: 30
   doubleJumpPower: 30
+  coyoteTime: 0.1
   maxFallSpeed: 40
   fallAcceleration: 70
   earlyReleaseFallAcceleration: 110
