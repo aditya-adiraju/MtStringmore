@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -92,6 +92,11 @@ public class PlayerController : MonoBehaviour
         {
             _swingArea = other;
             _inSwingArea = true;
+        }
+        else if (other.gameObject.CompareTag("Death"))
+        {
+            Debug.Log("Death");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
