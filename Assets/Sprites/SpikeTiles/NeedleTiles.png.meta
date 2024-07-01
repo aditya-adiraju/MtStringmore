@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b925a81ee5b92334aa5278ddd3fbc4bd
+guid: a39c6168b1f361c4d896ecca36d684df
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 215
+  spritePixelsToUnits: 216
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,203 +97,126 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GrassTileset_0
+      name: NeedleTiles_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 432
-        width: 216
-        height: 216
+        y: 218
+        width: 215
+        height: 215
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: -85, y: 89}
-        - {x: -108, y: 62}
-        - {x: -108, y: -108}
-        - {x: 108, y: -108}
-        - {x: 108, y: 89}
+      - - {x: 107.5, y: -107.5}
+        - {x: 107.5, y: -12.074158}
+        - {x: -107.5, y: -11.938019}
+        - {x: -107.5, y: -107.5}
       tessellationDetail: 0
       bones: []
-      spriteID: 61aa358e1cb0f654f8e8d32ae0fb4a23
-      internalID: -1293645918
+      spriteID: e58a805820a9e5d40ab4dca7ae96924c
+      internalID: -1482026322
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GrassTileset_1
+      name: NeedleTiles_1
       rect:
         serializedVersion: 2
-        x: 216
-        y: 432
-        width: 216
-        height: 216
+        x: 215
+        y: 218
+        width: 215
+        height: 215
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: -108, y: 89}
-        - {x: -108, y: -108}
-        - {x: 108, y: -108}
-        - {x: 108, y: 89}
+      - - {x: 107.5, y: -107.5}
+        - {x: 107.5, y: -12.074158}
+        - {x: -107.5, y: -11.938019}
+        - {x: -107.5, y: -107.5}
       tessellationDetail: 0
       bones: []
-      spriteID: 954ffd6894e6ac541a927968a138deb3
-      internalID: 2021551811
+      spriteID: 200e9ff3ed9a17a44b352bad1a7858e9
+      internalID: 1035180769
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GrassTileset_2
-      rect:
-        serializedVersion: 2
-        x: 432
-        y: 432
-        width: 216
-        height: 216
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -108, y: 89}
-        - {x: -108, y: -108}
-        - {x: 108, y: -108}
-        - {x: 108, y: 62.529785}
-        - {x: 80.81702, y: 89}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 66272da52f78bd1489e618dd6a56070e
-      internalID: 784584834
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GrassTileset_3
+      name: NeedleTiles_2
       rect:
         serializedVersion: 2
         x: 0
-        y: 216
-        width: 216
-        height: 216
+        y: 3
+        width: 215
+        height: 215
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: -108, y: 108}
-        - {x: -108, y: -108}
-        - {x: 108, y: -108}
-        - {x: 108, y: 108}
+      - - {x: 107.5, y: -107.5}
+        - {x: 107.5, y: -12.074158}
+        - {x: -107.5, y: -11.938019}
+        - {x: -107.5, y: -107.5}
       tessellationDetail: 0
       bones: []
-      spriteID: a03f4d17b6fa7de40a019bca401413d7
-      internalID: 1332015349
+      spriteID: 447652bc52f71fb4f899ee004e857dc9
+      internalID: 1785299982
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GrassTileset_4
+      name: NeedleTiles_3
       rect:
         serializedVersion: 2
-        x: 216
-        y: 216
-        width: 216
-        height: 216
+        x: 215
+        y: 3
+        width: 215
+        height: 215
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: -91.938995, y: -108}
-        - {x: 108, y: -108}
-        - {x: 108, y: 90.54501}
+      - - {x: 107.5, y: -107.5}
+        - {x: 107.5, y: -12.074158}
+        - {x: -107.5, y: -11.938019}
+        - {x: -107.5, y: -107.5}
       tessellationDetail: 0
       bones: []
-      spriteID: 88546c080aa2d7f4fa1fc69c80447c64
-      internalID: -496373805
+      spriteID: 7c9f1d6d944a70d4e803cbc594a74d83
+      internalID: 1563588509
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GrassTileset_5
+      name: NeedleTiles_4
       rect:
         serializedVersion: 2
-        x: 432
-        y: 216
-        width: 216
-        height: 216
+        x: 430
+        y: 3
+        width: 215
+        height: 215
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: -108, y: 90.43619}
-        - {x: -108, y: -108}
-        - {x: 92.790405, y: -108}
+      - - {x: 107.5, y: -107.5}
+        - {x: 107.5, y: -12.074158}
+        - {x: -107.5, y: -11.938019}
+        - {x: -107.5, y: -107.5}
       tessellationDetail: 0
       bones: []
-      spriteID: 87fca9010dcbfd34f89c9eb68480edca
-      internalID: 788892851
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GrassTileset_6
-      rect:
-        serializedVersion: 2
-        x: 216
-        y: 0
-        width: 216
-        height: 216
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -91.54509, y: 108}
-        - {x: -108, y: 90.151}
-        - {x: -108, y: -108}
-        - {x: 108, y: -108}
-        - {x: 108, y: 108}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9610f3f83c3381747aeeaab18d7e518c
-      internalID: -1999759043
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GrassTileset_7
-      rect:
-        serializedVersion: 2
-        x: 432
-        y: 0
-        width: 216
-        height: 216
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -108, y: 108}
-        - {x: -108, y: -108}
-        - {x: 108, y: -108}
-        - {x: 108, y: 93.242035}
-        - {x: 92.938965, y: 108}
-      tessellationDetail: 0
-      bones: []
-      spriteID: e32dcba929cef684cb5a8d5609e28636
-      internalID: 1953228072
+      spriteID: 50bcc0562e2b12047aeb507482112f5b
+      internalID: -407851448
       vertices: []
       indices: 
       edges: []
@@ -309,14 +232,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      GrassTileset_0: -1293645918
-      GrassTileset_1: 2021551811
-      GrassTileset_2: 784584834
-      GrassTileset_3: 1332015349
-      GrassTileset_4: -496373805
-      GrassTileset_5: 788892851
-      GrassTileset_6: -1999759043
-      GrassTileset_7: 1953228072
+      NeedleTiles_0: -1482026322
+      NeedleTiles_1: 1035180769
+      NeedleTiles_2: 1785299982
+      NeedleTiles_3: 1563588509
+      NeedleTiles_4: -407851448
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

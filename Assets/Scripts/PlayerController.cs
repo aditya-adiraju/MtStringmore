@@ -158,7 +158,6 @@ public class PlayerController : MonoBehaviour
         {
             _grounded = false;
             GroundedChanged?.Invoke(false, 0);
-            Debug.Log(_grounded);
         }
     }
 
@@ -188,7 +187,6 @@ public class PlayerController : MonoBehaviour
             _buttonUsed = true;
             _grounded = false;
             _canReleaseEarly = true;
-            Debug.Log("controller jumped");
             Jumped?.Invoke();
             GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y));
         }

@@ -10,9 +10,6 @@ public class PlayerAnimator : MonoBehaviour
 
     [SerializeField] private SpriteRenderer _sprite;
 
-    [Header("Settings")] [SerializeField, Range(1f, 3f)]
-    private float _maxIdleSpeed = 2;
-
     [SerializeField] private float _maxTilt = 5;
     [SerializeField] private float _tiltSpeed = 20;
 
@@ -59,7 +56,8 @@ public class PlayerAnimator : MonoBehaviour
 
         DetectGroundColor();
         HandleSpriteFlip();
-        HandleIdleSpeed();
+        // HandleYVelocity();
+        HandleVerticalSpeed();
         HandleCharacterTilt();
     }
 
@@ -68,16 +66,17 @@ public class PlayerAnimator : MonoBehaviour
         if (_player.FrameInput.x != 0) _sprite.flipX = _player.FrameInput.x < 0;
     }
 
-    private void HandleIdleSpeed()
-    {
-        var inputStrength = Mathf.Abs(_player.FrameInput.x);
-        _anim.SetFloat(IdleSpeedKey, Mathf.Lerp(1, _maxIdleSpeed, inputStrength));
+    // private void HandleYVelocity()
+    // {
+    //     var inputStrength = Mathf.Abs(_player.FrameInput.x);
+    //     _anim.SetFloat(YVelocityKey, Mathf.Lerp(1, _maxYVelocity, inputStrength));
         // _moveParticles.transform.localScale = Vector3.MoveTowards(_moveParticles.transform.localScale, Vector3.one * inputStrength, 2 * Time.deltaTime);
-    }
+    // }
 
-    private void OnWallHit(bool wallHit)
+    private void HandleVerticalSpeed()
     {
-        _anim.SetBool(WallHitKey, wallHit);
+        _anim.SetFloat(XSpeedKey, Mathf.Abs(_player.FrameInput.x));
+        _anim.SetFloat(YVelocityKey, _player.FrameInput.y);
     }
 
     private void HandleCharacterTilt()
@@ -86,9 +85,16 @@ public class PlayerAnimator : MonoBehaviour
         _anim.transform.up = Vector3.RotateTowards(_anim.transform.up, runningTilt * Vector2.up, _tiltSpeed * Time.deltaTime, 0f);
     }
 
+    private void OnWallHit(bool wallHit)
+    {
+        _anim.SetBool(WallHitKey, wallHit);
+        if (wallHit) {
+            _anim.ResetTrigger(JumpKey);
+        }
+    }
+
     private void OnJumped()
     {
-        Debug.Log("onjumped");
         _anim.SetTrigger(JumpKey);
         _anim.ResetTrigger(GroundedKey);
 
@@ -107,11 +113,11 @@ public class PlayerAnimator : MonoBehaviour
 
         if (grounded)
         {
-            DetectGroundColor();
+            // DetectGroundColor();
             // SetColor(_landParticles);
 
             _anim.ResetTrigger(JumpKey);
-            _anim.SetTrigger(GroundedKey);
+            _anim.SetBool(GroundedKey, true);
             _source.PlayOneShot(_footsteps[Random.Range(0, _footsteps.Length)]);
             // _moveParticles.Play();
 
@@ -120,7 +126,7 @@ public class PlayerAnimator : MonoBehaviour
         }
         else
         {
-            _anim.ResetTrigger(GroundedKey);
+            _anim.SetBool(GroundedKey, false);
             // _moveParticles.Stop();
         }
     }
@@ -142,7 +148,8 @@ public class PlayerAnimator : MonoBehaviour
     // }
 
     private static readonly int GroundedKey = Animator.StringToHash("Grounded");
-    private static readonly int IdleSpeedKey = Animator.StringToHash("IdleSpeed");
+    private static readonly int XSpeedKey = Animator.StringToHash("XSpeed");
+    private static readonly int YVelocityKey = Animator.StringToHash("YVelocity");
     private static readonly int WallHitKey = Animator.StringToHash("WallHit");
     private static readonly int JumpKey = Animator.StringToHash("Jump");
 }
