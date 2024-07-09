@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -36,9 +37,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Color doubleJumpUsedColor;
     [SerializeField] private Color doubleJumpUnusedColor;
     
+    public Vector2 FrameInput => _velocity;
+    public event Action<bool, float> GroundedChanged;
+    public event Action<bool> WallHit;
+    public event Action Jumped;
+
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
-    private SpriteRenderer _sprite;
+    // private SpriteRenderer _sprite;
 
     private float _time;
     private float _timeButtonPressed;
@@ -65,9 +71,9 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
-        _sprite = GetComponent<SpriteRenderer>();
+        // _sprite = GetComponent<SpriteRenderer>();
         
-        _sprite.color = doubleJumpUnusedColor;
+        // _sprite.color = doubleJumpUnusedColor;
         _buttonUsed = true;
         _lastDirection = startDirection;
     }
@@ -137,7 +143,12 @@ public class PlayerController : MonoBehaviour
             _velocity, wallCloseDistance, collisionLayer);
         
         if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
-        
+
+        if (leftWallHit || rightWallHit)
+            WallHit.Invoke(true);
+        else
+            WallHit.Invoke(false);
+
         _leftWallSliding = leftWallHit;
         _rightWallSliding = rightWallHit;
         
@@ -147,12 +158,14 @@ public class PlayerController : MonoBehaviour
         {
             _grounded = true;
             _canDoubleJump = true;
-            _sprite.color = doubleJumpUnusedColor;
+            // _sprite.color = doubleJumpUnusedColor;
+            GroundedChanged?.Invoke(true, Mathf.Abs(_velocity.y));
         }
         else if (_grounded && !groundHit)
         {
             _grounded = false;
             _timeLeftGround = _time;
+            GroundedChanged?.Invoke(false, 0);
         }
     }
 
@@ -168,7 +181,9 @@ public class PlayerController : MonoBehaviour
             _rightWallSliding = false;
             _canReleaseEarly = true;
             _canDoubleJump = true;
-            _sprite.color = doubleJumpUnusedColor;
+            // _sprite.color = doubleJumpUnusedColor;
+            Jumped?.Invoke();
+            GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y));
         }
     }
 
@@ -181,6 +196,8 @@ public class PlayerController : MonoBehaviour
             _buttonUsed = true;
             _grounded = false;
             _canReleaseEarly = true;
+            Jumped?.Invoke();
+            GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y));
         }
     }
 
@@ -191,7 +208,7 @@ public class PlayerController : MonoBehaviour
             _velocity.y = doubleJumpPower;
             _buttonUsed = true;
             _canDoubleJump = false;
-            _sprite.color = doubleJumpUsedColor;
+            // _sprite.color = doubleJumpUsedColor;
             _canReleaseEarly = true;
         }
     }
@@ -205,6 +222,7 @@ public class PlayerController : MonoBehaviour
         {
             _canReleaseEarly = false;
             _releasedEarly = false;
+            Jumped?.Invoke();
         }
     }
 
