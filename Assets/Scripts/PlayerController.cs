@@ -40,11 +40,13 @@ public class PlayerController : MonoBehaviour
     public event Action<bool, float> GroundedChanged;
     public event Action<bool> WallHit;
     public event Action Jumped;
+    public event Action Death;
 
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
     // private SpriteRenderer _sprite;
 
+    private bool _dead;
     private float _time;
     private float _timeButtonPressed;
     private bool _buttonUsed;
@@ -120,6 +122,16 @@ public class PlayerController : MonoBehaviour
         HandleGravity();
         
         ApplyMovement();
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "Damage")
+        {
+            _velocity = Vector2.zero;
+            _dead = true;
+            Death?.Invoke();
+        }
     }
 
     private void CheckCollisions()
@@ -219,6 +231,9 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWalk()
     {
+        if (_dead)
+            return;
+
         if (_grounded && !_leftWallSliding && !_rightWallSliding)
         {
             _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * _lastDirection, groundAcceleration * Time.fixedDeltaTime);
