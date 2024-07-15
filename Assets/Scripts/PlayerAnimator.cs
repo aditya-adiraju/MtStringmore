@@ -18,8 +18,9 @@ public class PlayerAnimator : MonoBehaviour
     // [SerializeField] private ParticleSystem _moveParticles;
     // [SerializeField] private ParticleSystem _landParticles;
 
-    [Header("Audio Clips")] [SerializeField]
-    private AudioClip[] _footsteps;
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip[] _footsteps;
+    [SerializeField] private AudioClip _jump;
 
     private AudioSource _source;
     private PlayerController _player;

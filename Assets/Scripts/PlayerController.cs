@@ -1,9 +1,11 @@
 using System.Runtime.CompilerServices;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] public int Respawn;
     [Header("Input")] 
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")] 
@@ -131,6 +133,7 @@ public class PlayerController : MonoBehaviour
             _velocity = Vector2.zero;
             _dead = true;
             Death?.Invoke();
+            Invoke("HandleDeath", 3);
         }
     }
 
@@ -171,6 +174,11 @@ public class PlayerController : MonoBehaviour
             _grounded = false;
             GroundedChanged?.Invoke(false, 0);
         }
+    }
+
+    private void HandleDeath()
+    {
+        SceneManager.LoadScene(Respawn);
     }
 
     private void HandleWallJump()
