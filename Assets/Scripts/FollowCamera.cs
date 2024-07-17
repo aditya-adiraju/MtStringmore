@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-    [SerializeField] private Transform target;
+    [SerializeField] private Transform player;
 
     private void LateUpdate()
     {
