@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a39c6168b1f361c4d896ecca36d684df
+guid: 656965751f130334184799ce20782261
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 216
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,126 +97,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: NeedleTiles_0
+      name: Marshmallow_Death_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 218
-        width: 215
-        height: 215
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape:
-      - - {x: 107.5, y: -107.5}
-        - {x: 107.5, y: -12.074158}
-        - {x: -107.5, y: -11.938019}
-        - {x: -107.5, y: -107.5}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e58a805820a9e5d40ab4dca7ae96924c
-      internalID: -1482026322
+      spriteID: 63cbea0bdf525b44b8484a996a2a207d
+      internalID: 938115802
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NeedleTiles_1
+      name: Marshmallow_Death_1
       rect:
         serializedVersion: 2
-        x: 215
-        y: 218
-        width: 215
-        height: 215
+        x: 256
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape:
-      - - {x: 107.5, y: -107.5}
-        - {x: 107.5, y: -12.074158}
-        - {x: -107.5, y: -11.938019}
-        - {x: -107.5, y: -107.5}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 200e9ff3ed9a17a44b352bad1a7858e9
-      internalID: 1035180769
+      spriteID: b3529347cd4c961479572bd3383ba030
+      internalID: 1450203795
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NeedleTiles_2
+      name: Marshmallow_Death_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 256
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 920d4442b6ea4604c953b82ac88f14be
+      internalID: 456187070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Marshmallow_Death_3
       rect:
         serializedVersion: 2
         x: 0
-        y: 3
-        width: 215
-        height: 215
+        y: 0
+        width: 256
+        height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape:
-      - - {x: 107.5, y: -107.5}
-        - {x: 107.5, y: -12.074158}
-        - {x: -107.5, y: -11.938019}
-        - {x: -107.5, y: -107.5}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 447652bc52f71fb4f899ee004e857dc9
-      internalID: 1785299982
+      spriteID: e81e257d3c32ada4ab31b7297b98110d
+      internalID: -995171336
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NeedleTiles_3
+      name: Marshmallow_Death_4
       rect:
         serializedVersion: 2
-        x: 215
-        y: 3
-        width: 215
-        height: 215
+        x: 256
+        y: 0
+        width: 256
+        height: 256
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape:
-      - - {x: 107.5, y: -107.5}
-        - {x: 107.5, y: -12.074158}
-        - {x: -107.5, y: -11.938019}
-        - {x: -107.5, y: -107.5}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7c9f1d6d944a70d4e803cbc594a74d83
-      internalID: 1563588509
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: NeedleTiles_4
-      rect:
-        serializedVersion: 2
-        x: 430
-        y: 3
-        width: 215
-        height: 215
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: 107.5, y: -107.5}
-        - {x: 107.5, y: -12.074158}
-        - {x: -107.5, y: -11.938019}
-        - {x: -107.5, y: -107.5}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 50bcc0562e2b12047aeb507482112f5b
-      internalID: -407851448
+      spriteID: 21c8d0d64667f95438103993b42fd387
+      internalID: 1599296250
       vertices: []
       indices: 
       edges: []
@@ -232,11 +212,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      NeedleTiles_0: -1482026322
-      NeedleTiles_1: 1035180769
-      NeedleTiles_2: 1785299982
-      NeedleTiles_3: 1563588509
-      NeedleTiles_4: -407851448
+      Marshmallow_Death_0: 938115802
+      Marshmallow_Death_1: 1450203795
+      Marshmallow_Death_2: 456187070
+      Marshmallow_Death_3: -995171336
+      Marshmallow_Death_4: 1599296250
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

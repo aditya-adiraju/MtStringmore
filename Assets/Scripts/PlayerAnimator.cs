@@ -5,9 +5,9 @@ using UnityEngine;
 /// </summary>
 public class PlayerAnimator : MonoBehaviour
 {
-    [Header("References")] [SerializeField]
-    private Animator _anim;
-
+    [Header("References")]
+    [SerializeField] private Animator _anim;
+    [SerializeField] private GameObject _deathSmoke;
     [SerializeField] private SpriteRenderer _sprite;
 
     [SerializeField] private float _maxTilt = 5;
@@ -18,8 +18,9 @@ public class PlayerAnimator : MonoBehaviour
     // [SerializeField] private ParticleSystem _moveParticles;
     // [SerializeField] private ParticleSystem _landParticles;
 
-    [Header("Audio Clips")] [SerializeField]
-    private AudioClip[] _footsteps;
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip[] _footsteps;
+    [SerializeField] private AudioClip _jump;
 
     private AudioSource _source;
     private PlayerController _player;
@@ -37,6 +38,7 @@ public class PlayerAnimator : MonoBehaviour
         _player.Jumped += OnJumped;
         _player.GroundedChanged += OnGroundedChanged;
         _player.WallHit += OnWallHit;
+        _player.Death += OnDeath;
 
         // _moveParticles.Play();
     }
@@ -46,6 +48,7 @@ public class PlayerAnimator : MonoBehaviour
         _player.Jumped -= OnJumped;
         _player.GroundedChanged -= OnGroundedChanged;
         _player.WallHit -= OnWallHit;
+        _player.Death -= OnDeath;
 
         // _moveParticles.Stop();
     }
@@ -131,6 +134,12 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
+    private void OnDeath()
+    {
+        _deathSmoke.SetActive(true);
+        _anim.SetTrigger(DeathKey);
+    }
+
     private void DetectGroundColor()
     {
         var hit = Physics2D.Raycast(transform.position, Vector3.down, 2);
@@ -152,4 +161,5 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int YVelocityKey = Animator.StringToHash("YVelocity");
     private static readonly int WallHitKey = Animator.StringToHash("WallHit");
     private static readonly int JumpKey = Animator.StringToHash("Jump");
+    private static readonly int DeathKey = Animator.StringToHash("Dead");
 }

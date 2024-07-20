@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] public int Respawn;
     [Header("Input")] 
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")] 
@@ -41,11 +42,13 @@ public class PlayerController : MonoBehaviour
     public event Action<bool, float> GroundedChanged;
     public event Action<bool> WallHit;
     public event Action Jumped;
+    public event Action Death;
 
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
     // private SpriteRenderer _sprite;
 
+    private bool _dead;
     private float _time;
     private float _timeButtonPressed;
     private float _timeLeftGround;
@@ -129,6 +132,17 @@ public class PlayerController : MonoBehaviour
         ApplyMovement();
     }
 
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "Damage")
+        {
+            _velocity = Vector2.zero;
+            _dead = true;
+            Death?.Invoke();
+            Invoke("HandleDeath", 3);
+        }
+    }
+
     private void CheckCollisions()
     {
         bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
@@ -167,6 +181,11 @@ public class PlayerController : MonoBehaviour
             _timeLeftGround = _time;
             GroundedChanged?.Invoke(false, 0);
         }
+    }
+
+    private void HandleDeath()
+    {
+        SceneManager.LoadScene(Respawn);
     }
 
     private void HandleWallJump()
@@ -228,6 +247,9 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWalk()
     {
+        if (_dead)
+            return;
+
         if (_grounded && !_leftWallSliding && !_rightWallSliding)
         {
             _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * _lastDirection, groundAcceleration * Time.fixedDeltaTime);
