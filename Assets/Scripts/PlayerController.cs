@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Color doubleJumpUnusedColor;
     
     public Vector2 FrameInput => _velocity;
+    public float Direction => _lastDirection;
+    public bool Grounded => _grounded;
     public event Action<bool, float> GroundedChanged;
     public event Action<bool> WallHit;
     public event Action Jumped;
