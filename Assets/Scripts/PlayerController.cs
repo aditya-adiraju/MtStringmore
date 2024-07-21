@@ -94,6 +94,11 @@ public class PlayerController : MonoBehaviour
         }
         _isButtonHeld = Input.GetButton("Jump");
 
+        if (Input.GetButtonDown("Debug Reset"))
+        {
+            HandleDeath();
+        }
+
         RedrawRope();
     }
 
