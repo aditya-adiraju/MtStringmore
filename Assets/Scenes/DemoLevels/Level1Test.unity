@@ -191,9 +191,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookaheadDistance: 7
   xSmoothTime: 0.3
-  ySmoothTime: 0.3
+  ySmoothTime: 0.2
   yOffset: 3
-  upYThreshold: 8
+  upYThreshold: 7
   downYThreshold: 0
 --- !u!81 &298993259
 AudioListener:
@@ -49271,7 +49271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9e09be468575c44ea9007cf7a0c40e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxCamera: {fileID: 519420033}
+  parallaxCamera: {fileID: 298993257}
 --- !u!1 &1207655377
 GameObject:
   m_ObjectHideFlags: 0
