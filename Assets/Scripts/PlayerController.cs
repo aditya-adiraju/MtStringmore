@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxFallSpeed;
     [SerializeField] private float fallAcceleration;
     [SerializeField] private float earlyReleaseFallAcceleration;
+    [SerializeField] private float maxAirSpeed;
+    [SerializeField] private float airAcceleration;
     [Header("Wall")] 
     [SerializeField] private float wallJumpAngle;
     [SerializeField] private float wallJumpPower;
@@ -247,12 +249,15 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWalk()
     {
-        if (_dead)
-            return;
+        if (_dead || _leftWallSliding || _rightWallSliding) return;
 
-        if (_grounded && !_leftWallSliding && !_rightWallSliding)
+        if (_grounded)
         {
             _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * _lastDirection, groundAcceleration * Time.fixedDeltaTime);
+        }
+        else if (Mathf.Abs(_velocity.x) < maxAirSpeed)
+        {
+            _velocity.x = Mathf.MoveTowards(_velocity.x, maxAirSpeed * _lastDirection, airAcceleration * Time.fixedDeltaTime);
         }
     }
 
