@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] public int Respawn;
     [Header("Input")] 
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")] 
@@ -37,6 +36,7 @@ public class PlayerController : MonoBehaviour
     [Header("Visual")] 
     [SerializeField] private Color doubleJumpUsedColor;
     [SerializeField] private Color doubleJumpUnusedColor;
+    [SerializeField] private int deathTime;
     
     public Vector2 FrameInput => _velocity;
     public float Direction => _lastDirection;
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Debug Reset"))
         {
-            HandleDeath();
+            ReloadScene();
         }
 
         RedrawRope();
@@ -104,6 +104,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("Enter Trigger");
         if (other.gameObject.CompareTag("SwingArea"))
         {
             _swingArea = other;
@@ -112,7 +113,10 @@ public class PlayerController : MonoBehaviour
         else if (other.gameObject.CompareTag("Death"))
         {
             Debug.Log("Death");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            _velocity = Vector2.zero;
+            _dead = true;
+            Death?.Invoke();
+            Invoke(nameof(ReloadScene), deathTime);
         }
     }
 
@@ -137,17 +141,6 @@ public class PlayerController : MonoBehaviour
         HandleGravity();
         
         ApplyMovement();
-    }
-
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.gameObject.tag == "Damage")
-        {
-            _velocity = Vector2.zero;
-            _dead = true;
-            Death?.Invoke();
-            Invoke("HandleDeath", 3);
-        }
     }
 
     private void CheckCollisions()
@@ -190,9 +183,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleDeath()
+    private void ReloadScene()
     {
-        SceneManager.LoadScene(Respawn);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void HandleWallJump()
