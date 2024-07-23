@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Serialized Private Fields
     [Header("Input")] 
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")] 
@@ -31,56 +32,84 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float wallSlideSpeed;
     [SerializeField] private float wallSlideAcceleration;
     [Header("Swinging")] 
-    [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private float swingBoostMultiplier;
     [SerializeField] private float maxSwingSpeed;
     [SerializeField] private float swingAcceleration;
-    [Header("Visual")] 
-    [SerializeField] private Color doubleJumpUsedColor;
-    [SerializeField] private Color doubleJumpUnusedColor;
+    [Header("Visual")]
+    [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private int deathTime;
-    
-    public Vector2 FrameInput => _velocity;
-    public float Direction => _lastDirection;
-    public bool Grounded => _grounded;
-    public event Action<bool, float> GroundedChanged;
-    public event Action<bool> WallHit;
-    public event Action Jumped;
-    public event Action Death;
+    #endregion
 
+    #region Public Stuff
+    public enum PlayerStateEnum
+    {
+        Run,
+        Air,
+        LeftWallSlide,
+        RightWallSlide,
+        Dead,
+        Swing,
+    }
+    
+    public PlayerStateEnum PlayerState { get; private set; }
+    
+    /// <summary>
+    /// Current velocity of the player.
+    /// </summary>
+    public Vector2 Velocity => _velocity;
+    
+    /// <summary>
+    /// Facing direction of the player. -1.0 for left, 1.0 for right.
+    /// </summary>
+    public float Direction => _lastDirection;
+    
+    /// <summary>
+    /// Fires when the player becomes grounded or leaves the ground.
+    /// Parameters:
+    ///     bool: false if leaving the ground, true if becoming grounded
+    ///     float: player's Y velocity
+    /// </summary>
+    public event Action<bool, float> GroundedChanged;
+    
+    /// <summary>
+    /// Fires when the player hits the wall or leaves the wall.
+    /// Parameters:
+    ///     bool: True if hitting the wall, false if leaving the wall
+    /// </summary>
+    public event Action<bool> WallChanged;
+    
+    public event Action Jumped;
+    public event Action DoubleJumped; 
+    public event Action Death;
+    #endregion
+    
+    #region Private Properties
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
-    // private SpriteRenderer _sprite;
 
-    private bool _dead;
     private float _time;
     private float _timeButtonPressed;
     private float _timeLeftGround;
     private bool _buttonUsed;
     private bool _isButtonHeld;
+    private bool _canReleaseEarly;
+    private bool _releasedEarly;
+    private bool _canDoubleJump;
     
     private Vector2 _velocity;
     private float _lastDirection;
-    private bool _grounded;
-    private bool _leftWallSliding;
-    private bool _rightWallSliding;
     private bool _closeToWall;
-    private bool _canDoubleJump;
-    private bool _canReleaseEarly;
-    private bool _releasedEarly;
     
     private Collider2D _swingArea;
     private bool _inSwingArea;
-    private bool _isSwinging;
     private float _swingRadius;
-    
+    #endregion
+
+    #region Event Functions
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
-        // _sprite = GetComponent<SpriteRenderer>();
-        
-        // _sprite.color = doubleJumpUnusedColor;
         _buttonUsed = true;
         _lastDirection = startDirection;
     }
@@ -106,7 +135,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Enter Trigger");
         if (other.gameObject.CompareTag("SwingArea"))
         {
             _swingArea = other;
@@ -114,9 +142,8 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Death"))
         {
-            Debug.Log("Death");
             _velocity = Vector2.zero;
-            _dead = true;
+            PlayerState = PlayerStateEnum.Dead;
             Death?.Invoke();
             Invoke(nameof(ReloadScene), deathTime);
         }
@@ -144,45 +171,50 @@ public class PlayerController : MonoBehaviour
         
         ApplyMovement();
     }
+    #endregion
 
+    private bool CapsuleCastCollision(Vector2 direction, float distance)
+    {
+        return Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+            direction, distance, collisionLayer);
+    }
+    
     private void CheckCollisions()
     {
-        bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.down, collisionDistance, collisionLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.up, collisionDistance, collisionLayer);
-        bool leftWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
-            Vector2.left, collisionDistance, collisionLayer);
-        bool rightWallHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
-            Vector2.right, collisionDistance, collisionLayer);
-        _closeToWall = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
-            _velocity, wallCloseDistance, collisionLayer);
+        bool groundHit = CapsuleCastCollision(Vector2.down, collisionDistance);
+        bool ceilingHit = CapsuleCastCollision(Vector2.up, collisionDistance);
+        bool leftWallHit = CapsuleCastCollision(Vector2.left, collisionDistance);
+        bool rightWallHit = CapsuleCastCollision(Vector2.right, collisionDistance);
+        _closeToWall = CapsuleCastCollision(_velocity, wallCloseDistance);
         
         if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
 
+        // TODO
         if (leftWallHit || rightWallHit)
-            WallHit.Invoke(true);
+            WallChanged?.Invoke(true);
         else
-            WallHit.Invoke(false);
+            WallChanged?.Invoke(false);
 
-        _leftWallSliding = leftWallHit;
-        _rightWallSliding = rightWallHit;
-        
-        // Debug.Log($"_leftWallSliding: {_leftWallSliding}, _rightWallSliding: {_rightWallSliding}, _closeToWall: {_closeToWall}");
-
-        if (!_grounded && groundHit)
+        if (PlayerState == PlayerStateEnum.Run && !groundHit)
         {
-            _grounded = true;
-            _canDoubleJump = true;
-            // _sprite.color = doubleJumpUnusedColor;
-            GroundedChanged?.Invoke(true, Mathf.Abs(_velocity.y));
-        }
-        else if (_grounded && !groundHit)
-        {
-            _grounded = false;
+            PlayerState = PlayerStateEnum.Air;
             _timeLeftGround = _time;
             GroundedChanged?.Invoke(false, 0);
         }
+        if (PlayerState == PlayerStateEnum.Air)
+        {
+            if (leftWallHit) PlayerState = PlayerStateEnum.LeftWallSlide;
+            if (rightWallHit) PlayerState = PlayerStateEnum.RightWallSlide;
+        }
+        if (PlayerState != PlayerStateEnum.Run && groundHit)
+        {
+            PlayerState = PlayerStateEnum.Run;
+            _canDoubleJump = true;
+            GroundedChanged?.Invoke(true, Mathf.Abs(_velocity.y));
+        }
+        if (PlayerState == PlayerStateEnum.RightWallSlide && !rightWallHit || 
+            PlayerState == PlayerStateEnum.LeftWallSlide && !leftWallHit) 
+            PlayerState = PlayerStateEnum.Air;
     }
 
     private void ReloadScene()
@@ -192,30 +224,28 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallJump()
     {
-        if ((_rightWallSliding || _leftWallSliding) && !_grounded && CanUseButton())
+        if (PlayerState is PlayerStateEnum.LeftWallSlide or PlayerStateEnum.RightWallSlide && CanUseButton())
         {
             _velocity = new Vector2(Mathf.Cos(wallJumpAngle), Mathf.Sin(wallJumpAngle)) * wallJumpPower;
-            if (_rightWallSliding) _velocity.x = -_velocity.x;
+            if (PlayerState == PlayerStateEnum.RightWallSlide) _velocity.x = -_velocity.x;
             
             _buttonUsed = true;
-            _leftWallSliding = false;
-            _rightWallSliding = false;
+            PlayerState = PlayerStateEnum.Air;
             _canReleaseEarly = true;
             _canDoubleJump = true;
-            // _sprite.color = doubleJumpUnusedColor;
-            Jumped?.Invoke();
-            GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y));
+            Jumped?.Invoke(); // TODO
+            GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y)); // TODO
         }
     }
 
     private void HandleJump()
     {
-        bool canUseCoyote = !_grounded && _time - _timeLeftGround <= coyoteTime;
-        if ((_grounded || canUseCoyote) && CanUseButton())
+        bool canUseCoyote = PlayerState == PlayerStateEnum.Air && _time - _timeLeftGround <= coyoteTime;
+        if ((PlayerState == PlayerStateEnum.Run || canUseCoyote) && CanUseButton())
         {
             _velocity.y = jumpPower;
             _buttonUsed = true;
-            _grounded = false;
+            PlayerState = PlayerStateEnum.Air;
             _canReleaseEarly = true;
             Jumped?.Invoke();
             GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y));
@@ -229,8 +259,8 @@ public class PlayerController : MonoBehaviour
             _velocity.y = doubleJumpPower;
             _buttonUsed = true;
             _canDoubleJump = false;
-            // _sprite.color = doubleJumpUsedColor;
             _canReleaseEarly = true;
+            DoubleJumped?.Invoke();
         }
     }
     
@@ -249,59 +279,61 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWalk()
     {
-        if (_dead || _leftWallSliding || _rightWallSliding) return;
-
-        if (_grounded)
+        switch (PlayerState)
         {
-            _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * _lastDirection, groundAcceleration * Time.fixedDeltaTime);
-        }
-        else if (Mathf.Abs(_velocity.x) < maxAirSpeed)
-        {
-            _velocity.x = Mathf.MoveTowards(_velocity.x, maxAirSpeed * _lastDirection, airAcceleration * Time.fixedDeltaTime);
+            case PlayerStateEnum.Run: 
+                _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * _lastDirection, groundAcceleration * Time.fixedDeltaTime);
+                break;
+            case PlayerStateEnum.Air:
+                if (Mathf.Abs(_velocity.x) < maxAirSpeed)
+                    _velocity.x = Mathf.MoveTowards(_velocity.x, maxAirSpeed * _lastDirection, airAcceleration * Time.fixedDeltaTime);
+                break;
         }
     }
 
     private void HandleGravity()
     {
-        if (_grounded && _velocity.y <= 0f)
+        switch (PlayerState)
         {
-            _velocity.y = -groundingForce;
-        }
-        else if ((_leftWallSliding || _rightWallSliding) && _velocity.y <= 0f)
-        {
-            _velocity.y = Mathf.MoveTowards(_velocity.y, -wallSlideSpeed, wallSlideAcceleration * Time.fixedDeltaTime);
-            _velocity.x = 0f;
-        }
-        else
-        {
-            float accel = _releasedEarly ? earlyReleaseFallAcceleration : fallAcceleration;
-            _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, accel * Time.fixedDeltaTime);
+            case PlayerStateEnum.Run:
+                if (_velocity.y <= 0f) 
+                    _velocity.y = -groundingForce;
+                break;
+            case PlayerStateEnum.LeftWallSlide:
+            case PlayerStateEnum.RightWallSlide:
+                _velocity.x = 0f;
+                if (_velocity.y <= 0f)
+                    _velocity.y = Mathf.MoveTowards(_velocity.y, -wallSlideSpeed, wallSlideAcceleration * Time.fixedDeltaTime);
+                else goto default;
+                break;
+            default:
+                float accel = _releasedEarly ? earlyReleaseFallAcceleration : fallAcceleration;
+                _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, accel * Time.fixedDeltaTime);
+                break;
         }
     }
 
     private void HandleSwing()
     {
-        if (!_isSwinging && CanUseButton() && _inSwingArea)
+        if (PlayerState != PlayerStateEnum.Swing && CanUseButton() && _inSwingArea)
         {
             // start swing
-            _isSwinging = true;
+            PlayerState = PlayerStateEnum.Swing;
             _buttonUsed = true;
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
-            // Debug.Log("Swing started with radius " + _swingRadius);
-            // Debug.Log($"swing pos: {_swingArea.transform.position} my pos: {transform.position}");
             ropeRenderer.enabled = true;
         }
         
-        if (_isSwinging && !_isButtonHeld)
+        if (PlayerState == PlayerStateEnum.Swing && !_isButtonHeld)
         {
             // stop swing
-            _isSwinging = false;
+            PlayerState = PlayerStateEnum.Air;
             ropeRenderer.enabled = false;
             // boost velocity if going up
             if (_velocity.y >= 0f) _velocity *= swingBoostMultiplier;
         }
 
-        if (_isSwinging)
+        if (PlayerState == PlayerStateEnum.Swing)
         {
             Vector2 relPos = transform.position - _swingArea.transform.position;
             // if going down, accelerate to target swing speed
@@ -313,14 +345,12 @@ public class PlayerController : MonoBehaviour
             Vector2 testPos = relPos + _velocity * Time.fixedDeltaTime;
             Vector2 newPos = testPos.normalized * _swingRadius;
             _velocity = (newPos - relPos) / Time.fixedDeltaTime;
-            // Debug.Log($"Swing speed: {boostedVelocity.magnitude}");
-            // Debug.Log("rel pos: " + relPos + " test pos: " + testPos + " new pos: " + newPos);
         }
     }
 
     private void RedrawRope()
     {
-        if (_isSwinging)
+        if (PlayerState == PlayerStateEnum.Swing)
         {
             ropeRenderer.positionCount = 2;
             ropeRenderer.SetPosition(0, transform.position);

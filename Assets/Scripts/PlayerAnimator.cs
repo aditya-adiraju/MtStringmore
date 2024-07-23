@@ -37,7 +37,7 @@ public class PlayerAnimator : MonoBehaviour
     {
         _player.Jumped += OnJumped;
         _player.GroundedChanged += OnGroundedChanged;
-        _player.WallHit += OnWallHit;
+        _player.WallChanged += OnWallChanged;
         _player.Death += OnDeath;
 
         // _moveParticles.Play();
@@ -47,7 +47,7 @@ public class PlayerAnimator : MonoBehaviour
     {
         _player.Jumped -= OnJumped;
         _player.GroundedChanged -= OnGroundedChanged;
-        _player.WallHit -= OnWallHit;
+        _player.WallChanged -= OnWallChanged;
         _player.Death -= OnDeath;
 
         // _moveParticles.Stop();
@@ -66,7 +66,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleSpriteFlip()
     {
-        if (_player.FrameInput.x != 0) _sprite.flipX = _player.FrameInput.x < 0;
+        if (_player.Velocity.x != 0) _sprite.flipX = _player.Velocity.x < 0;
     }
 
     // private void HandleYVelocity()
@@ -78,17 +78,17 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleVerticalSpeed()
     {
-        _anim.SetFloat(XSpeedKey, Mathf.Abs(_player.FrameInput.x));
-        _anim.SetFloat(YVelocityKey, _player.FrameInput.y);
+        _anim.SetFloat(XSpeedKey, Mathf.Abs(_player.Velocity.x));
+        _anim.SetFloat(YVelocityKey, _player.Velocity.y);
     }
 
     private void HandleCharacterTilt()
     {
-        var runningTilt = _grounded ? Quaternion.Euler(0, 0, _maxTilt * _player.FrameInput.x) : Quaternion.identity;
+        var runningTilt = _grounded ? Quaternion.Euler(0, 0, _maxTilt * _player.Velocity.x) : Quaternion.identity;
         _anim.transform.up = Vector3.RotateTowards(_anim.transform.up, runningTilt * Vector2.up, _tiltSpeed * Time.deltaTime, 0f);
     }
 
-    private void OnWallHit(bool wallHit)
+    private void OnWallChanged(bool wallHit)
     {
         _anim.SetBool(WallHitKey, wallHit);
         if (wallHit) {

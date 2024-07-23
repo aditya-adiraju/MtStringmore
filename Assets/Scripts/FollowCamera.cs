@@ -1,4 +1,5 @@
 using UnityEngine;
+using static PlayerController;
 
 // [ExecuteInEditMode]
 public class FollowCamera : MonoBehaviour
@@ -8,7 +9,6 @@ public class FollowCamera : MonoBehaviour
     [SerializeField] private float ySmoothTime;
     [SerializeField] private float yOffset;
     [SerializeField] private float upYThreshold;
-    [SerializeField] private float downYThreshold;
     
     private PlayerController _playerController;
     private Transform _playerTransform;
@@ -28,17 +28,17 @@ public class FollowCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_playerController.Grounded) _lastGroundedY = _playerTransform.position.y;
+        if (_playerController.PlayerState == PlayerStateEnum.Run) _lastGroundedY = _playerTransform.position.y;
         float playerY = _playerTransform.position.y;
-        // if (playerY > _lastGroundedY + upYThreshold)
-        
         _target.y = playerY > _lastGroundedY + upYThreshold || playerY < _lastGroundedY
             ? playerY + yOffset
             : _lastGroundedY + yOffset;
-        // _target.y = _playerTransform.position.y + yOffset;
         _target.x = _playerTransform.position.x + lookaheadDistance * _playerController.Direction;
-        float smoothedX = Mathf.SmoothDamp(transform.position.x, _target.x, ref _xVelocity, xSmoothTime);
-        float smoothedY = Mathf.SmoothDamp(transform.position.y, _target.y, ref _yVelocity, ySmoothTime);
-        transform.position = new Vector3(smoothedX, smoothedY, _cameraZ);
+        
+        var position = transform.position;
+        float smoothedX = Mathf.SmoothDamp(position.x, _target.x, ref _xVelocity, xSmoothTime);
+        float smoothedY = Mathf.SmoothDamp(position.y, _target.y, ref _yVelocity, ySmoothTime);
+        position = new Vector3(smoothedX, smoothedY, _cameraZ);
+        transform.position = position;
     }
 }
