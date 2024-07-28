@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     #region Serialized Private Fields
+    
     [Header("Input")] 
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")] 
@@ -41,9 +42,11 @@ public class PlayerController : MonoBehaviour
     [Header("Visual")]
     [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private int deathTime;
+    
     #endregion
 
-    #region Public Stuff
+    #region Public Properties and Actions
+    
     public enum PlayerStateEnum
     {
         Run,
@@ -84,9 +87,11 @@ public class PlayerController : MonoBehaviour
     public event Action Jumped;
     public event Action DoubleJumped; 
     public event Action Death;
+    
     #endregion
     
     #region Private Properties
+    
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
 
@@ -106,9 +111,11 @@ public class PlayerController : MonoBehaviour
     private Collider2D _swingArea;
     private bool _inSwingArea;
     private float _swingRadius;
+    
     #endregion
 
-    #region Event Functions
+    #region Unity Event Handlers
+    
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -177,8 +184,11 @@ public class PlayerController : MonoBehaviour
         
         ApplyMovement();
     }
+    
     #endregion
 
+    #region Private Methods
+    
     private bool CapsuleCastCollision(Vector2 direction, float distance)
     {
         return Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
@@ -384,4 +394,6 @@ public class PlayerController : MonoBehaviour
     {
         return !_buttonUsed && _time <= _timeButtonPressed + buttonBufferTime;
     }
+    
+    #endregion
 }
