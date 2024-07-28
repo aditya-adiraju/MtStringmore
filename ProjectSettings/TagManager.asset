@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SwingArea
   - Death
+  - ParallaxBackground
   layers:
   - Default
   - TransparentFX

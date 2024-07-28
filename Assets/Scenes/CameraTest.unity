@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -135,7 +134,6 @@ GameObject:
   - component: {fileID: 33968402}
   - component: {fileID: 33968401}
   - component: {fileID: 33968404}
-  - component: {fileID: 33968400}
   - component: {fileID: 33968399}
   m_Layer: 0
   m_Name: 'Camera '
@@ -156,27 +154,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6f8ed4d8ac7ba40b7351a3da73d887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levels:
-  - {fileID: 465874678}
-  - {fileID: 221611255}
-  - {fileID: 549620184}
-  - {fileID: 1302341387}
-  - {fileID: 843355243}
-  _repeats: 3
   choke: 5
   scrollSpeed: 0
---- !u!114 &33968400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 33968398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6a636d4a05a3734a96ff26012a4ea35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  background: {fileID: 574743412}
+  repeats: 3
+  _levels: []
 --- !u!81 &33968401
 AudioListener:
   m_ObjectHideFlags: 0
@@ -268,7 +250,6 @@ MonoBehaviour:
   ySmoothTime: 0.3
   yOffset: 3
   upYThreshold: 8
-  downYThreshold: 0
 --- !u!1 &221611255
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,7 +618,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9e09be468575c44ea9007cf7a0c40e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxCamera: {fileID: 33968400}
+  parallaxCamera: {fileID: 33968399}
+  parallaxLayers:
+  - {fileID: 465874680}
+  - {fileID: 221611258}
+  - {fileID: 549620187}
+  - {fileID: 1302341390}
+  - {fileID: 843355246}
 --- !u!4 &574743414
 Transform:
   m_ObjectHideFlags: 0
