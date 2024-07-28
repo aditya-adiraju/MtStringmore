@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Controls player movement and invokes events for different player states
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
     #region Serialized Private Fields
@@ -142,10 +145,10 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Death"))
         {
-            _velocity = Vector2.zero;
-            PlayerState = PlayerStateEnum.Dead;
-            Death?.Invoke();
-            Invoke(nameof(ReloadScene), deathTime);
+            if (PlayerState != PlayerStateEnum.Dead)
+            {
+                HandleDeath();
+            }
         }
     }
 
@@ -159,6 +162,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (PlayerState == PlayerStateEnum.Dead)
+            return;
+        
         CheckCollisions();
         
         HandleWallJump();
@@ -220,6 +226,15 @@ public class PlayerController : MonoBehaviour
     private void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void HandleDeath()
+    {
+        _velocity = Vector2.zero;
+        _rb.velocity = _velocity;
+        PlayerState = PlayerStateEnum.Dead;
+        Death?.Invoke();
+        Invoke(nameof(ReloadScene), deathTime);
     }
 
     private void HandleWallJump()

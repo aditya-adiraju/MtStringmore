@@ -32,7 +32,6 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4169286967807924285}
-  - {fileID: 6348558700974563055}
   m_Father: {fileID: 2905708094114413808}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &4375740838175892631
@@ -143,134 +142,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a47edf10a950db478d937fcda21bdb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _anim: {fileID: 6379059411910678817}
-  _deathSmoke: {fileID: 997393198673036421}
-  _sprite: {fileID: 6233932863109230516}
-  _maxTilt: 0
-  _tiltSpeed: 20
-  _footsteps:
+  anim: {fileID: 6379059411910678817}
+  deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
+  sprite: {fileID: 6233932863109230516}
+  maxTilt: 0
+  tiltSpeed: 20
+  footsteps:
   - {fileID: 8300000, guid: e05ea9651883a3646bbe6728ac6844fe, type: 3}
-  _jump: {fileID: 0}
---- !u!1 &997393198673036421
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6348558700974563055}
-  - component: {fileID: 2968530768971040398}
-  - component: {fileID: 3000646639048161605}
-  - component: {fileID: 7160344103759757205}
-  m_Layer: 7
-  m_Name: DeathSmoke
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &6348558700974563055
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997393198673036421}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.08251917, y: -0.14766589, z: 0}
-  m_LocalScale: {x: 0.43431145, y: 0.43431145, z: 0.43431145}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5426778651927839959}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &2968530768971040398
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997393198673036421}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 2147080142, guid: 767c24efbb274bc4d99ccb02cda4f455, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 2.56, y: 2.56}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!95 &3000646639048161605
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997393198673036421}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 16fd3a321bbd9b243acddf7ab324b6db, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7160344103759757205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997393198673036421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d09870e1ef4cb734ab779de3b653b70f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fadeDuration: 0.3
+  jump: {fileID: 8300000, guid: e05ea9651883a3646bbe6728ac6844fe, type: 3}
 --- !u!1 &4217790213014453210
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,12 +220,10 @@ MonoBehaviour:
   wallJumpPower: 35
   wallSlideSpeed: 15
   wallSlideAcceleration: 30
-  ropeRenderer: {fileID: 8739561083334380143}
   swingBoostMultiplier: 1.2
   maxSwingSpeed: 50
   swingAcceleration: 50
-  doubleJumpUsedColor: {r: 0.39215684, g: 0.8317075, b: 1, a: 1}
-  doubleJumpUnusedColor: {r: 1, g: 0.40784314, b: 0.39215687, a: 1}
+  ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 2
 --- !u!50 &5301496585393855472
 Rigidbody2D:

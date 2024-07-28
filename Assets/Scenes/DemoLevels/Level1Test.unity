@@ -193,7 +193,6 @@ MonoBehaviour:
   ySmoothTime: 0.2
   yOffset: 3
   upYThreshold: 7
-  downYThreshold: 0
 --- !u!81 &298993259
 AudioListener:
   m_ObjectHideFlags: 0

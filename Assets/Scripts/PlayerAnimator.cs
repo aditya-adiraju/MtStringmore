@@ -1,17 +1,17 @@
 using UnityEngine;
 
 /// <summary>
-/// VERY primitive animator example.
+/// Handles player animation
 /// </summary>
 public class PlayerAnimator : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Animator _anim;
-    [SerializeField] private GameObject _deathSmoke;
-    [SerializeField] private SpriteRenderer _sprite;
+    [SerializeField] private Animator anim;
+    [SerializeField] private GameObject deathSmoke;
+    [SerializeField] private SpriteRenderer sprite;
 
-    [SerializeField] private float _maxTilt = 5;
-    [SerializeField] private float _tiltSpeed = 20;
+    [SerializeField] private float maxTilt = 5;
+    [SerializeField] private float tiltSpeed = 20;
 
     // [Header("Particles")] [SerializeField] private ParticleSystem _jumpParticles;
     // [SerializeField] private ParticleSystem _launchParticles;
@@ -19,8 +19,8 @@ public class PlayerAnimator : MonoBehaviour
     // [SerializeField] private ParticleSystem _landParticles;
 
     [Header("Audio Clips")]
-    [SerializeField] private AudioClip[] _footsteps;
-    [SerializeField] private AudioClip _jump;
+    [SerializeField] private AudioClip[] footsteps;
+    [SerializeField] private AudioClip jump;
 
     private AudioSource _source;
     private PlayerController _player;
@@ -66,7 +66,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleSpriteFlip()
     {
-        if (_player.Velocity.x != 0) _sprite.flipX = _player.Velocity.x < 0;
+        if (_player.Velocity.x != 0) sprite.flipX = _player.Velocity.x < 0;
     }
 
     // private void HandleYVelocity()
@@ -78,28 +78,28 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleVerticalSpeed()
     {
-        _anim.SetFloat(XSpeedKey, Mathf.Abs(_player.Velocity.x));
-        _anim.SetFloat(YVelocityKey, _player.Velocity.y);
+        anim.SetFloat(XSpeedKey, Mathf.Abs(_player.Velocity.x));
+        anim.SetFloat(YVelocityKey, _player.Velocity.y);
     }
 
     private void HandleCharacterTilt()
     {
-        var runningTilt = _grounded ? Quaternion.Euler(0, 0, _maxTilt * _player.Velocity.x) : Quaternion.identity;
-        _anim.transform.up = Vector3.RotateTowards(_anim.transform.up, runningTilt * Vector2.up, _tiltSpeed * Time.deltaTime, 0f);
+        var runningTilt = _grounded ? Quaternion.Euler(0, 0, maxTilt * _player.Velocity.x) : Quaternion.identity;
+        anim.transform.up = Vector3.RotateTowards(anim.transform.up, runningTilt * Vector2.up, tiltSpeed * Time.deltaTime, 0f);
     }
 
     private void OnWallChanged(bool wallHit)
     {
-        _anim.SetBool(WallHitKey, wallHit);
+        anim.SetBool(WallHitKey, wallHit);
         if (wallHit) {
-            _anim.ResetTrigger(JumpKey);
+            anim.ResetTrigger(JumpKey);
         }
     }
 
     private void OnJumped()
     {
-        _anim.SetTrigger(JumpKey);
-        _anim.ResetTrigger(GroundedKey);
+        anim.SetTrigger(JumpKey);
+        anim.ResetTrigger(GroundedKey);
 
 
         // if (_grounded) // Avoid coyote
@@ -119,9 +119,9 @@ public class PlayerAnimator : MonoBehaviour
             // DetectGroundColor();
             // SetColor(_landParticles);
 
-            _anim.ResetTrigger(JumpKey);
-            _anim.SetBool(GroundedKey, true);
-            _source.PlayOneShot(_footsteps[Random.Range(0, _footsteps.Length)]);
+            anim.ResetTrigger(JumpKey);
+            anim.SetBool(GroundedKey, true);
+            _source.PlayOneShot(footsteps[Random.Range(0, footsteps.Length)]);
             // _moveParticles.Play();
 
             // _landParticles.transform.localScale = Vector3.one * Mathf.InverseLerp(0, 40, impact);
@@ -129,15 +129,15 @@ public class PlayerAnimator : MonoBehaviour
         }
         else
         {
-            _anim.SetBool(GroundedKey, false);
+            anim.SetBool(GroundedKey, false);
             // _moveParticles.Stop();
         }
     }
 
     private void OnDeath()
     {
-        _deathSmoke.SetActive(true);
-        _anim.SetTrigger(DeathKey);
+        Instantiate(deathSmoke, transform);
+        anim.SetTrigger(DeathKey);
     }
 
     private void DetectGroundColor()
