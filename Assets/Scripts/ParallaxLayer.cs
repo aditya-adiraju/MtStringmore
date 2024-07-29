@@ -1,9 +1,11 @@
 using UnityEngine;
 
-[ExecuteInEditMode]
+/// <summary>
+/// Controls parallax background layer to move with respect to camera movement
+/// </summary>
 public class ParallaxLayer : MonoBehaviour
 {
-    public float parallaxFactor;
+    [SerializeField] private float parallaxFactor;
 
     public void Move(float delta)
     {

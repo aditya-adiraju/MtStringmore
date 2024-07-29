@@ -1,42 +1,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
+/// <summary>
+/// Loads background layers from child objects, and moves them with respect to camera movement
+/// </summary>
 public class ParallaxBackground : MonoBehaviour
 {
-    public ParallaxCamera parallaxCamera;
-    List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>();
+    private ParallaxCamera _parallaxCamera;
+    private readonly List<ParallaxLayer> _parallaxLayers = new();
 
-    void Start()
+    private void Start()
     {
-        if (parallaxCamera == null)
-            parallaxCamera = Camera.main.GetComponent<ParallaxCamera>();
+        _parallaxCamera = Camera.main?.GetComponent<ParallaxCamera>();
 
-        if (parallaxCamera != null)
-            parallaxCamera.onCameraTranslate += Move;
+        if (_parallaxCamera is not null)
+            _parallaxCamera.Moved += Move;
 
         SetLayers();
     }
 
-    void SetLayers()
+    private void SetLayers()
     {
-        parallaxLayers.Clear();
+        _parallaxLayers.Clear();
 
         for (int i = 0; i < transform.childCount; i++)
         {
             ParallaxLayer layer = transform.GetChild(i).GetComponent<ParallaxLayer>();
 
-            if (layer != null)
+            if (layer is not null)
             {
                 layer.name = "Layer-" + i;
-                parallaxLayers.Add(layer);
+                _parallaxLayers.Add(layer);
             }
         }
     }
 
-    void Move(float delta)
+    private void Move(float delta)
     {
-        foreach (ParallaxLayer layer in parallaxLayers)
+        foreach (ParallaxLayer layer in _parallaxLayers)
         {
             layer.Move(delta);
         }

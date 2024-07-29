@@ -1,9 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Causes the GameObject to fade out and deactivate over time when InvokeFadeOut() is called.
+/// </summary>
 public class FadeOut : MonoBehaviour
 {
-    public float fadeDuration = 0.3f; // Duration of the fade-out effect
+    [SerializeField] private float fadeDuration = 0.3f; // Duration of the fade-out effect
 
     public void InvokeFadeOut()
     {
