@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Controls player movement and invokes events for different player states
@@ -122,6 +121,12 @@ public class PlayerController : MonoBehaviour
         _col = GetComponent<CapsuleCollider2D>();
         _buttonUsed = true;
         _lastDirection = startDirection;
+
+        Vector3 spawnPos = GameManager.Instance.CheckPointPos;
+        spawnPos.z = transform.position.z;
+        transform.position = spawnPos;
+        var cam = GameObject.FindGameObjectWithTag("MainCamera");
+        cam.GetComponent<FollowCamera>().SetCameraPosition(transform.position);
     }
 
     private void Update()
@@ -137,7 +142,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Debug Reset"))
         {
-            ReloadScene();
+            GameManager.Instance.Respawn();
         }
 
         RedrawRope();
@@ -233,18 +238,18 @@ public class PlayerController : MonoBehaviour
             PlayerState = PlayerStateEnum.Air;
     }
 
-    private void ReloadScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
     private void HandleDeath()
     {
         _velocity = Vector2.zero;
         _rb.velocity = _velocity;
         PlayerState = PlayerStateEnum.Dead;
         Death?.Invoke();
-        Invoke(nameof(ReloadScene), deathTime);
+        Invoke(nameof(Respawn), deathTime);
+    }
+
+    private void Respawn()
+    {
+        GameManager.Instance.Respawn();
     }
 
     private void HandleWallJump()

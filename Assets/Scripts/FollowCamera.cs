@@ -61,4 +61,13 @@ public class FollowCamera : MonoBehaviour
     }
 
     #endregion
+
+    /// <summary>
+    /// Instantly sets camera position to the given position
+    /// </summary>
+    /// <param name="position">x,y,z of the position the camera should be</param>
+    public void SetCameraPosition(Vector3 position)
+    {
+        transform.position = position;
+    }
 }

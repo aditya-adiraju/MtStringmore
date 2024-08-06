@@ -145,8 +145,6 @@ MonoBehaviour:
   anim: {fileID: 6379059411910678817}
   deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
   sprite: {fileID: 6233932863109230516}
-  maxTilt: 0
-  tiltSpeed: 20
   footsteps:
   - {fileID: 8300000, guid: e05ea9651883a3646bbe6728ac6844fe, type: 3}
   jump: {fileID: 8300000, guid: e05ea9651883a3646bbe6728ac6844fe, type: 3}
@@ -298,7 +296,7 @@ GameObject:
   - component: {fileID: 4169286967807924285}
   - component: {fileID: 6233932863109230516}
   - component: {fileID: 6379059411910678817}
-  - component: {fileID: 6457510935641284901}
+  - component: {fileID: 961831407685796246}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -394,7 +392,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6457510935641284901
+--- !u!114 &961831407685796246
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -406,7 +404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d09870e1ef4cb734ab779de3b653b70f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 0.1
+  fadeDuration: 0.3
 --- !u!1 &8704445144224804026
 GameObject:
   m_ObjectHideFlags: 0
