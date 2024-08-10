@@ -123,15 +123,6 @@ public class PlayerController : MonoBehaviour
         _lastDirection = startDirection;
     }
 
-    private void Start()
-    {
-        // Vector3 spawnPos = GameManager.Instance.CheckPointPos;
-        // spawnPos.z = transform.position.z;
-        // transform.position = spawnPos;
-        // var cam = GameObject.FindGameObjectWithTag("MainCamera");
-        // cam.GetComponent<FollowCamera>().SetCameraPosition(transform.position);
-    }
-
     private void Update()
     {
         _time += Time.deltaTime;
