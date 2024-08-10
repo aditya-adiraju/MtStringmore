@@ -8,9 +8,9 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
 
     /// <summary>
-    /// Last checkpoint position. The player should respawn here if they die
+    /// Last checkpoint position. The player should respawn here if they die.
     /// </summary>
-    [SerializeField] public Vector2 CheckPointPos;
+    public Vector2 CheckPointPos;
 
     private void Awake() {
         if (Instance == null)
@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
         }
     }
-    
+
     void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
