@@ -36,7 +36,7 @@ public class FollowCamera : MonoBehaviour
         _playerTransform = player.transform;
         _playerController = player.GetComponent<PlayerController>();
         // always keep the camera Z 1 less than the player
-        _cameraZ = transform.position.z - 1;
+        _cameraZ = transform.position.z;
     }
 
     private void LateUpdate()

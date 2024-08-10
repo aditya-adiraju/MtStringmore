@@ -17,9 +17,29 @@ public class GameManager : MonoBehaviour {
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded; 
         } else {
             Destroy(gameObject);
         }
+    }
+    
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    
+    /// <summary>
+    /// On scene load, put player in the right spawn/respawn point
+    /// </summary>
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        var player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 spawnPos = new Vector3(CheckPointPos.x, CheckPointPos.y, player.transform.position.z);
+        player.transform.position = spawnPos;
+        
+        var cam = GameObject.FindGameObjectWithTag("MainCamera");
+        Vector3 camPos = new Vector3(CheckPointPos.x, CheckPointPos.y, cam.transform.position.z);
+        cam.GetComponent<FollowCamera>().SetCameraPosition(camPos);
     }
 
     public void Respawn()
