@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6452453256689605497}
   - component: {fileID: 8572367019768239859}
   - component: {fileID: 9220039533559654016}
+  - component: {fileID: 8846073679660825170}
   m_Layer: 0
   m_Name: CheckpointFlag
   m_TagString: Untagged
@@ -98,6 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38850eebbb2e58d4daa87eec93f13206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 8846073679660825170}
+  sprite: {fileID: 6452453256689605497}
 --- !u!61 &9220039533559654016
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -143,3 +146,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.56, y: 5.12}
   m_EdgeRadius: 0
+--- !u!95 &8846073679660825170
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4544653655168585683}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6d719de6a3ea67940bc31b1bb450d34a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

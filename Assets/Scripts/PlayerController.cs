@@ -121,7 +121,10 @@ public class PlayerController : MonoBehaviour
         _col = GetComponent<CapsuleCollider2D>();
         _buttonUsed = true;
         _lastDirection = startDirection;
+    }
 
+    private void Start()
+    {
         Vector3 spawnPos = GameManager.Instance.CheckPointPos;
         spawnPos.z = transform.position.z;
         transform.position = spawnPos;

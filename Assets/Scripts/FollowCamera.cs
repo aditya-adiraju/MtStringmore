@@ -35,8 +35,8 @@ public class FollowCamera : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         _playerTransform = player.transform;
         _playerController = player.GetComponent<PlayerController>();
-        // always keep the camera Z the same
-        _cameraZ = transform.position.z;
+        // always keep the camera Z 1 less than the player
+        _cameraZ = transform.position.z - 1;
     }
 
     private void LateUpdate()
