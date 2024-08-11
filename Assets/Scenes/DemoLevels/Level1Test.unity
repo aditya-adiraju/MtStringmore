@@ -48776,7 +48776,7 @@ PrefabInstance:
     - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: runSound
       value: 
-      objectReference: {fileID: 8300000, guid: 687cb81dbc0868d44ba8154ca1a8c999, type: 3}
+      objectReference: {fileID: 8300000, guid: 6bf00bd78aa7cc44ca3aeb9158e8bd12, type: 3}
     - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: jumpSound
       value: 
@@ -48784,7 +48784,7 @@ PrefabInstance:
     - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: landSound
       value: 
-      objectReference: {fileID: 8300000, guid: e05ea9651883a3646bbe6728ac6844fe, type: 3}
+      objectReference: {fileID: 8300000, guid: 632e2ef2dd1e97b439f2aa7375153a25, type: 3}
     - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: wallSlide
       value: 
@@ -48792,7 +48792,7 @@ PrefabInstance:
     - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: wallSlideSound
       value: 
-      objectReference: {fileID: 8300000, guid: 264e675d911337046ac31dfb78974941, type: 3}
+      objectReference: {fileID: 8300000, guid: 7840a60655380b045a800a67dd581a66, type: 3}
     - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: death.Array.size
       value: 2
