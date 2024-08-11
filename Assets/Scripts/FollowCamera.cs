@@ -35,7 +35,6 @@ public class FollowCamera : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         _playerTransform = player.transform;
         _playerController = player.GetComponent<PlayerController>();
-        // always keep the camera Z 1 less than the player
         _cameraZ = transform.position.z;
     }
 
@@ -61,13 +60,4 @@ public class FollowCamera : MonoBehaviour
     }
 
     #endregion
-
-    /// <summary>
-    /// Instantly sets camera position to the given position
-    /// </summary>
-    /// <param name="position">x,y,z of the position the camera should be</param>
-    public void SetCameraPosition(Vector3 position)
-    {
-        transform.position = position;
-    }
 }

@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
         
         var cam = GameObject.FindGameObjectWithTag("MainCamera");
         Vector3 camPos = new Vector3(CheckPointPos.x, CheckPointPos.y, cam.transform.position.z);
-        cam.GetComponent<FollowCamera>().SetCameraPosition(camPos);
+        cam.transform.position = camPos;
     }
 
     public void Respawn()
