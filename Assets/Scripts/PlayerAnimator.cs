@@ -189,7 +189,7 @@ public class PlayerAnimator : MonoBehaviour
         foreach (AudioClip sound in deathSounds)
             _source.PlayOneShot(sound);
         Instantiate(deathSmoke, transform);
-        anim.SetTrigger(DeathKey);
+        anim.SetBool(DeathKey, true);
     }
 
     // private void DetectGroundColor()
