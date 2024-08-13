@@ -35,7 +35,6 @@ public class FollowCamera : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         _playerTransform = player.transform;
         _playerController = player.GetComponent<PlayerController>();
-        // always keep the camera Z the same
         _cameraZ = transform.position.z;
     }
 
