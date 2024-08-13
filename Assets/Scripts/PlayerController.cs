@@ -257,7 +257,7 @@ public class PlayerController : MonoBehaviour
             PlayerState = PlayerStateEnum.Air;
             _canReleaseEarly = true;
             _canDoubleJump = true;
-            Jumped?.Invoke(); // TODO
+            Jumped?.Invoke();
             GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y)); // TODO
         }
     }
@@ -297,7 +297,6 @@ public class PlayerController : MonoBehaviour
         {
             _canReleaseEarly = false;
             _releasedEarly = false;
-            Jumped?.Invoke();
         }
     }
 

@@ -18,8 +18,11 @@ public class PlayerAnimator : MonoBehaviour
     // [SerializeField] private ParticleSystem _landParticles;
 
     [Header("Audio Clips")]
-    [SerializeField] private AudioClip[] footsteps;
-    [SerializeField] private AudioClip jump;
+    [SerializeField] private AudioClip runSound;
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip landSound;
+    [SerializeField] private AudioClip wallSlideSound;
+    [SerializeField] private AudioClip[] deathSounds;
     
     #endregion
     
@@ -54,6 +57,7 @@ public class PlayerAnimator : MonoBehaviour
     private void OnEnable()
     {
         _player.Jumped += OnJumped;
+        _player.DoubleJumped += OnJumped;
         _player.GroundedChanged += OnGroundedChanged;
         _player.WallChanged += OnWallChanged;
         _player.Death += OnDeath;
@@ -64,6 +68,7 @@ public class PlayerAnimator : MonoBehaviour
     private void OnDisable()
     {
         _player.Jumped -= OnJumped;
+        _player.DoubleJumped -= OnJumped;
         _player.GroundedChanged -= OnGroundedChanged;
         _player.WallChanged -= OnWallChanged;
         _player.Death -= OnDeath;
@@ -102,9 +107,17 @@ public class PlayerAnimator : MonoBehaviour
     private void OnWallChanged(bool wallChanged)
     {
         anim.SetBool(WallChangedKey, wallChanged);
-        if (wallChanged) {
+        if (wallChanged)
+        {
             anim.ResetTrigger(JumpKey);
+            if (!_grounded && (_source.clip != wallSlideSound || !_source.isPlaying))
+            {
+                _source.clip = wallSlideSound;
+                _source.Play();
+            }
         }
+        else if (_source.clip == wallSlideSound)
+            _source.Stop();
     }
 
     /// <summary>
@@ -115,6 +128,9 @@ public class PlayerAnimator : MonoBehaviour
     {
         anim.SetTrigger(JumpKey);
         anim.SetBool(GroundedKey, false);
+
+        _source.clip = jumpSound;
+        _source.PlayOneShot(jumpSound);
 
         // if (_grounded) // Avoid coyote
         // {
@@ -142,7 +158,15 @@ public class PlayerAnimator : MonoBehaviour
 
             anim.ResetTrigger(JumpKey);
             anim.SetBool(GroundedKey, true);
-            _source.PlayOneShot(footsteps[Random.Range(0, footsteps.Length)]);
+            
+            if (_source.clip == wallSlideSound)
+                _source.Stop();
+            _source.PlayOneShot(landSound);
+
+            _source.clip = runSound;
+            _source.loop = true;
+            _source.Play();
+
             // _moveParticles.Play();
 
             // _landParticles.transform.localScale = Vector3.one * Mathf.InverseLerp(0, 40, impact);
@@ -150,6 +174,8 @@ public class PlayerAnimator : MonoBehaviour
         }
         else
         {
+            if (_source.loop)
+                _source.loop = false;
             anim.SetBool(GroundedKey, false);
             // _moveParticles.Stop();
         }
@@ -160,8 +186,10 @@ public class PlayerAnimator : MonoBehaviour
     /// </summary>
     private void OnDeath()
     {
+        foreach (AudioClip sound in deathSounds)
+            _source.PlayOneShot(sound);
         Instantiate(deathSmoke, transform);
-        anim.SetTrigger(DeathKey);
+        anim.SetBool(DeathKey, true);
     }
 
     // private void DetectGroundColor()

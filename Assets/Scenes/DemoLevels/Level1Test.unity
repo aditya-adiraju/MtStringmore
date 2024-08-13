@@ -48887,6 +48887,58 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: run
+      value: 
+      objectReference: {fileID: 8300000, guid: 687cb81dbc0868d44ba8154ca1a8c999, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: jump
+      value: 
+      objectReference: {fileID: 8300000, guid: f2b3c1932e39bef4d9fd655ea0a50af9, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: runSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6bf00bd78aa7cc44ca3aeb9158e8bd12, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: jumpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: f2b3c1932e39bef4d9fd655ea0a50af9, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: landSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 632e2ef2dd1e97b439f2aa7375153a25, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: wallSlide
+      value: 
+      objectReference: {fileID: 8300000, guid: 264e675d911337046ac31dfb78974941, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: wallSlideSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 7840a60655380b045a800a67dd581a66, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: death.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: death.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: c81b8a0512e132e4cbdff16ff3c341e9, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: death.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: e9de9b181cfc6804e9e615db52c9d7ad, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: deathSounds.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: deathSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: c81b8a0512e132e4cbdff16ff3c341e9, type: 3}
+    - target: {fileID: 7281573306219109277, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
+      propertyPath: deathSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: e9de9b181cfc6804e9e615db52c9d7ad, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
