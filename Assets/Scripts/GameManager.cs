@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour {
     /// <summary>
     /// Last checkpoint position. The player should respawn here if they die.
     /// </summary>
-    public Vector2 CheckPointPos;
+    public Vector2 CheckPointPos { get; set; }
 
     /// <summary>
     /// Used between scene transitions. Set to false for respawns, true for transition between levels
