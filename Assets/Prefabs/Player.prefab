@@ -145,9 +145,13 @@ MonoBehaviour:
   anim: {fileID: 6379059411910678817}
   deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
   sprite: {fileID: 6233932863109230516}
-  footsteps:
-  - {fileID: 8300000, guid: e05ea9651883a3646bbe6728ac6844fe, type: 3}
-  jump: {fileID: 8300000, guid: e05ea9651883a3646bbe6728ac6844fe, type: 3}
+  runSound: {fileID: 8300000, guid: 6bf00bd78aa7cc44ca3aeb9158e8bd12, type: 3}
+  jumpSound: {fileID: 8300000, guid: f2b3c1932e39bef4d9fd655ea0a50af9, type: 3}
+  landSound: {fileID: 8300000, guid: 632e2ef2dd1e97b439f2aa7375153a25, type: 3}
+  wallSlideSound: {fileID: 8300000, guid: 7840a60655380b045a800a67dd581a66, type: 3}
+  deathSounds:
+  - {fileID: 8300000, guid: c81b8a0512e132e4cbdff16ff3c341e9, type: 3}
+  - {fileID: 8300000, guid: e9de9b181cfc6804e9e615db52c9d7ad, type: 3}
 --- !u!1 &4217790213014453210
 GameObject:
   m_ObjectHideFlags: 0
