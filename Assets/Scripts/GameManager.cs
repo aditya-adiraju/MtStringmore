@@ -50,9 +50,9 @@ public class GameManager : MonoBehaviour {
             CheckPointPos = player.transform.position;
         }
         
-        var cam = GameObject.FindGameObjectWithTag("MainCamera");
-        Vector3 camPos = new Vector3(CheckPointPos.x, CheckPointPos.y, cam.transform.position.z);
-        cam.transform.position = camPos;
+        FollowCamera cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowCamera>();
+        Vector2 playerTarget = cam.GetPlayerTarget();
+        cam.transform.position = new Vector3(playerTarget.x, playerTarget.y, cam.transform.position.z);
     }
 
     public void Respawn()
