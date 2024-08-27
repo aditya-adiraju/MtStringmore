@@ -106,6 +106,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _velocity;
     private float _lastDirection;
     private bool _closeToWall;
+    private Vector2 _groundNormal;
     
     private Collider2D _swingArea;
     private bool _inSwingArea;
@@ -188,7 +189,7 @@ public class PlayerController : MonoBehaviour
 
     #region Private Methods
     
-    private bool CapsuleCastCollision(Vector2 direction, float distance)
+    private RaycastHit2D CapsuleCastCollision(Vector2 direction, float distance)
     {
         return Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
             direction, distance, collisionLayer);
@@ -196,15 +197,18 @@ public class PlayerController : MonoBehaviour
     
     private void CheckCollisions()
     {
-        bool groundHit = CapsuleCastCollision(Vector2.down, collisionDistance);
+        RaycastHit2D groundCast = CapsuleCastCollision(Vector2.down, collisionDistance);
+        bool groundHit = groundCast;
         bool ceilingHit = CapsuleCastCollision(Vector2.up, collisionDistance);
         bool leftWallHit = CapsuleCastCollision(Vector2.left, collisionDistance);
         bool rightWallHit = CapsuleCastCollision(Vector2.right, collisionDistance);
         _closeToWall = CapsuleCastCollision(_velocity, wallCloseDistance);
+
+        if (groundCast) _groundNormal = groundCast.normal;
         
         if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
 
-        // TODO
+        // TODO is this being fired constantly while on a wall?
         if (leftWallHit || rightWallHit)
             WallChanged?.Invoke(true);
         else
@@ -258,7 +262,7 @@ public class PlayerController : MonoBehaviour
             _canReleaseEarly = true;
             _canDoubleJump = true;
             Jumped?.Invoke();
-            GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y)); // TODO
+            GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y)); // TODO need a new action for wj
         }
     }
 
@@ -304,8 +308,12 @@ public class PlayerController : MonoBehaviour
     {
         switch (PlayerState)
         {
-            case PlayerStateEnum.Run: 
-                _velocity.x = Mathf.MoveTowards(_velocity.x, maxGroundSpeed * _lastDirection, groundAcceleration * Time.fixedDeltaTime);
+            case PlayerStateEnum.Run:
+                // rotate ground normal vector 90 degrees towards facing direction
+                Vector2 walkTarget = new Vector2(_groundNormal.y * _lastDirection, _groundNormal.x * -_lastDirection) * maxGroundSpeed;
+                float newX = Mathf.MoveTowards(_velocity.x, walkTarget.x, groundAcceleration * Time.fixedDeltaTime);
+                float newY = walkTarget.y;
+                _velocity = new Vector2(newX, newY);
                 break;
             case PlayerStateEnum.Air:
                 if (Mathf.Abs(_velocity.x) < maxAirSpeed)
