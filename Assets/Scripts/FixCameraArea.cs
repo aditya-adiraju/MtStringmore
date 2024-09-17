@@ -8,6 +8,8 @@ using UnityEngine;
 public class FixCamera : MonoBehaviour
 {
     [SerializeField] private Vector2 targetOffset;
+    [SerializeField] private bool fixX = true;
+    [SerializeField] private bool fixY = true;
 
     private FollowCamera _cam;
     private Vector2 _target;
@@ -23,7 +25,7 @@ public class FixCamera : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            _cam.FixTarget(_target);
+            _cam.FixTarget(_target, fixX, fixY);
         }
     }
 
