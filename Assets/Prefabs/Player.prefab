@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7436c926f8d254e69adf04aebd819228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doubleJumpEnabled: 0
   buttonBufferTime: 0.1
   collisionLayer:
     serializedVersion: 2
@@ -224,7 +225,7 @@ MonoBehaviour:
   wallSlideAcceleration: 30
   swingBoostMultiplier: 1.2
   maxSwingSpeed: 50
-  swingAcceleration: 50
+  swingAcceleration: 60
   ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 2
 --- !u!50 &5301496585393855472
