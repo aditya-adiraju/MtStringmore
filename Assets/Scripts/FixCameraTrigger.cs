@@ -5,7 +5,7 @@ using UnityEngine;
 /// Camera position is the centre of the box collider, plus an offset.
 /// Uses "MainCamera" and "Player" tags.
 /// </summary>
-public class FixCamera : MonoBehaviour
+public class FixCameraTrigger : MonoBehaviour
 {
     [SerializeField] private Vector2 targetOffset;
     [SerializeField] private bool fixX = true;
