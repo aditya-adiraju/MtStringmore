@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e6836ba268674d8c8d42072d277de18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookaheadDistance: 7
+  lookaheadDistance: 10
   xSmoothTime: 0.3
   ySmoothTime: 0.2
   yOffset: 3

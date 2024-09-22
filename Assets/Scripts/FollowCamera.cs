@@ -25,7 +25,8 @@ public class FollowCamera : MonoBehaviour
     private float _yVelocity;
     private float _cameraZ;
     private float _lastGroundedY;
-    private bool _fixed;
+    private bool _fixedX;
+    private bool _fixedY;
 
     #endregion
 
@@ -37,12 +38,16 @@ public class FollowCamera : MonoBehaviour
         _playerTransform = player.transform;
         _playerController = player.GetComponent<PlayerController>();
         _cameraZ = transform.position.z;
-        _fixed = false;
+        _fixedX = false;
+        _fixedY = false;
+        
     }
 
     private void LateUpdate()
     {
-        if (!_fixed) _target = GetPlayerTarget();
+        if (!_fixedX && !_fixedY) _target = GetPlayerTarget();
+        else if (!_fixedX) _target.x = GetPlayerTarget().x;
+        else if (!_fixedY) _target.y = GetPlayerTarget().y;
         
         // apply smoothing to the camera
         Vector3 camPosition = transform.position;
@@ -58,9 +63,13 @@ public class FollowCamera : MonoBehaviour
     /// <summary>
     /// Fixes the target position of the camera.
     /// </summary>
-    public void FixTarget(Vector2 fixedTarget)
+    /// <param name="fixedTarget">Vector2 target position</param>
+    /// <param name="fixX">If true, fix X coordinate of camera</param>
+    /// <param name="fixY">If true, fix Y coordinate of camera</param>
+    public void FixTarget(Vector2 fixedTarget, bool fixX = true, bool fixY = true)
     {
-        _fixed = true;
+        _fixedX = fixX;
+        _fixedY = fixY;
         _target = fixedTarget;
     }
 
@@ -69,7 +78,8 @@ public class FollowCamera : MonoBehaviour
     /// </summary>
     public void FollowPlayer()
     {
-        _fixed = false;
+        _fixedX = false;
+        _fixedY = false;
     }
 
     /// <summary>

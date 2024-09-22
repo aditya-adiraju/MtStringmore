@@ -7,8 +7,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     #region Serialized Private Fields
-    
+
     [Header("Input")] 
+    [SerializeField] private bool doubleJumpEnabled;
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")] 
     [SerializeField] private LayerMask collisionLayer;
@@ -282,7 +283,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDoubleJump()
     {
-        if (CanUseButton() && _canDoubleJump && !_closeToWall)
+        if (doubleJumpEnabled && CanUseButton() && _canDoubleJump && !_closeToWall)
         {
             _velocity.y = doubleJumpPower;
             _buttonUsed = true;
