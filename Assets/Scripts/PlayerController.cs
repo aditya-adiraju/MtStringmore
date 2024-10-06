@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float swingBoostMultiplier;
     [SerializeField] private float maxSwingSpeed;
     [SerializeField] private float swingAcceleration;
-    [SerializeField] private float swingDeadTime;
     [Header("Visual")]
     [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private int deathTime;
@@ -112,9 +111,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 _groundNormal;
     
     private Collider2D _swingArea;
-    private bool _inSwingArea;
+    private bool _enteredSwingArea;
     private float _swingRadius;
-    private float _timeSwingReleased;
     
     #endregion
 
@@ -133,7 +131,7 @@ public class PlayerController : MonoBehaviour
         _time += Time.deltaTime;
 
         GetInput();
-        RedrawRope();  // this should be moved outside player controller when knitby is real
+        RedrawRope();  // TODO this should be moved outside player controller when knitby is real
     }
 
     private void GetInput()
@@ -163,7 +161,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("SwingArea"))
         {
             _swingArea = other;
-            _inSwingArea = true;
+            _enteredSwingArea = true;
         }
         else if (other.gameObject.CompareTag("Death"))
         {
@@ -171,14 +169,6 @@ public class PlayerController : MonoBehaviour
             {
                 HandleDeath();
             }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("SwingArea"))
-        {
-            _inSwingArea = false;
         }
     }
 
@@ -368,13 +358,13 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSwing()
     {
-        float timeSinceSwing = _time - _timeSwingReleased;
-        if (PlayerState is PlayerStateEnum.Air && _inSwingArea && timeSinceSwing >= swingDeadTime)
+        if (PlayerState is PlayerStateEnum.Air && _enteredSwingArea)
         {
             // start swing automatically when entering
             PlayerState = PlayerStateEnum.Swing;
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
             ropeRenderer.enabled = true;
+            _enteredSwingArea = false;
         } else if (PlayerState is PlayerStateEnum.Swing && CanUseButton())
         {
             // press button to release
