@@ -265,8 +265,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallJump()
     {
-        // TODO right now either direction can wall jump, is that desired behavior?
-        if (PlayerState is PlayerStateEnum.LeftWallSlide or PlayerStateEnum.RightWallSlide && CanUseButton())
+        if (CanUseButton() && PlayerState is PlayerStateEnum.LeftWallSlide && _directionPressed == 1 ||
+            CanUseButton() && PlayerState is PlayerStateEnum.RightWallSlide && _directionPressed == -1)
         {
             _velocity = new Vector2(Mathf.Cos(wallJumpAngle), Mathf.Sin(wallJumpAngle)) * wallJumpPower;
             if (PlayerState == PlayerStateEnum.RightWallSlide) _velocity.x = -_velocity.x;
