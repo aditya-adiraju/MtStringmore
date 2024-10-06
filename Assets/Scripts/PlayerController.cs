@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float swingBoostMultiplier;
     [SerializeField] private float maxSwingSpeed;
     [SerializeField] private float swingAcceleration;
+    [SerializeField] private float swingDeadTime;
     [Header("Visual")]
     [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private int deathTime;
@@ -113,6 +114,7 @@ public class PlayerController : MonoBehaviour
     private Collider2D _swingArea;
     private bool _inSwingArea;
     private float _swingRadius;
+    private float _timeSwingReleased;
     
     #endregion
 
@@ -366,25 +368,23 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSwing()
     {
-        if (PlayerState != PlayerStateEnum.Swing && CanUseButton() && _inSwingArea)
+        float timeSinceSwing = _time - _timeSwingReleased;
+        if (PlayerState is PlayerStateEnum.Air && _inSwingArea && timeSinceSwing >= swingDeadTime)
         {
-            // start swing
+            // start swing automatically when entering
             PlayerState = PlayerStateEnum.Swing;
-            _buttonUsed = true;
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
             ropeRenderer.enabled = true;
-        }
-        
-        if (PlayerState == PlayerStateEnum.Swing && !_isButtonHeld)
+        } else if (PlayerState is PlayerStateEnum.Swing && CanUseButton())
         {
-            // stop swing
+            // press button to release
+            // TODO: only release with correct direction
             PlayerState = PlayerStateEnum.Air;
             ropeRenderer.enabled = false;
             // boost velocity if going up
+            // TODO: set a min x and y velocity instead?
             if (_velocity.y >= 0f) _velocity *= swingBoostMultiplier;
-        }
-
-        if (PlayerState == PlayerStateEnum.Swing)
+        } else if (PlayerState is PlayerStateEnum.Swing)
         {
             Vector2 relPos = transform.position - _swingArea.transform.position;
             // if going down, accelerate to target swing speed
@@ -396,7 +396,7 @@ public class PlayerController : MonoBehaviour
             Vector2 testPos = relPos + _velocity * Time.fixedDeltaTime;
             Vector2 newPos = testPos.normalized * _swingRadius;
             _velocity = (newPos - relPos) / Time.fixedDeltaTime;
-        }
+        } 
     }
 
     private void RedrawRope()
