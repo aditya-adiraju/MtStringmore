@@ -103,6 +103,7 @@ public class PlayerController : MonoBehaviour
     private bool _canReleaseEarly;
     private bool _releasedEarly;
     private bool _canDoubleJump;
+    private int _directionPressed;
     
     private Vector2 _velocity;
     private float _lastDirection;
@@ -129,19 +130,30 @@ public class PlayerController : MonoBehaviour
     {
         _time += Time.deltaTime;
 
-        if (Input.GetButtonDown("Jump"))
+        GetInput();
+        RedrawRope();  // this should be moved outside player controller when knitby is real
+    }
+
+    private void GetInput()
+    {
+        bool leftDown = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
+        bool leftHeld = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
+        bool rightDown = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
+        bool rightHeld = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D);
+        
+        if (leftDown || rightDown)
         {
             _timeButtonPressed = _time;
             _buttonUsed = false;
+            if (leftDown) _directionPressed = -1;
+            if (rightDown) _directionPressed = 1;
         }
-        _isButtonHeld = Input.GetButton("Jump");
+        _isButtonHeld = leftHeld || rightHeld;
 
         if (Input.GetButtonDown("Debug Reset"))
         {
             GameManager.Instance.Respawn();
         }
-
-        RedrawRope();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -253,6 +265,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallJump()
     {
+        // TODO right now either direction can wall jump, is that desired behavior?
         if (PlayerState is PlayerStateEnum.LeftWallSlide or PlayerStateEnum.RightWallSlide && CanUseButton())
         {
             _velocity = new Vector2(Mathf.Cos(wallJumpAngle), Mathf.Sin(wallJumpAngle)) * wallJumpPower;
@@ -273,6 +286,11 @@ public class PlayerController : MonoBehaviour
         if ((PlayerState == PlayerStateEnum.Run || canUseCoyote) && CanUseButton())
         {
             _velocity.y = jumpPower;
+            if ((int)Mathf.Sign(_velocity.x) != _directionPressed)
+            {
+                _velocity.x = -_velocity.x;
+            }
+            
             _buttonUsed = true;
             PlayerState = PlayerStateEnum.Air;
             _canReleaseEarly = true;
@@ -283,6 +301,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDoubleJump()
     {
+        // TODO add left/right behavior
         if (doubleJumpEnabled && CanUseButton() && _canDoubleJump && !_closeToWall)
         {
             _velocity.y = doubleJumpPower;
