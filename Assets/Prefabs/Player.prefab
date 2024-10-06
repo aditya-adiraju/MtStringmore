@@ -201,6 +201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doubleJumpEnabled: 0
+  dashEnabled: 0
   buttonBufferTime: 0.1
   collisionLayer:
     serializedVersion: 2
@@ -219,6 +220,8 @@ MonoBehaviour:
   earlyReleaseFallAcceleration: 110
   maxAirSpeed: 5
   airAcceleration: 10
+  dashTime: 0.1
+  dashSpeed: 30
   wallJumpAngle: 1
   wallJumpPower: 35
   wallSlideSpeed: 15

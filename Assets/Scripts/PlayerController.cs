@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Input")] 
     [SerializeField] private bool doubleJumpEnabled;
+    [SerializeField] private bool dashEnabled;
     [SerializeField] private float buttonBufferTime;
     [Header("Collisions")] 
     [SerializeField] private LayerMask collisionLayer;
@@ -30,6 +31,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float earlyReleaseFallAcceleration;
     [SerializeField] private float maxAirSpeed;
     [SerializeField] private float airAcceleration;
+    [Header("Dash")] 
+    [SerializeField] private float dashTime;
+    [SerializeField] private float dashSpeed;
     [Header("Wall")] 
     [SerializeField] private float wallJumpAngle;
     [SerializeField] private float wallJumpPower;
@@ -55,6 +59,7 @@ public class PlayerController : MonoBehaviour
         RightWallSlide,
         Dead,
         Swing,
+        Dash
     }
     
     public PlayerStateEnum PlayerState { get; private set; }
@@ -98,11 +103,15 @@ public class PlayerController : MonoBehaviour
     private float _time;
     private float _timeButtonPressed;
     private float _timeLeftGround;
+    private float _timeDashed;
+    
     private bool _buttonUsed;
     private bool _isButtonHeld;
     private bool _canReleaseEarly;
     private bool _releasedEarly;
     private bool _canDoubleJump;
+    private bool _canDash;
+    private int _dashDirection;
     private int _directionPressed;
     
     private Vector2 _velocity;
@@ -186,7 +195,7 @@ public class PlayerController : MonoBehaviour
         HandleEarlyRelease();
         HandleWalk();
         HandleGravity();
-        
+        if (dashEnabled) HandleDash();
         ApplyMovement();
     }
     
@@ -303,6 +312,35 @@ public class PlayerController : MonoBehaviour
             DoubleJumped?.Invoke();
         }
     }
+
+    private void HandleDash()
+    {
+        if (PlayerState is PlayerStateEnum.Air && CanUseButton() && _canDash)
+        {
+            // start a dash
+            _canDash = false;
+            _buttonUsed = true;
+            PlayerState = PlayerStateEnum.Dash;
+            _timeDashed = _time;
+            _dashDirection = _directionPressed;
+        } 
+        else if (PlayerState is PlayerStateEnum.Dash)
+        {
+            // move player forward at dash speed
+            _velocity.y = 0;
+            _velocity.x = dashSpeed * _dashDirection;
+            // check if dash is over
+            if (_time - _timeDashed >= dashTime)
+            {
+                PlayerState = PlayerStateEnum.Air;
+            }
+        } 
+        else if (PlayerState is PlayerStateEnum.Run or PlayerStateEnum.LeftWallSlide or PlayerStateEnum.RightWallSlide)
+        {
+            // can dash after landing on the ground or wall sliding
+            _canDash = true;
+        }
+    }
     
     private void HandleEarlyRelease()
     {
@@ -358,13 +396,12 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSwing()
     {
-        if (PlayerState is PlayerStateEnum.Air && _enteredSwingArea)
+        if (_enteredSwingArea)
         {
             // start swing automatically when entering
             PlayerState = PlayerStateEnum.Swing;
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
             ropeRenderer.enabled = true;
-            _enteredSwingArea = false;
         } else if (PlayerState is PlayerStateEnum.Swing && CanUseButton())
         {
             // press button to release
@@ -374,6 +411,7 @@ public class PlayerController : MonoBehaviour
             // boost velocity if going up
             // TODO: set a min x and y velocity instead?
             if (_velocity.y >= 0f) _velocity *= swingBoostMultiplier;
+            _buttonUsed = true;
         } else if (PlayerState is PlayerStateEnum.Swing)
         {
             Vector2 relPos = transform.position - _swingArea.transform.position;
@@ -386,7 +424,8 @@ public class PlayerController : MonoBehaviour
             Vector2 testPos = relPos + _velocity * Time.fixedDeltaTime;
             Vector2 newPos = testPos.normalized * _swingRadius;
             _velocity = (newPos - relPos) / Time.fixedDeltaTime;
-        } 
+        }
+        _enteredSwingArea = false;
     }
 
     private void RedrawRope()
