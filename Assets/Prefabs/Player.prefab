@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7436c926f8d254e69adf04aebd819228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oneButton: 0
   doubleJumpEnabled: 0
   dashEnabled: 1
   buttonBufferTime: 0.1

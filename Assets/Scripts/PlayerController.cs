@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     #region Serialized Private Fields
 
     [Header("Input")] 
+    [SerializeField] private bool oneButton;
     [SerializeField] private bool doubleJumpEnabled;
     [SerializeField] private bool dashEnabled;
     [SerializeField] private float buttonBufferTime;
@@ -145,20 +146,34 @@ public class PlayerController : MonoBehaviour
 
     private void GetInput()
     {
-        bool leftDown = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
-        bool leftHeld = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
-        bool rightDown = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
-        bool rightHeld = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D);
-        
-        if (leftDown || rightDown)
+        if (oneButton)
         {
-            _timeButtonPressed = _time;
-            _buttonUsed = false;
-            if (leftDown) _directionPressed = -1;
-            if (rightDown) _directionPressed = 1;
+            if (Input.GetButtonDown("Jump"))
+            {
+                _timeButtonPressed = _time;
+                _buttonUsed = false;
+            }
+            _isButtonHeld = Input.GetButton("Jump");
+            _directionPressed = (int) _lastDirection;
         }
-        _isButtonHeld = leftHeld || rightHeld;
-
+        else
+        {
+            bool leftDown = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
+            bool leftHeld = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
+            bool rightDown = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
+            bool rightHeld = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D);
+        
+            if (leftDown || rightDown)
+            {
+                _timeButtonPressed = _time;
+                _buttonUsed = false;
+                if (leftDown) _directionPressed = -1;
+                if (rightDown) _directionPressed = 1;
+                if (oneButton) _directionPressed = (int) _lastDirection;
+            }
+            _isButtonHeld = leftHeld || rightHeld;
+        }
+        
         if (Input.GetButtonDown("Debug Reset"))
         {
             GameManager.Instance.Respawn();
@@ -191,7 +206,7 @@ public class PlayerController : MonoBehaviour
         HandleWallJump();
         HandleSwing();
         HandleJump();
-        HandleDoubleJump();
+        if (doubleJumpEnabled) HandleDoubleJump();
         HandleEarlyRelease();
         HandleWalk();
         HandleGravity();
@@ -266,8 +281,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallJump()
     {
-        if (CanUseButton() && PlayerState is PlayerStateEnum.LeftWallSlide && _directionPressed == 1 ||
-            CanUseButton() && PlayerState is PlayerStateEnum.RightWallSlide && _directionPressed == -1)
+        if (CanUseButton() && PlayerState is PlayerStateEnum.LeftWallSlide or PlayerStateEnum.RightWallSlide)
         {
             _velocity = new Vector2(Mathf.Cos(wallJumpAngle), Mathf.Sin(wallJumpAngle)) * wallJumpPower;
             if (PlayerState == PlayerStateEnum.RightWallSlide) _velocity.x = -_velocity.x;
@@ -303,7 +317,7 @@ public class PlayerController : MonoBehaviour
     private void HandleDoubleJump()
     {
         // TODO add left/right behavior
-        if (doubleJumpEnabled && CanUseButton() && _canDoubleJump && !_closeToWall)
+        if (CanUseButton() && _canDoubleJump && !_closeToWall)
         {
             _velocity.y = doubleJumpPower;
             _buttonUsed = true;
