@@ -110,7 +110,7 @@ MonoBehaviour:
   xSmoothTime: 0.3
   ySmoothTime: 0.2
   yOffset: 3
-  upYThreshold: 7
+  upYThreshold: 9
 --- !u!114 &-1983140750682687142
 MonoBehaviour:
   m_ObjectHideFlags: 0

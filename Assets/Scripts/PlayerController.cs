@@ -7,7 +7,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     #region Serialized Private Fields
-
+    
+    // @formatter:off
     [Header("Input")] 
     [SerializeField] private bool oneButton;
     [SerializeField] private bool doubleJumpEnabled;
@@ -28,13 +29,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float coyoteTime;
     [Header("Air")]
     [SerializeField] private float maxFallSpeed;
-    [SerializeField] private float fallAcceleration;
+    [SerializeField] private float fallAccelerationUp;
+    [SerializeField] private float fallAccelerationDown;
     [SerializeField] private float earlyReleaseFallAcceleration;
     [SerializeField] private float maxAirSpeed;
     [SerializeField] private float airAcceleration;
     [Header("Dash")] 
     [SerializeField] private float dashTime;
     [SerializeField] private float dashSpeed;
+    [SerializeField] private float endDashSpeed;
     [Header("Wall")] 
     [SerializeField] private float wallJumpAngle;
     [SerializeField] private float wallJumpPower;
@@ -44,14 +47,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float swingBoostMultiplier;
     [SerializeField] private float maxSwingSpeed;
     [SerializeField] private float swingAcceleration;
+    [SerializeField] private float swingGravity;
     [Header("Visual")]
     [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private int deathTime;
-    
+    // @formatter:on
+
     #endregion
 
     #region Public Properties and Actions
-    
+
     public enum PlayerStateEnum
     {
         Run,
@@ -62,19 +67,28 @@ public class PlayerController : MonoBehaviour
         Swing,
         Dash
     }
-    
-    public PlayerStateEnum PlayerState { get; private set; }
-    
+
+    // TODO: PlayerState set should be a function that fires an action
+    public PlayerStateEnum PlayerState
+    {
+        get => _playerState;
+        private set
+        {
+            Debug.Log($"PlayerState: {value}");
+            _playerState = value;
+        }
+    }
+
     /// <summary>
     /// Current velocity of the player.
     /// </summary>
     public Vector2 Velocity => _velocity;
-    
+
     /// <summary>
     /// Facing direction of the player. -1.0 for left, 1.0 for right.
     /// </summary>
     public float Direction => _lastDirection;
-    
+
     /// <summary>
     /// Fires when the player becomes grounded or leaves the ground.
     /// Parameters:
@@ -82,22 +96,24 @@ public class PlayerController : MonoBehaviour
     ///     float: player's Y velocity
     /// </summary>
     public event Action<bool, float> GroundedChanged;
-    
+
     /// <summary>
     /// Fires when the player hits the wall or leaves the wall.
     /// Parameters:
     ///     bool: True if hitting the wall, false if leaving the wall
     /// </summary>
     public event Action<bool> WallChanged;
-    
+
     public event Action Jumped;
-    public event Action DoubleJumped; 
+    public event Action DoubleJumped;
     public event Action Death;
-    
+
     #endregion
-    
+
     #region Private Properties
-    
+
+    private PlayerStateEnum _playerState;
+
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
 
@@ -105,7 +121,7 @@ public class PlayerController : MonoBehaviour
     private float _timeButtonPressed;
     private float _timeLeftGround;
     private float _timeDashed;
-    
+
     private bool _buttonUsed;
     private bool _isButtonHeld;
     private bool _canReleaseEarly;
@@ -114,20 +130,20 @@ public class PlayerController : MonoBehaviour
     private bool _canDash;
     private int _dashDirection;
     private int _directionPressed;
-    
+
     private Vector2 _velocity;
     private float _lastDirection;
     private bool _closeToWall;
     private Vector2 _groundNormal;
-    
+
     private Collider2D _swingArea;
     private bool _enteredSwingArea;
     private float _swingRadius;
-    
+
     #endregion
 
     #region Unity Event Handlers
-    
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -141,7 +157,7 @@ public class PlayerController : MonoBehaviour
         _time += Time.deltaTime;
 
         GetInput();
-        RedrawRope();  // TODO this should be moved outside player controller when knitby is real
+        RedrawRope(); // TODO this should be moved outside player controller when knitby is real
     }
 
     private void GetInput()
@@ -153,8 +169,9 @@ public class PlayerController : MonoBehaviour
                 _timeButtonPressed = _time;
                 _buttonUsed = false;
             }
+
             _isButtonHeld = Input.GetButton("Jump");
-            _directionPressed = (int) _lastDirection;
+            _directionPressed = (int)_lastDirection;
         }
         else
         {
@@ -162,18 +179,19 @@ public class PlayerController : MonoBehaviour
             bool leftHeld = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
             bool rightDown = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
             bool rightHeld = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D);
-        
+
             if (leftDown || rightDown)
             {
                 _timeButtonPressed = _time;
                 _buttonUsed = false;
                 if (leftDown) _directionPressed = -1;
                 if (rightDown) _directionPressed = 1;
-                if (oneButton) _directionPressed = (int) _lastDirection;
+                if (oneButton) _directionPressed = (int)_lastDirection;
             }
+
             _isButtonHeld = leftHeld || rightHeld;
         }
-        
+
         if (Input.GetButtonDown("Debug Reset"))
         {
             GameManager.Instance.Respawn();
@@ -200,9 +218,8 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerState == PlayerStateEnum.Dead)
             return;
-        
+
         CheckCollisions();
-        
         HandleWallJump();
         HandleSwing();
         HandleJump();
@@ -213,17 +230,17 @@ public class PlayerController : MonoBehaviour
         if (dashEnabled) HandleDash();
         ApplyMovement();
     }
-    
+
     #endregion
 
     #region Private Methods
-    
+
     private RaycastHit2D CapsuleCastCollision(Vector2 direction, float distance)
     {
-        return Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, 
+        return Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0,
             direction, distance, collisionLayer);
     }
-    
+
     private void CheckCollisions()
     {
         RaycastHit2D groundCast = CapsuleCastCollision(Vector2.down, collisionDistance);
@@ -234,7 +251,7 @@ public class PlayerController : MonoBehaviour
         _closeToWall = CapsuleCastCollision(_velocity, wallCloseDistance);
 
         if (groundCast) _groundNormal = groundCast.normal;
-        
+
         if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
 
         // TODO is this being fired constantly while on a wall?
@@ -249,19 +266,22 @@ public class PlayerController : MonoBehaviour
             _timeLeftGround = _time;
             GroundedChanged?.Invoke(false, 0);
         }
+
         if (PlayerState == PlayerStateEnum.Air)
         {
             if (leftWallHit) PlayerState = PlayerStateEnum.LeftWallSlide;
             if (rightWallHit) PlayerState = PlayerStateEnum.RightWallSlide;
         }
+
         if (PlayerState != PlayerStateEnum.Run && groundHit)
         {
             PlayerState = PlayerStateEnum.Run;
             _canDoubleJump = true;
             GroundedChanged?.Invoke(true, Mathf.Abs(_velocity.y));
         }
-        if (PlayerState == PlayerStateEnum.RightWallSlide && !rightWallHit || 
-            PlayerState == PlayerStateEnum.LeftWallSlide && !leftWallHit) 
+
+        if (PlayerState == PlayerStateEnum.RightWallSlide && !rightWallHit ||
+            PlayerState == PlayerStateEnum.LeftWallSlide && !leftWallHit)
             PlayerState = PlayerStateEnum.Air;
     }
 
@@ -285,10 +305,10 @@ public class PlayerController : MonoBehaviour
         {
             _velocity = new Vector2(Mathf.Cos(wallJumpAngle), Mathf.Sin(wallJumpAngle)) * wallJumpPower;
             if (PlayerState == PlayerStateEnum.RightWallSlide) _velocity.x = -_velocity.x;
-            
+
             _buttonUsed = true;
             PlayerState = PlayerStateEnum.Air;
-            _canReleaseEarly = true;
+            _canReleaseEarly = false;
             _canDoubleJump = true;
             Jumped?.Invoke();
             GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y)); // TODO need a new action for wj
@@ -305,7 +325,7 @@ public class PlayerController : MonoBehaviour
             {
                 _velocity.x = -_velocity.x;
             }
-            
+
             _buttonUsed = true;
             PlayerState = PlayerStateEnum.Air;
             _canReleaseEarly = true;
@@ -329,7 +349,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDash()
     {
-        if (PlayerState is PlayerStateEnum.Air && CanUseButton() && _canDash)
+        if (PlayerState is PlayerStateEnum.Air && CanUseButton() && _canDash && !_closeToWall)
         {
             // start a dash
             _canDash = false;
@@ -337,7 +357,7 @@ public class PlayerController : MonoBehaviour
             PlayerState = PlayerStateEnum.Dash;
             _timeDashed = _time;
             _dashDirection = _directionPressed;
-        } 
+        }
         else if (PlayerState is PlayerStateEnum.Dash)
         {
             // move player forward at dash speed
@@ -347,15 +367,16 @@ public class PlayerController : MonoBehaviour
             if (_time - _timeDashed >= dashTime)
             {
                 PlayerState = PlayerStateEnum.Air;
+                _velocity.x = endDashSpeed * _lastDirection;
             }
-        } 
-        else if (PlayerState is PlayerStateEnum.Run or PlayerStateEnum.LeftWallSlide or PlayerStateEnum.RightWallSlide)
+        }
+        else if (PlayerState is PlayerStateEnum.Run)
         {
-            // can dash after landing on the ground or wall sliding
+            // can dash after landing on the ground
             _canDash = true;
         }
     }
-    
+
     private void HandleEarlyRelease()
     {
         if (!_canReleaseEarly) return;
@@ -374,14 +395,16 @@ public class PlayerController : MonoBehaviour
         {
             case PlayerStateEnum.Run:
                 // rotate ground normal vector 90 degrees towards facing direction
-                Vector2 walkTarget = new Vector2(_groundNormal.y * _lastDirection, _groundNormal.x * -_lastDirection) * maxGroundSpeed;
+                Vector2 walkTarget = new Vector2(_groundNormal.y * _lastDirection, _groundNormal.x * -_lastDirection) *
+                                     maxGroundSpeed;
                 float newX = Mathf.MoveTowards(_velocity.x, walkTarget.x, groundAcceleration * Time.fixedDeltaTime);
                 float newY = walkTarget.y;
                 _velocity = new Vector2(newX, newY);
                 break;
             case PlayerStateEnum.Air:
                 if (Mathf.Abs(_velocity.x) < maxAirSpeed)
-                    _velocity.x = Mathf.MoveTowards(_velocity.x, maxAirSpeed * _lastDirection, airAcceleration * Time.fixedDeltaTime);
+                    _velocity.x = Mathf.MoveTowards(_velocity.x, maxAirSpeed * _lastDirection,
+                        airAcceleration * Time.fixedDeltaTime);
                 break;
         }
     }
@@ -391,18 +414,23 @@ public class PlayerController : MonoBehaviour
         switch (PlayerState)
         {
             case PlayerStateEnum.Run:
-                if (_velocity.y <= 0f) 
+                if (_velocity.y <= 0f)
                     _velocity.y = -groundingForce;
                 break;
             case PlayerStateEnum.LeftWallSlide:
             case PlayerStateEnum.RightWallSlide:
                 _velocity.x = 0f;
                 if (_velocity.y <= 0f)
-                    _velocity.y = Mathf.MoveTowards(_velocity.y, -wallSlideSpeed, wallSlideAcceleration * Time.fixedDeltaTime);
-                else goto default;
+                    _velocity.y = Mathf.MoveTowards(_velocity.y, -wallSlideSpeed,
+                        wallSlideAcceleration * Time.fixedDeltaTime);
+                else goto case PlayerStateEnum.Air;
                 break;
-            default:
-                float accel = _releasedEarly ? earlyReleaseFallAcceleration : fallAcceleration;
+            case PlayerStateEnum.Air:
+                float accel;
+                if (_releasedEarly) accel = earlyReleaseFallAcceleration;
+                else if (_velocity.y >= 0f) accel = fallAccelerationUp;
+                else accel = fallAccelerationDown;
+
                 _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, accel * Time.fixedDeltaTime);
                 break;
         }
@@ -416,7 +444,8 @@ public class PlayerController : MonoBehaviour
             PlayerState = PlayerStateEnum.Swing;
             _swingRadius = Vector2.Distance(_swingArea.transform.position, transform.position);
             ropeRenderer.enabled = true;
-        } else if (PlayerState is PlayerStateEnum.Swing && CanUseButton())
+        }
+        else if (PlayerState is PlayerStateEnum.Swing && CanUseButton())
         {
             // press button to release
             // TODO: only release with correct direction
@@ -426,19 +455,23 @@ public class PlayerController : MonoBehaviour
             // TODO: set a min x and y velocity instead?
             if (_velocity.y >= 0f) _velocity *= swingBoostMultiplier;
             _buttonUsed = true;
-        } else if (PlayerState is PlayerStateEnum.Swing)
+        }
+        else if (PlayerState is PlayerStateEnum.Swing)
         {
+            _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, swingAcceleration * Time.fixedDeltaTime);
             Vector2 relPos = transform.position - _swingArea.transform.position;
             // if going down, accelerate to target swing speed
             if (_velocity.y <= 0f && _velocity.magnitude <= maxSwingSpeed)
             {
-                _velocity = _velocity.normalized * Mathf.MoveTowards(_velocity.magnitude, maxSwingSpeed, 
+                _velocity = _velocity.normalized * Mathf.MoveTowards(_velocity.magnitude, maxSwingSpeed,
                     swingAcceleration * Time.fixedDeltaTime);
             }
+
             Vector2 testPos = relPos + _velocity * Time.fixedDeltaTime;
             Vector2 newPos = testPos.normalized * _swingRadius;
             _velocity = (newPos - relPos) / Time.fixedDeltaTime;
         }
+
         _enteredSwingArea = false;
     }
 
@@ -458,11 +491,11 @@ public class PlayerController : MonoBehaviour
         if (_velocity.x != 0f) _lastDirection = Mathf.Sign(_velocity.x);
         Debug.DrawRay(transform.position, _velocity, Color.magenta);
     }
-    
+
     private bool CanUseButton()
     {
         return !_buttonUsed && _time <= _timeButtonPressed + buttonBufferTime;
     }
-    
+
     #endregion
 }
