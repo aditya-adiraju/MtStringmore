@@ -212,7 +212,7 @@ MonoBehaviour:
   maxGroundSpeed: 20
   groundAcceleration: 30
   startDirection: 1
-  groundingForce: 0.1
+  groundingForce: 1
   jumpPower: 34
   doubleJumpPower: 30
   coyoteTime: 0.1
@@ -220,7 +220,7 @@ MonoBehaviour:
   fallAccelerationUp: 70
   fallAccelerationDown: 90
   earlyReleaseFallAcceleration: 170
-  maxAirSpeed: 10
+  maxAirSpeed: 20
   airAcceleration: 10
   dashTime: 0.2
   dashSpeed: 30
@@ -230,9 +230,10 @@ MonoBehaviour:
   wallSlideSpeed: 15
   wallSlideAcceleration: 30
   swingBoostMultiplier: 1.2
-  maxSwingSpeed: 50
-  swingAcceleration: 60
+  maxSwingSpeed: 47
+  swingAcceleration: 75
   swingGravity: 110
+  minSwingReleaseX: 25
   ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 2
 --- !u!50 &5301496585393855472

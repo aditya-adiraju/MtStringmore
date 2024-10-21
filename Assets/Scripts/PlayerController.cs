@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxSwingSpeed;
     [SerializeField] private float swingAcceleration;
     [SerializeField] private float swingGravity;
+    [SerializeField] private float minSwingReleaseX;
     [Header("Visual")]
     [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private int deathTime;
@@ -309,6 +310,7 @@ public class PlayerController : MonoBehaviour
             _buttonUsed = true;
             PlayerState = PlayerStateEnum.Air;
             _canReleaseEarly = false;
+            _releasedEarly = false;
             _canDoubleJump = true;
             Jumped?.Invoke();
             GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y)); // TODO need a new action for wj
@@ -448,12 +450,13 @@ public class PlayerController : MonoBehaviour
         else if (PlayerState is PlayerStateEnum.Swing && CanUseButton())
         {
             // press button to release
-            // TODO: only release with correct direction
             PlayerState = PlayerStateEnum.Air;
             ropeRenderer.enabled = false;
-            // boost velocity if going up
-            // TODO: set a min x and y velocity instead?
-            if (_velocity.y >= 0f) _velocity *= swingBoostMultiplier;
+            
+            // give x velocity boost on release
+            float boostDirection = transform.position.x >= _swingArea.transform.position.x ? 1f : -1f;
+            if (_velocity.x <= Mathf.Abs(minSwingReleaseX)) 
+                _velocity.x = minSwingReleaseX * boostDirection;
             _buttonUsed = true;
         }
         else if (PlayerState is PlayerStateEnum.Swing)
