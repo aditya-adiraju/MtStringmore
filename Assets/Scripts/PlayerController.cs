@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour
     [Header("Visual")]
     [SerializeField] private LineRenderer ropeRenderer;
     [SerializeField] private int deathTime;
+    [Header("Debug")]
+    [SerializeField] private bool stateDebugLog;
     // @formatter:on
 
     #endregion
@@ -74,7 +76,8 @@ public class PlayerController : MonoBehaviour
         get => _playerState;
         private set
         {
-            Debug.Log($"PlayerState: {value}");
+            if (stateDebugLog)
+                Debug.Log($"PlayerState: {value}");
             _playerState = value;
         }
     }
