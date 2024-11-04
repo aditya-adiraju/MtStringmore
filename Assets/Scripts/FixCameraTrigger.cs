@@ -13,6 +13,7 @@ public class FixCameraTrigger : MonoBehaviour
 
     private FollowCamera _cam;
     private Vector2 _target;
+    private static int _triggerCount;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class FixCameraTrigger : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             _cam.FixTarget(_target, fixX, fixY);
+            _triggerCount++;
         }
     }
 
@@ -33,7 +35,9 @@ public class FixCameraTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            _cam.FollowPlayer();
+            _triggerCount--;
+            if (_triggerCount == 0)
+                _cam.FollowPlayer();
         }
     }
 }
