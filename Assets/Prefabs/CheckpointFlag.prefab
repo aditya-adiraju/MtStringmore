@@ -101,6 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 8846073679660825170}
   sprite: {fileID: 6452453256689605497}
+  conversationStartNode: 
+  beginsInteractable: 0
 --- !u!61 &9220039533559654016
 BoxCollider2D:
   m_ObjectHideFlags: 0
