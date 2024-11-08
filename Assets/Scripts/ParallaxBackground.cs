@@ -23,23 +23,21 @@ public class ParallaxBackground : MonoBehaviour
     {
         _parallaxLayers.Clear();
 
-        for (int i = 0; i < transform.childCount; i++)
+        for (var i = 0; i < transform.childCount; i++)
         {
-            ParallaxLayer layer = transform.GetChild(i).GetComponent<ParallaxLayer>();
+            var layer = transform.GetChild(i).GetComponent<ParallaxLayer>();
 
-            if (layer is not null)
-            {
-                layer.name = "Layer-" + i;
-                _parallaxLayers.Add(layer);
-            }
+            if (layer is null) continue;
+            layer.name = "Layer-" + i;
+            _parallaxLayers.Add(layer);
         }
     }
 
-    private void Move(float delta)
+    private void Move(float deltaX, float deltaY)
     {
-        foreach (ParallaxLayer layer in _parallaxLayers)
+        foreach (var layer in _parallaxLayers)
         {
-            layer.Move(delta);
+            layer.Move(deltaX, deltaY);
         }
     }
 }

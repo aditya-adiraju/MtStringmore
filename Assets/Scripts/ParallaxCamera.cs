@@ -14,13 +14,14 @@ public class ParallaxCamera : MonoBehaviour
     private Camera _mainCamera;
     private Vector2 _screenBounds;
     private float _prevX;
+    private float _prevY;
     private GameObject[] _layers;
     
     /// <summary>
     /// Fired when camera moves.
     /// Parameter is the amount the camera moved on the x-axis since the last frame.
     /// </summary>
-    public event Action<float> Moved;
+    public event Action<float, float> Moved;
     
     #endregion
     
@@ -29,8 +30,8 @@ public class ParallaxCamera : MonoBehaviour
     private void Start()
     {
         _mainCamera = gameObject.GetComponent<Camera>();
-        Vector3 screenTopRight = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-        Vector3 screenCenter = _mainCamera.ScreenToWorldPoint(new Vector3((float) Screen.width / 2, (float) Screen.height / 2, 0));
+        var screenTopRight = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+        var screenCenter = _mainCamera.ScreenToWorldPoint(new Vector3((float) Screen.width / 2, (float) Screen.height / 2, 0));
         _screenBounds = new Vector2(Mathf.Abs(screenTopRight.x - screenCenter.x), Mathf.Abs(screenTopRight.y - screenCenter.y));
         
         GameObject background = GameObject.FindGameObjectWithTag("ParallaxBackground");
@@ -45,21 +46,22 @@ public class ParallaxCamera : MonoBehaviour
 
     private void Update()
     {
-        Vector3 velocity = Vector3.zero;
-        Vector3 desiredPosition = transform.position + new Vector3(scrollSpeed, 0, 0);
-        Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, 0.3f);
+        var velocity = Vector3.zero;
+        var desiredPosition = transform.position + new Vector3(scrollSpeed, 0, 0);
+        var smoothPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, 0.3f);
         transform.position = smoothPosition;
     }
 
     private void LateUpdate()
     {
-        if (!Mathf.Approximately(_prevX, transform.position.x))
+        if (!Mathf.Approximately(_prevX, transform.position.x) | !Mathf.Approximately(_prevY, transform.position.y))
         {
-            Moved?.Invoke(_prevX - transform.position.x);
+            Moved?.Invoke(_prevX - transform.position.x, _prevY - transform.position.y);
             _prevX = transform.position.x;
+            _prevY = transform.position.y;
         }
         
-        foreach (GameObject layer in _layers)
+        foreach (var layer in _layers)
         {
             // RepositionLayer(layer);
         }
@@ -71,8 +73,9 @@ public class ParallaxCamera : MonoBehaviour
 
     private void RepositionLayer(GameObject obj)
     {
-        float bgWidth = obj.GetComponent<SpriteRenderer>().bounds.size.x;
-        float distanceFromCam = obj.transform.position.x - transform.position.x;
+        var bgWidth = obj.GetComponent<SpriteRenderer>().bounds.size.x;
+        var bgHeight = obj.GetComponent<SpriteRenderer>().bounds.size.y;
+        var distanceFromCam = obj.transform.position.x - transform.position.x;
         
         if (distanceFromCam >= _screenBounds.x)
         {
@@ -81,6 +84,15 @@ public class ParallaxCamera : MonoBehaviour
         else if (distanceFromCam <= -_screenBounds.x)
         {
             obj.transform.position = new Vector3(obj.transform.position.x + bgWidth / 3, obj.transform.position.y, obj.transform.position.z);
+        }
+        
+        if (distanceFromCam >= _screenBounds.y)
+        {
+            obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y- bgHeight / 3, obj.transform.position.z);
+        }
+        else if (distanceFromCam <= -_screenBounds.y)
+        {
+            obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y- bgHeight / 3, obj.transform.position.z);
         }
     }
     
