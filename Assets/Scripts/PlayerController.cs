@@ -53,6 +53,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int deathTime;
     [Header("Debug")]
     [SerializeField] private bool stateDebugLog;
+    // this is just here for battle of the concepts
+    [Header("Temporary")]
+    [SerializeField] private GameObject poofSmoke;
     // @formatter:on
 
     #endregion
@@ -330,6 +333,8 @@ public class PlayerController : MonoBehaviour
             _buttonUsed = true;
             PlayerState = PlayerStateEnum.Dash;
             _timeDashed = _time;
+            // for battle of the concepts: add temp dash anim
+            Instantiate(poofSmoke, transform.position, new Quaternion());
         }
         else if (PlayerState is PlayerStateEnum.Dash)
         {

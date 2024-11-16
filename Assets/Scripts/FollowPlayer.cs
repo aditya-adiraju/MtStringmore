@@ -35,9 +35,9 @@ public class FollowPlayer : MonoBehaviour
         if (spriteRenderer.enabled != !lineRenderer.isVisible)
         {
             spriteRenderer.enabled = !lineRenderer.isVisible;
-            // make poof smoke only on knitby disappearance, not on reapparance 
+            // make poof smoke only on Knitby disappearance, not on reappearance 
             if (!spriteRenderer.enabled)
-                Instantiate(poofSmoke, transform);
+                Instantiate(poofSmoke, transform.position, new Quaternion());
         }
 
         // flip Knitby sprite depending on location relative to next path
