@@ -1,95 +1,35 @@
-﻿title: Start
+﻿title: IntroCutscene
+setting: outside Knitby's house
 ---
-Knitby: Hi Marshmallow, what a surprise!
-Marshmallow: 🤗
-Knitby: Aww, it's nice to see you too
-Knitby: It's been a while
-Knitby: What are you up to now?
-Marshmallow: 😅
-Knitby: So, what's up?
-Marshmallow: 🧗⛰️❓
-Knitby: Why do you want to climb Mt Stringmore?
-Marshmallow: ☁️👅
-Knitby: ... you want to what?
-Marshmallow: 😋
-Knitby: Why would you think they would taste good?
-Knitby: Clouds are made of water vapour
-Knitby: So they don't taste like anything
-Marshmallow: 🍬👀
-Knitby: I know it might *look* like cotton candy
-Knitby: But looks can be deceiving
-Knitby: Or something
-Knitby: Are you sure you want to do this?
-Marshmallow: 🙂‍↕️
-Knitby: Well, then I'm coming with you
-Knitby: Wouldn't want you to get hurt
-Marshmallow: 😃
-
-===
-
-title: Start2
----
-Knitby: Hi Marshmallow, what a surprise!
-Marshmallow: Hey!
-Knitby: Aww, it's nice to see you
-Knitby: It's been a while
-Knitby: What are you up to now?
-Marshmallow: Uhh...
-Knitby: So, what's up?
-Marshmallow: Let's climb Mt Stringmore!
-Knitby: Uhhh, why?
-Marshmallow: Don't laugh
-Marshmallow: I want to eat a cloud at the summit
-Knitby: ... you want to what?
-Marshmallow: Look
-Marshmallow: I heard they taste good
-Knitby: Why would you think that
-Knitby: Clouds are made of water vapour
-Knitby: So they wouldn't taste like anything
-Marshmallow: But they *look* like cotton candy!
-Knitby: I know it might *look* like cotton candy
-Knitby: But looks can be deceiving
-Knitby: Or something
-Knitby: Are you sure you want to do this?
-Marshmallow: I've already made up my mind
-Marshmallow: Either you're coming with me
-Marshmallow: Or I'm going myself
-Knitby: Well, then I'm coming with you
-Knitby: Wouldn't want you to get hurt
-Marshmallow: Yay! 
-Marshmallow: Off we go then!
-===
-
-title: Start3
----
-Knitby: Good morning, Marshmallow, what a delightful surprise!
-Marshmallow: Hey!
-Knitby: It's so wonderful to see you, how long has it been?
-Knitby: What's new with you?
-Marshmallow: Uhh...
-Knitby: So, what brings you here to my home?
-Marshmallow: I want to climb Mt Stringmore together!
-Knitby: While I certainly appreciate the thought, why do you want to do that?
-Marshmallow: Don't laugh, but I want to eat a cloud at the summit
-Knitby: ... I'm sorry, you want to *what*?
-Marshmallow: Look... I heard they taste good
-Knitby: Can you help me understand why would think that?
-Knitby: Clouds are merely atmospheric collections of condensation
-Knitby: So they wouldn't taste like anything aside from water
-Knitby: Probably stale water too, as if it's been left out too long
-Marshmallow: But clouds *look* like cotton candy!
-Knitby: Just because two things *look* similar doesn't mean they are the same!
-Knitby: [insert snarky example of two things which look similar but are very different]
-Knitby: You of all people should know, physically resembling like a marshmallow but actually being composed of sprinkles
-Knitby: You know, looks can be deceiving. 
-Knitby: Or something
-Marshmallow: I want to find out for myself
-Knitby: Are you absolutely sure you intend on doing this?
-Marshmallow: I'm going, either with or without you
-Knitby: Well, when you put it that way, then I'm definitely coming with you
-Knitby: I wouldn't want you to get hurt attempting to summit Mt Stringmore
-Knitby: Knowing, of course, that I could've done something to prevent it
-Marshmallow: Yay, off we go then!
+Marshmallow: <i>*walks up to Knitby's door and knocks*</i>
+Knitby: <i>*opens the door with a creak*</i>
+Marshmallow: Hiya Knitby, how's it going?
+Knitby: Hey, good to see you, Marshmallow! It's going well, I'm still reveling in our glorious victory on the football field the other day.  
+Marshmallow: <i>*smiling*</i> Those anthropomorphic teddy bears didn't know what hit them! 
+Knitby: So... what's up? You don't normally come by unless you want something from me. 
+Marshmallow: Can you teach me how to climb Mt. Stringmore? I'm going to the summit!
+Knitby: Well... It's a really treacherous journey to get up there, why would you want to subject yourself to that?
+Marshmallow: I've always wanted to eat a cloud, and I bet I could reach one from up there.
+Knitby: ... I'm sorry, run that one by me again? You want to <i>what</i>?
+Marshmallow: I want to eat a cloud! They look just like cotton candy, so I'm sure it'll be very delicious.
+Knitby: Why would you think that? Clouds are just made of water vapour and dust, hanging around in the sky getting all stale and acrid.
+Knitby: By your argument, they could very well just be cotton balls instead, which would be much less tasty!
+Marshmallow: Do you not trust me? Have I ever led you wrong?
+Knitby: <i>*sternly*</i> Marshmallow, even ignoring your absurd reasons for doing so, you're far too soft to be climbing Mt. Stringmore.
+Marshmallow: <i>*shocked*</i> Did... did you just call me SOFT???
+Knitby: Look, there's nothing wrong with being soft! It's just that these peaks have claimed many adventurers before you. This is a dangerous and foolish endeavour, and—
+Marshmallow: <i>*even more shocked*</i> FOOLISH???
+Knitby: Okay, not quite what I meant. My point is that just because you have a chip on your shoulder—
+Marshmallow: I have <i>what</i> on my shoulder?
+Knitby: Let me rephrase. Just because you want to prove yourself doesn't mean you should recklessly endanger yourself—
+Marshmallow: Well, okay then. Bye! <i>*takes off at a full sprint*</i>
+Knitby: Wait, where are you going in such a hurry?
+Marshmallow: <i>*getting further away*</i> Up the mountain, duh!
+Knitby: <i>*shouting*</i> But why?
+Marshmallow: <i>*far away*</i> Because I know you can't help but follow me anyway!
+Knitby: <i>*sighs*</i> I really should've guessed that Marshmallow would pull this kind of stunt.
+Knitby: <i>*shouting*</i> Fine, I'm coming, wait up!
+Marshmallow: <i>*playfully*</i> Good, try to keep up!
 ===
 
 title: DemoEnd
@@ -97,3 +37,4 @@ title: DemoEnd
 Knitby: Hey, not too shabby!
 Marshmallow: ...thanks?
 ===
+

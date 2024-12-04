@@ -223,8 +223,6 @@ namespace Yarn
                 // time for.
                 while (accumulator >= secondsPerLetter)
                 {
-                    text.maxVisibleCharacters += 1;
-
                     // ok so the change needs to be that if at any point we hit the pause position
                     // we instead stop worrying about letters
                     // and instead we do a normal wait for the necessary duration
@@ -240,8 +238,19 @@ namespace Yarn
                             accumulator = Time.unscaledDeltaTime;
                         }
 
+                    text.maxVisibleCharacters += 1;
+
                     onCharacterTyped?.Invoke();
                     accumulator -= secondsPerLetter;
+                    
+                    // Don't pause on the last character
+                    if (text.maxVisibleCharacters >= characterCount) continue;
+
+                    // Extra pause on punctuation
+                    var nextChar = text.text[text.maxVisibleCharacters - 1];
+                    if (nextChar.Equals('.') || nextChar.Equals(',') || nextChar.Equals('?') || nextChar.Equals('!')) {
+                        yield return new WaitForSecondsRealtime(0.3f);
+                    }
                 }
 
                 accumulator += Time.unscaledDeltaTime;

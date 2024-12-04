@@ -439,15 +439,15 @@ namespace Yarn
                 else
                     lineText.text = AddLineBreaks(text);
 
-                if (useTypewriterEffect)
-                    // If we're using the typewriter effect, hide all of the
-                    // text before we begin any possible fade (so we don't fade
-                    // in on visible text).
-                    lineText.maxVisibleCharacters = 0;
-                else
+                // If we're using the typewriter effect, hide all of the
+                // text before we begin any possible fade (so we don't fade
+                // in on visible text).
+                lineText.maxVisibleCharacters = useTypewriterEffect
+                    ? 0
+                    :
                     // Ensure that the max visible characters is effectively
                     // unlimited.
-                    lineText.maxVisibleCharacters = int.MaxValue;
+                    int.MaxValue;
 
                 // If we're using the fade effect, start it, and wait for it to
                 // finish.
@@ -506,7 +506,7 @@ namespace Yarn
             canvasGroup.blocksRaycasts = true;
 
             // Show the continue button, if we have one.
-            if (continueButton != null) continueButton.SetActive(true);
+            continueButton?.SetActive(true);
 
             // If we have a hold time, wait that amount of time, and then
             // continue.
@@ -585,7 +585,7 @@ namespace Yarn
         /// <param name="palette">The palette mapping attributes to colours.</param>
         /// <param name="applyLineBreaks">If the [br /] marker is found in the line should this be replaced with a line break?</param>
         /// <returns>A TMP formatted string with the palette markup values injected within.</returns>
-        public static string PaletteMarkedUpText(MarkupParseResult line, MarkupPalette palette,
+        private static string PaletteMarkedUpText(MarkupParseResult line, MarkupPalette palette,
             bool applyLineBreaks = true)
         {
             var lineOfText = line.Text;
@@ -593,8 +593,7 @@ namespace Yarn
             foreach (var attribute in line.Attributes)
             {
                 // we have a colour that matches the current marker
-                Color markerColour;
-                if (palette.ColorForMarker(attribute.Name, out markerColour))
+                if (palette.ColorForMarker(attribute.Name, out var markerColour))
                 {
                     // we use the range on the marker to insert the TMP <color> tags
                     // not the best approach but will work ok for this use case
@@ -610,14 +609,12 @@ namespace Yarn
             return lineOfText;
         }
 
-        public static string AddLineBreaks(MarkupParseResult line)
+        private static string AddLineBreaks(MarkupParseResult line)
         {
             var lineOfText = line.Text;
             line.Attributes.Sort((a, b) => b.Position.CompareTo(a.Position));
-            foreach (var attribute in line.Attributes.Where(a => a.Name == "br"))
-                // we then replace the marker with the tmp <br>
-                lineOfText = lineOfText.Insert(attribute.Position, "<br>");
-            return lineOfText;
+            return line.Attributes.Where(a => a.Name == "br").Aggregate(lineOfText,
+                (current, attribute) => current.Insert(attribute.Position, "<br>"));
         }
 
         /// <summary>
@@ -636,17 +633,13 @@ namespace Yarn
         public static Stack<(int position, float duration)> GetPauseDurationsInsideLine(MarkupParseResult line)
         {
             var pausePositions = new Stack<(int, float)>();
-            var label = "pause";
+            const string label = "pause";
 
             // sorting all the attributes in reverse positional order
             // this is so we can build the stack up in the right positioning
             var attributes = line.Attributes;
             attributes.Sort((a, b) => b.Position.CompareTo(a.Position));
-            foreach (var attribute in line.Attributes)
-            {
-                // if we aren't a pause skip it
-                if (attribute.Name != label) continue;
-
+            foreach (var attribute in line.Attributes.Where(attribute => attribute.Name == label))
                 // did they set a custom duration or not, as in did they do this:
                 //     Alice: this is my line with a [pause = 1000 /]pause in the middle
                 // or did they go:
@@ -655,7 +648,7 @@ namespace Yarn
                     // depending on the property value we need to take a different path
                     // this is because they have made it an integer or a float which are roughly the same
                     // note to self: integer and float really ought to be convertible...
-                    // but they also might have done something weird and we need to handle that
+                    // but they also might have done something weird, and we need to handle that
                     switch (value.Type)
                     {
                         case MarkupValueType.Integer:
@@ -665,6 +658,8 @@ namespace Yarn
                         case MarkupValueType.Float:
                             pausePositions.Push((attribute.Position, value.FloatValue / 1000));
                             break;
+                        case MarkupValueType.String:
+                        case MarkupValueType.Bool:
                         default:
                             Debug.LogWarning(
                                 $"Pause property is of type {value.Type}, which is not allowed. Defaulting to one second.");
@@ -674,7 +669,6 @@ namespace Yarn
                 else
                     // they haven't set a duration, so we will instead use the default of one second
                     pausePositions.Push((attribute.Position, 1));
-            }
 
             return pausePositions;
         }
