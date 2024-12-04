@@ -236,6 +236,8 @@ MonoBehaviour:
   ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 2
   stateDebugLog: 1
+  yBounceForce: 0
+  xBounceForce: 0
 --- !u!50 &5301496585393855472
 Rigidbody2D:
   serializedVersion: 4

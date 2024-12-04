@@ -88,6 +88,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Current velocity of the player.
     /// </summary>
+
     public Vector2 Velocity => _velocity;
 
     /// <summary>
@@ -120,6 +121,7 @@ public class PlayerController : MonoBehaviour
 
     private PlayerStateEnum _playerState;
 
+
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
 
@@ -144,6 +146,12 @@ public class PlayerController : MonoBehaviour
     private bool _enteredSwingArea;
     private float _swingRadius;
 
+    private bool _inTrampolineArea;
+    private bool _inBouncePlatformArea;
+    private Collision2D _bounceArea;
+    private Trampoline _trampoline;
+    private BouncyPlatform _bouncyPlatform;
+
     #endregion
 
     #region Unity Event Handlers
@@ -159,7 +167,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _time += Time.deltaTime;
-
         GetInput();
         RedrawRope(); // TODO this should be moved outside player controller when knitby is real
     }
@@ -194,13 +201,44 @@ public class PlayerController : MonoBehaviour
                 HandleDeath();
             }
         }
+        else if (other.gameObject.CompareTag("Trampoline"))
+        {
+            _inTrampolineArea = true;
+            //get the exact trampoline that the player touched to get its public variables
+            _trampoline = other.gameObject.GetComponent<Trampoline>();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Trampoline"))
+        {
+            _inTrampolineArea = false;
+        }
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("BounceArea"))
+        {
+            //put player in air state for proper bouncy platform interactions
+            if (_playerState == PlayerStateEnum.Dash)
+            {
+                _playerState = PlayerStateEnum.Air;
+            }
+
+            _inBouncePlatformArea = true;
+            _bounceArea = other;
+            //get the exact bouncy platform the player touched to get its public variables
+            _bouncyPlatform = other.gameObject.GetComponent<BouncyPlatform>();
+        }
     }
 
     private void FixedUpdate()
     {
         if (PlayerState == PlayerStateEnum.Dead)
             return;
-
         CheckCollisions();
         HandleWallJump();
         HandleSwing();
@@ -209,6 +247,7 @@ public class PlayerController : MonoBehaviour
         HandleEarlyRelease();
         HandleWalk();
         HandleGravity();
+        HandleBounce();
         if (dashEnabled) HandleDash();
         ApplyMovement();
     }
@@ -387,8 +426,45 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void HandleBounce()
+    {
+        //handle trampoline bounces
+        if (_inTrampolineArea)
+        {
+            _velocity = new Vector2(_trampoline.xBounceForce * _lastDirection, _trampoline.yBounceForce);
+        }
+
+        //handle bouncy platform bounces
+        if (_inBouncePlatformArea)
+        {
+            //on first contact determine the players new direction
+            Vector2 directionVector = Vector2.Reflect(_velocity, _bounceArea.contacts[0].normal);
+
+            //ensure the player bounces correctly when hitting the platform coming from the left
+            if (_velocity.x < 0 && directionVector.x < 0 && _velocity.y < 0 &&
+                directionVector.y < 0)
+            {
+                _velocity = new Vector2(-_bouncyPlatform.xBounceForce, _bouncyPlatform.yBounceForce);
+            }
+            else
+            {
+                _velocity = new Vector2(_bouncyPlatform.xBounceForce * Mathf.Sign(directionVector.x),
+                    _bouncyPlatform.yBounceForce);
+            }
+
+            _inBouncePlatformArea = false;
+        }
+    }
+
+
     private void HandleGravity()
     {
+        //temporarily "turn off gravity" for auto trampoline bounce
+        if (_inTrampolineArea)
+        {
+            return;
+        }
+
         switch (PlayerState)
         {
             case PlayerStateEnum.Run:
@@ -428,10 +504,10 @@ public class PlayerController : MonoBehaviour
             // press button to release
             PlayerState = PlayerStateEnum.Air;
             ropeRenderer.enabled = false;
-            
+
             // give x velocity boost on release
             float boostDirection = transform.position.x >= _swingArea.transform.position.x ? 1f : -1f;
-            if (_velocity.x <= Mathf.Abs(minSwingReleaseX)) 
+            if (_velocity.x <= Mathf.Abs(minSwingReleaseX))
                 _velocity.x = minSwingReleaseX * boostDirection;
             _buttonUsed = true;
         }
