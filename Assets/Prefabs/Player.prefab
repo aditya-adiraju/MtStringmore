@@ -235,9 +235,8 @@ MonoBehaviour:
   minSwingReleaseX: 25
   ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 2
-  stateDebugLog: 1
-  yBounceForce: 0
-  xBounceForce: 0
+  stateDebugLog: 0
+  poofSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
 --- !u!50 &5301496585393855472
 Rigidbody2D:
   serializedVersion: 4

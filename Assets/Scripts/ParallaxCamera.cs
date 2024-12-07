@@ -7,12 +7,8 @@ using UnityEngine;
 public class ParallaxCamera : MonoBehaviour
 {
     #region Properties
-    
-    [SerializeField] private float choke;
-    [SerializeField] private float scrollSpeed;
-    [SerializeField] private int repeats = 3;
     private Camera _mainCamera;
-    private Vector2 _screenBounds;
+    private float _screenWidth;
     private float _prevX;
     private float _prevY;
     private GameObject[] _layers;
@@ -29,10 +25,9 @@ public class ParallaxCamera : MonoBehaviour
 
     private void Start()
     {
-        _mainCamera = gameObject.GetComponent<Camera>();
-        var screenTopRight = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-        var screenCenter = _mainCamera.ScreenToWorldPoint(new Vector3((float) Screen.width / 2, (float) Screen.height / 2, 0));
-        _screenBounds = new Vector2(Mathf.Abs(screenTopRight.x - screenCenter.x), Mathf.Abs(screenTopRight.y - screenCenter.y));
+        Camera cam = gameObject.GetComponent<Camera>();
+        float height = 2f * cam.orthographicSize;
+        _screenWidth = height * cam.aspect;
         
         GameObject background = GameObject.FindGameObjectWithTag("ParallaxBackground");
         _layers = new GameObject[background.transform.childCount];
@@ -44,26 +39,18 @@ public class ParallaxCamera : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        var velocity = Vector3.zero;
-        var desiredPosition = transform.position + new Vector3(scrollSpeed, 0, 0);
-        var smoothPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, 0.3f);
-        transform.position = smoothPosition;
-    }
-
     private void LateUpdate()
     {
-        if (!Mathf.Approximately(_prevX, transform.position.x) | !Mathf.Approximately(_prevY, transform.position.y))
+        if (!Mathf.Approximately(_prevX, transform.position.x) || !Mathf.Approximately(_prevY, transform.position.y))
         {
             Moved?.Invoke(_prevX - transform.position.x, _prevY - transform.position.y);
             _prevX = transform.position.x;
             _prevY = transform.position.y;
         }
         
-        foreach (var layer in _layers)
+        foreach (GameObject layer in _layers)
         {
-            // RepositionLayer(layer);
+            RepositionLayer(layer);
         }
     }
     
@@ -71,28 +58,23 @@ public class ParallaxCamera : MonoBehaviour
     
     #region Helper Functions
 
+    /// <summary>
+    /// Moves a background tiled to repeat 3x to the left or right as the player reaches the edge,
+    /// to create the illusion of a seamlessly repeating background
+    /// Background MUST be tiled to repeat 3x.
+    /// </summary>
+    /// <param name="obj">Background sprite object to be moved</param>
     private void RepositionLayer(GameObject obj)
     {
-        var bgWidth = obj.GetComponent<SpriteRenderer>().bounds.size.x;
-        var bgHeight = obj.GetComponent<SpriteRenderer>().bounds.size.y;
-        var distanceFromCam = obj.transform.position.x - transform.position.x;
+        float bgWidth = obj.GetComponent<SpriteRenderer>().bounds.size.x;
         
-        if (distanceFromCam >= _screenBounds.x)
+        if (obj.transform.position.x + bgWidth / 2f <= transform.position.x + _screenWidth / 2f)
         {
-            obj.transform.position = new Vector3(obj.transform.position.x - bgWidth / 3, obj.transform.position.y, obj.transform.position.z);
+            obj.transform.position = new Vector3(obj.transform.position.x + bgWidth / 3f, obj.transform.position.y, obj.transform.position.z);
         }
-        else if (distanceFromCam <= -_screenBounds.x)
+        else if (obj.transform.position.x - bgWidth / 2f >= transform.position.x - _screenWidth / 2f)
         {
-            obj.transform.position = new Vector3(obj.transform.position.x + bgWidth / 3, obj.transform.position.y, obj.transform.position.z);
-        }
-        
-        if (distanceFromCam >= _screenBounds.y)
-        {
-            obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y- bgHeight / 3, obj.transform.position.z);
-        }
-        else if (distanceFromCam <= -_screenBounds.y)
-        {
-            obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y- bgHeight / 3, obj.transform.position.z);
+            obj.transform.position = new Vector3(obj.transform.position.x - bgWidth / 3f, obj.transform.position.y, obj.transform.position.z);
         }
     }
     
