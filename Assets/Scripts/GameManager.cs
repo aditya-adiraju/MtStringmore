@@ -40,10 +40,12 @@ public class GameManager : MonoBehaviour {
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         var player = GameObject.FindGameObjectWithTag("Player");
+        var knitby = GameObject.FindGameObjectWithTag("Knitby");
         if (_newLevel == false)
         {
             Vector3 spawnPos = new Vector3(CheckPointPos.x, CheckPointPos.y, player.transform.position.z);
             player.transform.position = spawnPos;
+            knitby.transform.position = spawnPos;
         }
         else
         {

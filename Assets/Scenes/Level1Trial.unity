@@ -91576,7 +91576,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: conversationStartNode
-      value: IntroCutscene
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -91949,7 +91949,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7747568601484656293, guid: c50dd1e140118644ca9df94590c0a344, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -16
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 7747568601484656293, guid: c50dd1e140118644ca9df94590c0a344, type: 3}
       propertyPath: m_LocalPosition.z
@@ -92281,10 +92281,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4476534854235773522, guid: 0fedb40c7675c7a40b7785be1f0863bf, type: 3}
-      propertyPath: objectToFollow
-      value: 
-      objectReference: {fileID: 2111871245}
     - target: {fileID: 7720336601314418461, guid: 0fedb40c7675c7a40b7785be1f0863bf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.1
@@ -92966,11 +92962,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2905708094114413808, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.5
+      value: 2.92
       objectReference: {fileID: 0}
     - target: {fileID: 2905708094114413808, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 2905708094114413808, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
       propertyPath: m_LocalPosition.z
@@ -93184,11 +93180,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecbae29f5f6393b4c8321b00c39c29c0, type: 3}
---- !u!1 &2111871245 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4217790213014453210, guid: 616301d93505e4a409e884aa0b323f31, type: 3}
-  m_PrefabInstance: {fileID: 1806021932}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2141303905
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -93240,10 +93231,6 @@ PrefabInstance:
     - target: {fileID: 4544653655168585683, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: m_Name
       value: CheckpointFlag (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
-      propertyPath: conversationStartNode
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
