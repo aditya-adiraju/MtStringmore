@@ -8,26 +8,26 @@ using UnityEngine;
 public class FixCameraTrigger : MonoBehaviour
 {
     [SerializeField] private Vector2 targetOffset;
-    [SerializeField] private bool fixX = true;
-    [SerializeField] private bool fixY = true;
+    [SerializeField] public bool fixX = true;
+    [SerializeField] public bool fixY = true;
 
-    private FollowCamera _cam;
+    public Vector2 Target => _target;
+
     private Vector2 _target;
-    private static int _triggerCount;
+    private FollowCamera _cam;
 
     private void Awake()
     {
         _cam = GameObject.FindWithTag("MainCamera").GetComponent<FollowCamera>();
         Vector2 boxOffset = GetComponent<BoxCollider2D>().offset;
-        _target = (Vector2) transform.position + boxOffset + targetOffset;
+        _target = (Vector2)transform.position + boxOffset + targetOffset;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            _cam.FixTarget(_target, fixX, fixY);
-            _triggerCount++;
+            _cam.EnterFixCameraTrigger(this);
         }
     }
 
@@ -35,9 +35,7 @@ public class FixCameraTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            _triggerCount--;
-            if (_triggerCount == 0)
-                _cam.FollowPlayer();
+            _cam.ExitFixCameraTrigger(this);
         }
     }
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static PlayerController;
 
@@ -20,6 +22,7 @@ public class FollowCamera : MonoBehaviour
 
     private PlayerController _playerController;
     private Transform _playerTransform;
+    private List<FixCameraTrigger> _fixCameraTriggers;
     private Vector2 _target;
     private float _xVelocity;
     private float _yVelocity;
@@ -40,7 +43,7 @@ public class FollowCamera : MonoBehaviour
         _cameraZ = transform.position.z;
         _fixedX = false;
         _fixedY = false;
-        
+        _fixCameraTriggers = new List<FixCameraTrigger>();
     }
 
     private void LateUpdate()
@@ -48,7 +51,7 @@ public class FollowCamera : MonoBehaviour
         if (!_fixedX && !_fixedY) _target = GetPlayerTarget();
         else if (!_fixedX) _target.x = GetPlayerTarget().x;
         else if (!_fixedY) _target.y = GetPlayerTarget().y;
-        
+
         // apply smoothing to the camera
         Vector3 camPosition = transform.position;
         float smoothedX = Mathf.SmoothDamp(camPosition.x, _target.x, ref _xVelocity, xSmoothTime);
@@ -57,7 +60,7 @@ public class FollowCamera : MonoBehaviour
     }
 
     #endregion
-    
+
     #region Public Methods
 
     /// <summary>
@@ -89,7 +92,7 @@ public class FollowCamera : MonoBehaviour
     {
         if (_playerController.PlayerState == PlayerStateEnum.Run) _lastGroundedY = _playerTransform.position.y;
         float playerY = _playerTransform.position.y;
-        
+
         // when player is above their last grounded position + a threshold or below their last grounded position,
         // set the camera to the player's y level + offset
         // otherwise, set the camera to their last grounded position + offset
@@ -100,7 +103,37 @@ public class FollowCamera : MonoBehaviour
         float targetX = _playerTransform.position.x + lookaheadDistance * _playerController.Direction;
 
         return new Vector2(targetX, targetY);
-    } 
-    
+    }
+
+    /// <summary>
+    /// Called when entering a new FixCameraTrigger.
+    /// Camera will fix to the new area.
+    /// </summary>
+    public void EnterFixCameraTrigger(FixCameraTrigger trigger)
+    {
+        _fixCameraTriggers.Add(trigger);
+        FixTarget(trigger.Target, trigger.fixX, trigger.fixY);
+    }
+
+    /// <summary>
+    /// Called when exiting a FixCameraTrigger.
+    /// Camera will follow the previous area, or start following the player.
+    /// </summary>
+    public void ExitFixCameraTrigger(FixCameraTrigger trigger)
+    {
+        _fixCameraTriggers.Remove(trigger);
+        if (_fixCameraTriggers.Count == 0)
+        {
+            // exited last fix area, follow the player again
+            FollowPlayer();
+        }
+        else
+        {
+            // still in an area, track the most recently entered area
+            FixCameraTrigger recent = _fixCameraTriggers.Last();
+            FixTarget(recent.Target, recent.fixX, recent.fixY);
+        }
+    }
+
     #endregion
 }
