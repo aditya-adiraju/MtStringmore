@@ -91576,7 +91576,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: conversationStartNode
-      value: 
+      value: JumpTutorial
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -92169,11 +92169,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1324156711375271402, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 593.50696
+      value: 499
       objectReference: {fileID: 0}
     - target: {fileID: 1324156711375271402, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 77.89
+      value: 69.2
       objectReference: {fileID: 0}
     - target: {fileID: 1324156711375271402, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: m_LocalPosition.z
@@ -92210,6 +92210,10 @@ PrefabInstance:
     - target: {fileID: 4544653655168585683, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: m_Name
       value: CheckpointFlag (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
+      propertyPath: conversationStartNode
+      value: SwingTutorial
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -92946,6 +92950,10 @@ PrefabInstance:
     - target: {fileID: 4544653655168585683, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: m_Name
       value: CheckpointFlag (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
+      propertyPath: conversationStartNode
+      value: DashTutorial
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
