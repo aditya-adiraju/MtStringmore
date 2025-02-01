@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8153732205709624572}
   - component: {fileID: 3953184341829753173}
   - component: {fileID: 328250590533980581}
+  - component: {fileID: 1902188598252490184}
   m_Layer: 0
   m_Name: Swing Area
   m_TagString: SwingArea
@@ -119,7 +120,20 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 2.61
+  m_Radius: 3.5
+--- !u!114 &1902188598252490184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4545649595690617337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64bac5ff3cd33462aab301aedcbdcbe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swingRadius: 3
 --- !u!1 &8980845071309438840
 GameObject:
   m_ObjectHideFlags: 0
