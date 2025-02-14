@@ -112,6 +112,11 @@ public class PlayerController : MonoBehaviour
     public event Action Jumped;
     public event Action DoubleJumped;
     public event Action Death;
+    
+    /// <summary>
+    /// If true, skips death logic.
+    /// </summary>
+    public bool DebugIgnoreDeath { get; set; }
 
     #endregion
 
@@ -314,6 +319,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDeath()
     {
+        if (DebugIgnoreDeath) return;
         _velocity = Vector2.zero;
         _rb.velocity = _velocity;
         PlayerState = PlayerStateEnum.Dead;
