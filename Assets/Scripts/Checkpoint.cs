@@ -12,7 +12,7 @@ public class Checkpoint : MonoBehaviour
     private Animator anim;
 
     [SerializeField] private SpriteRenderer sprite;
-    
+
     [Tooltip("Node that starts from this checkpoint. Set to \"\" to not trigger dialog from checkpoint.")]
     [SerializeField]
     private string conversationStartNode;
@@ -24,7 +24,7 @@ public class Checkpoint : MonoBehaviour
     public void Start()
     {
         _dialogueRunner = FindObjectOfType<DialogueRunner>();
-        _dialogueRunner.onDialogueComplete.AddListener(EndConversation);
+        if (_dialogueRunner) _dialogueRunner.onDialogueComplete.AddListener(EndConversation);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
