@@ -50,3 +50,6 @@ TagManager:
   - name: Player
     uniqueID: 2546906049
     locked: 0
+  - name: ClothLayer
+    uniqueID: 1775649197
+    locked: 0
