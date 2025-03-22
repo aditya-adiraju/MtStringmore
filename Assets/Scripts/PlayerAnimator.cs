@@ -30,6 +30,20 @@ public class PlayerAnimator : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Max number of roasted states.
+    /// </summary>
+    public const int NumRoastStates = 6;
+
+    /// <summary>
+    /// RoastState of the player (i.e. how cooked they are) on a scale of 0 (not cooked) to <see cref="NumRoastStates"/>
+    /// (very cooked).
+    /// </summary>
+    public int RoastState
+    {
+        set => anim.SetInteger(RoastKey, value);
+    }
+
     #region Private Fields
 
     private AudioSource _source;
@@ -48,6 +62,7 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int WallChangedKey = Animator.StringToHash("WallChanged");
     private static readonly int JumpKey = Animator.StringToHash("Jump");
     private static readonly int DeathKey = Animator.StringToHash("Dead");
+    private static readonly int RoastKey = Animator.StringToHash("Roast");
 
     #endregion
 

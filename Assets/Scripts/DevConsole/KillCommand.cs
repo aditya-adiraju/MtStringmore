@@ -21,7 +21,7 @@ namespace DevConsole
                 return;
             }
 
-            pc.SendMessage("HandleDeath");
+            pc.ForceKill();
         }
 
         /// <inheritdoc />

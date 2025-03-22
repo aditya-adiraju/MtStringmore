@@ -263,7 +263,15 @@ public class PlayerController : MonoBehaviour
         CurrentInteractableArea.EndInteract(this);
         PlayerState = PlayerStateEnum.Air;
     }
-    
+
+    /// <summary>
+    /// Force kills the player.
+    /// </summary>
+    public void ForceKill()
+    {
+        HandleDeath();
+    }
+
     #region Private Methods
 
     private RaycastHit2D CapsuleCastCollision(Vector2 direction, float distance)

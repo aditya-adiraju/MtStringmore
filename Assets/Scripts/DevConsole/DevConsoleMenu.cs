@@ -159,6 +159,7 @@ namespace DevConsole
             RegisterCommand(new LoadSceneCommand());
             RegisterCommand(new QuitCommand());
             RegisterCommand(new KillCommand());
+            RegisterCommand(new FlipCommand());
             RegisterCommand(new ResetCommand());
             RegisterCommand(new HelpCommand(this));
             RegisterCommand(new EnableCheatsCommand(this));
