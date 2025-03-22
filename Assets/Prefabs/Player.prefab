@@ -145,10 +145,15 @@ MonoBehaviour:
   anim: {fileID: 6379059411910678817}
   deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
   sprite: {fileID: 6233932863109230516}
-  runSound: {fileID: 8300000, guid: 6bf00bd78aa7cc44ca3aeb9158e8bd12, type: 3}
-  jumpSound: {fileID: 8300000, guid: f2b3c1932e39bef4d9fd655ea0a50af9, type: 3}
+  runSound: {fileID: 8300000, guid: 6e356ef902be4f840b367f41e707de86, type: 3}
+  jumpSound:
+  - {fileID: 8300000, guid: 8abbc66e3f16bff488ce21cc82ac1745, type: 3}
+  - {fileID: 8300000, guid: 1b204d783914ee546b6a7f8231255ba2, type: 3}
+  - {fileID: 8300000, guid: 181ba71da646aaf4f93b5f384785ce56, type: 3}
+  - {fileID: 8300000, guid: 26eb9aa74b4fe8d4882f29398cba0fac, type: 3}
+  dashSound: {fileID: 8300000, guid: 8651851e0ad36d34da97e4c6c4edcbd4, type: 3}
   landSound: {fileID: 8300000, guid: 632e2ef2dd1e97b439f2aa7375153a25, type: 3}
-  wallSlideSound: {fileID: 8300000, guid: 7840a60655380b045a800a67dd581a66, type: 3}
+  wallSlideSound: {fileID: 8300000, guid: bda851337f1a3ad4db1a535fcfca588c, type: 3}
   deathSounds:
   - {fileID: 8300000, guid: c81b8a0512e132e4cbdff16ff3c341e9, type: 3}
   - {fileID: 8300000, guid: e9de9b181cfc6804e9e615db52c9d7ad, type: 3}
@@ -231,11 +236,9 @@ MonoBehaviour:
   swingBoostMultiplier: 1.2
   maxSwingSpeed: 47
   swingAcceleration: 75
-  swingGravity: 110
   minSwingReleaseX: 25
   ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 2
-  stateDebugLog: 0
   poofSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
 --- !u!50 &5301496585393855472
 Rigidbody2D:
@@ -419,6 +422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeDuration: 0.3
+  destroyOnFadeOut: 0
 --- !u!1 &8704445144224804026
 GameObject:
   m_ObjectHideFlags: 0

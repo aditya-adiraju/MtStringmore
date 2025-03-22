@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 /// <summary>
@@ -120,6 +120,7 @@ public class PlayerController : MonoBehaviour
     public event Action<bool> WallChanged;
 
     public event Action Jumped;
+    public event Action Dashed;
     public event Action DoubleJumped;
     public event Action Death;
 
@@ -390,6 +391,7 @@ public class PlayerController : MonoBehaviour
             _canDash = false;
             _buttonUsed = true;
             PlayerState = PlayerStateEnum.Dash;
+            Dashed?.Invoke();
             _timeDashed = _time;
             // for battle of the concepts: add temp dash anim
             Instantiate(poofSmoke, transform.position, new Quaternion());

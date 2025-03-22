@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 ///     Handles player animation
@@ -22,7 +22,8 @@ public class PlayerAnimator : MonoBehaviour
     [Header("Audio Clips")] [SerializeField]
     private AudioClip runSound;
 
-    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip[] jumpSound;
+    [SerializeField] private AudioClip dashSound;
     [SerializeField] private AudioClip landSound;
     [SerializeField] private AudioClip wallSlideSound;
     [SerializeField] private AudioClip[] deathSounds;
@@ -81,6 +82,7 @@ public class PlayerAnimator : MonoBehaviour
         _player.GroundedChanged += OnGroundedChanged;
         _player.WallChanged += OnWallChanged;
         _player.Death += OnDeath;
+        _player.Dashed += OnDash;
 
         // _moveParticles.Play();
     }
@@ -151,8 +153,9 @@ public class PlayerAnimator : MonoBehaviour
         anim.SetTrigger(JumpKey);
         anim.SetBool(GroundedKey, false);
 
-        _source.clip = jumpSound;
-        _source.PlayOneShot(jumpSound);
+        int randomSound = Random.Range(0, jumpSound.Length);
+        _source.clip = jumpSound[randomSound];
+        _source.PlayOneShot(jumpSound[randomSound]);
 
         // if (_grounded) // Avoid coyote
         // {
@@ -212,6 +215,12 @@ public class PlayerAnimator : MonoBehaviour
             _source.PlayOneShot(sound);
         Instantiate(deathSmoke, transform);
         anim.SetBool(DeathKey, true);
+    }
+
+    private void OnDash()
+    {
+        _source.clip = dashSound;
+        _source.PlayOneShot(dashSound);
     }
 
     // private void DetectGroundColor()
