@@ -28,8 +28,6 @@ public class FollowCamera : MonoBehaviour
     private float _yVelocity;
     private float _cameraZ;
     private float _lastGroundedY;
-    private bool _fixedX;
-    private bool _fixedY;
 
     #endregion
 
@@ -41,16 +39,13 @@ public class FollowCamera : MonoBehaviour
         _playerTransform = player.transform;
         _playerController = player.GetComponent<PlayerController>();
         _cameraZ = transform.position.z;
-        _fixedX = false;
-        _fixedY = false;
         _fixCameraTriggers = new List<FixCameraTrigger>();
     }
 
     private void LateUpdate()
     {
-        if (!_fixedX && !_fixedY) _target = GetPlayerTarget();
-        else if (!_fixedX) _target.x = GetPlayerTarget().x;
-        else if (!_fixedY) _target.y = GetPlayerTarget().y;
+        Vector2 target = GetPlayerTarget();
+        _target = _fixCameraTriggers.LastOrDefault()?.AffectTarget(target) ?? target;
 
         // apply smoothing to the camera
         Vector3 camPosition = transform.position;
@@ -62,28 +57,6 @@ public class FollowCamera : MonoBehaviour
     #endregion
 
     #region Public Methods
-
-    /// <summary>
-    /// Fixes the target position of the camera.
-    /// </summary>
-    /// <param name="fixedTarget">Vector2 target position</param>
-    /// <param name="fixX">If true, fix X coordinate of camera</param>
-    /// <param name="fixY">If true, fix Y coordinate of camera</param>
-    public void FixTarget(Vector2 fixedTarget, bool fixX = true, bool fixY = true)
-    {
-        _fixedX = fixX;
-        _fixedY = fixY;
-        _target = fixedTarget;
-    }
-
-    /// <summary>
-    /// Sets the camera to follow the player.
-    /// </summary>
-    public void FollowPlayer()
-    {
-        _fixedX = false;
-        _fixedY = false;
-    }
 
     /// <summary>
     /// Returns the intended target of the camera based on the player's position.
@@ -112,7 +85,6 @@ public class FollowCamera : MonoBehaviour
     public void EnterFixCameraTrigger(FixCameraTrigger trigger)
     {
         _fixCameraTriggers.Add(trigger);
-        FixTarget(trigger.Target, trigger.fixX, trigger.fixY);
     }
 
     /// <summary>
@@ -122,17 +94,6 @@ public class FollowCamera : MonoBehaviour
     public void ExitFixCameraTrigger(FixCameraTrigger trigger)
     {
         _fixCameraTriggers.Remove(trigger);
-        if (_fixCameraTriggers.Count == 0)
-        {
-            // exited last fix area, follow the player again
-            FollowPlayer();
-        }
-        else
-        {
-            // still in an area, track the most recently entered area
-            FixCameraTrigger recent = _fixCameraTriggers.Last();
-            FixTarget(recent.Target, recent.fixX, recent.fixY);
-        }
     }
 
     #endregion

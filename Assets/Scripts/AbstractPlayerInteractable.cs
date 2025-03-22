@@ -67,7 +67,8 @@ public abstract class AbstractPlayerInteractable : MonoBehaviour, IPlayerVelocit
         if (!other.TryGetComponent(out PlayerController player)) return;
         if (player.CurrentInteractableArea != this)
         {
-            Debug.LogWarning("Player's current interactable area does not match!");
+            if (player.CurrentInteractableArea != null)
+                Debug.LogWarning("Player's current interactable area does not match!");
         }
         else if (DisallowReinteraction)
         {
