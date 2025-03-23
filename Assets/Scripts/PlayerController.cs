@@ -216,6 +216,17 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.CompareTag("Death"))
+        {
+            if (PlayerState != PlayerStateEnum.Dead)
+            {
+                HandleDeath();
+            }
+        }
+    }
 
     private void OnTriggerExit2D(Collider2D other)
     {
