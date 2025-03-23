@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -10,16 +9,8 @@ using UnityEngine;
 public class FixCameraTrigger : MonoBehaviour
 {
     [SerializeField] private Vector2 targetOffset;
-
-    [Obsolete("Please use fixTypeX"), Tooltip("Obsolete: please use fixTypeX")]
-    public bool fixX = true;
-
-    public FixCameraType fixTypeX = FixCameraType.Invalid;
-
-    [Obsolete("Please use fixTypeY"), Tooltip("Obsolete: please use fixTypeY")]
-    public bool fixY = true;
-
-    public FixCameraType fixTypeY = FixCameraType.Invalid;
+    public FixCameraType fixTypeX = FixCameraType.RequireEqual;
+    public FixCameraType fixTypeY = FixCameraType.RequireEqual;
 
     private Vector2 _bound;
     private FollowCamera _cam;
@@ -29,43 +20,7 @@ public class FixCameraTrigger : MonoBehaviour
         _cam = GameObject.FindWithTag("MainCamera").GetComponent<FollowCamera>();
         Vector2 boxOffset = GetComponent<BoxCollider2D>().offset;
         _bound = (Vector2)transform.position + boxOffset + targetOffset;
-        SetValidFixType();
     }
-
-
-#pragma warning disable CS0618 // Type or member is obsolete
-
-    private void SetValidFixType()
-    {
-        if (fixTypeX == FixCameraType.Invalid)
-        {
-            fixTypeX = fixX ? FixCameraType.RequireEqual : FixCameraType.None;
-            Debug.LogWarning($"Invalid Camera FixType - importing from fixX: {fixTypeX}");
-        }
-
-        if (fixTypeY == FixCameraType.Invalid)
-        {
-            fixTypeY = fixY ? FixCameraType.RequireEqual : FixCameraType.None;
-            Debug.LogWarning($"Invalid Camera FixType - importing from fixY: {fixTypeY}");
-        }
-    }
-
-    private void OnValidate()
-    {
-        SetValidFixType();
-        // listen, i wanted it to be modified on change but custom property drawers can easily crash the editor and
-        // this is HOPEFULLY a one-off change.
-        if ((fixTypeX == FixCameraType.RequireEqual && !fixX) || (fixTypeX == FixCameraType.None && fixX))
-        {
-            Debug.LogWarning("Mismatch between deprecated field fixX and fixTypeX.");
-        }
-
-        if ((fixTypeY == FixCameraType.RequireEqual && !fixY) || (fixTypeY == FixCameraType.None && fixY))
-        {
-            Debug.LogWarning("Mismatch between deprecated field fixY and fixTypeY.");
-        }
-    }
-#pragma warning restore CS0618 // Type or member is obsolete
 
     /// <summary>
     /// Locks a specific field/value within the provided FixCameraType settings.
@@ -153,24 +108,20 @@ public class FixCameraTrigger : MonoBehaviour
     public enum FixCameraType
     {
         /// <summary>
-        /// Type is undefined - imports from <see cref="fixX"/> and <see cref="fixY"/>
-        /// </summary>
-        /// <remarks>
-        /// Needed to maintain compatibility - gets auto-set to <see cref="RequireEqual"/> or <see cref="None"/>.
-        /// </remarks>
-        Invalid,
-        /// <summary>
         /// Fixes the target to a specific coordinate.
         /// </summary>
         RequireEqual,
+
         /// <summary>
         /// Allows the target value to be less than or equal to a specific coordinate.
         /// </summary>
         AllowLess,
+
         /// <summary>
         /// Allows the target value to be greater than or equal to a specific coordinate.
         /// </summary>
         AllowGreater,
+
         /// <summary>
         /// Does not perform locking at all.
         /// </summary>
