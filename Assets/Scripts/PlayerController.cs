@@ -601,7 +601,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector2 testPos = relPos + _velocity * Time.fixedDeltaTime;
                 Vector2 newPos = testPos.normalized * _swingRadius;
-                _velocity = (newPos - relPos) / Time.fixedDeltaTime;
+                _velocity = Vector2.ClampMagnitude((newPos - relPos) / Time.fixedDeltaTime, maxSwingSpeed);
             }
         }
         else if (PlayerState is PlayerStateEnum.Swing && !_isButtonHeld)
