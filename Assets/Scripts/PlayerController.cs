@@ -141,6 +141,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
     private IPlayerVelocityEffector _activeEffector;
+    private ParticleSystem _runningDust;
+    private ParticleSystem _landingDust;
+    private ParticleSystem _leftWallSlideDust;
+    private ParticleSystem _rightWallSlideDust;
 
     private float _time;
     private float _timeButtonPressed;
@@ -171,6 +175,26 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
+        ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
+        
+        foreach (ParticleSystem ps in particleSystems)
+        {
+            switch (ps.gameObject.name)
+            {
+                case "RunningDust":
+                    _runningDust = ps;
+                    break;
+                case "LandingDust":
+                    _landingDust = ps;
+                    break;
+                case "LeftWallSlidingDust":
+                    _leftWallSlideDust = ps;
+                    break;
+                case "RightWallSlidingDust":
+                    _rightWallSlideDust = ps;
+                    break;
+            }
+        }
         _buttonUsed = true;
         Direction = startDirection;
     }
@@ -329,11 +353,24 @@ public class PlayerController : MonoBehaviour
             PlayerState = PlayerStateEnum.Run;
             _canDoubleJump = true;
             GroundedChanged?.Invoke(true, Mathf.Abs(_velocity.y));
+            _landingDust.Play();
         }
 
         if (PlayerState == PlayerStateEnum.RightWallSlide && !rightWallHit ||
             PlayerState == PlayerStateEnum.LeftWallSlide && !leftWallHit)
             PlayerState = PlayerStateEnum.Air;
+        
+        UpdateParticleSystemState(_runningDust, PlayerStateEnum.Run);
+        UpdateParticleSystemState(_leftWallSlideDust, PlayerStateEnum.LeftWallSlide);
+        UpdateParticleSystemState(_rightWallSlideDust, PlayerStateEnum.RightWallSlide);
+    }
+
+    private void UpdateParticleSystemState(ParticleSystem system, PlayerStateEnum targetState) {
+      if (PlayerState == targetState) {
+        if (!system.isPlaying) system.Play();
+      } else if (system.isPlaying) {
+        system.Stop();
+      }
     }
 
     private void HandleDeath()
