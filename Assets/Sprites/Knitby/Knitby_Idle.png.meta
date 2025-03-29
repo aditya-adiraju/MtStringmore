@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8ca02fa30897b5f46b8141b0ffea614b
+guid: 81aea7ae68410404192fd56e43c85c3e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -94,19 +94,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -123,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Marshmallow_Idle_0
+      name: Knitby_Idle_0
       rect:
         serializedVersion: 2
         x: 0
@@ -137,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3c1ce67c63db8c4428702b12e0d19d68
-      internalID: -1670557411
+      spriteID: d2d8ce447dc8c784bb25758e7b151871
+      internalID: 340246830
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_1
+      name: Knitby_Idle_1
       rect:
         serializedVersion: 2
         x: 256
@@ -158,14 +145,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b03ee088bf81b244197322c6214bb26c
-      internalID: -587509533
+      spriteID: 1dc657415ab724a4e8e62c0657d42652
+      internalID: 676354219
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_2
+      name: Knitby_Idle_2
       rect:
         serializedVersion: 2
         x: 512
@@ -179,14 +166,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9cf324464bc3a1d44b6a5914db2491e8
-      internalID: 1861140440
+      spriteID: e11972848738ded4999c5f87c116132c
+      internalID: -1002209809
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_3
+      name: Knitby_Idle_3
       rect:
         serializedVersion: 2
         x: 0
@@ -200,14 +187,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 78666e50f59c7cb4d96f5c501893ff65
-      internalID: 188131732
+      spriteID: eca89a08710a69d4c8ede7469e29b830
+      internalID: -926611708
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_4
+      name: Knitby_Idle_4
       rect:
         serializedVersion: 2
         x: 256
@@ -221,14 +208,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f7507d8d60c47c54fa48ea41fc8f9947
-      internalID: 1635208457
+      spriteID: f528079b92502eb43877bdafda949253
+      internalID: 1056396752
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_5
+      name: Knitby_Idle_5
       rect:
         serializedVersion: 2
         x: 512
@@ -242,14 +229,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62ff4802da9c6334d9cd93127c030286
-      internalID: -315062027
+      spriteID: 428ed6f7fa616f943819b59c348a82b5
+      internalID: 494427983
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_6
+      name: Knitby_Idle_6
       rect:
         serializedVersion: 2
         x: 0
@@ -263,14 +250,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3b6df4d0c72b4724498d687ba946f9a7
-      internalID: 1727665829
+      spriteID: 29060fd8a3678cd49ae478d2de3bec62
+      internalID: -1195145464
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_7
+      name: Knitby_Idle_7
       rect:
         serializedVersion: 2
         x: 256
@@ -284,8 +271,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40549a886efab854aab22337c14b2cdc
-      internalID: 193993244
+      spriteID: e7ad8535208ed1e44aba14dca174d0c2
+      internalID: 1653335274
       vertices: []
       indices: 
       edges: []
@@ -301,14 +288,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Marshmallow_Idle_0: -1670557411
-      Marshmallow_Idle_1: -587509533
-      Marshmallow_Idle_2: 1861140440
-      Marshmallow_Idle_3: 188131732
-      Marshmallow_Idle_4: 1635208457
-      Marshmallow_Idle_5: -315062027
-      Marshmallow_Idle_6: 1727665829
-      Marshmallow_Idle_7: 193993244
+      Knitby_Idle_0: 340246830
+      Knitby_Idle_1: 676354219
+      Knitby_Idle_2: -1002209809
+      Knitby_Idle_3: -926611708
+      Knitby_Idle_4: 1056396752
+      Knitby_Idle_5: 494427983
+      Knitby_Idle_6: -1195145464
+      Knitby_Idle_7: 1653335274
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

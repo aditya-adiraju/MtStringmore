@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8ca02fa30897b5f46b8141b0ffea614b
+guid: 042126a924d5fd34499428ed3308f660
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -94,19 +94,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -123,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Marshmallow_Idle_0
+      name: Knitby_House_Door_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 512
-        width: 256
-        height: 256
+        y: 300
+        width: 200
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3c1ce67c63db8c4428702b12e0d19d68
-      internalID: -1670557411
+      spriteID: 65f1ecb615dd67a46923576e1e8ca325
+      internalID: -1639799632
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_1
+      name: Knitby_House_Door_1
       rect:
         serializedVersion: 2
-        x: 256
-        y: 512
-        width: 256
-        height: 256
+        x: 200
+        y: 300
+        width: 200
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,104 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b03ee088bf81b244197322c6214bb26c
-      internalID: -587509533
+      spriteID: 804772922bd21044c967ee81d3cf2da8
+      internalID: -238991093
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_2
-      rect:
-        serializedVersion: 2
-        x: 512
-        y: 512
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9cf324464bc3a1d44b6a5914db2491e8
-      internalID: 1861140440
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Marshmallow_Idle_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 256
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 78666e50f59c7cb4d96f5c501893ff65
-      internalID: 188131732
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Marshmallow_Idle_4
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 256
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f7507d8d60c47c54fa48ea41fc8f9947
-      internalID: 1635208457
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Marshmallow_Idle_5
-      rect:
-        serializedVersion: 2
-        x: 512
-        y: 256
-        width: 256
-        height: 256
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 62ff4802da9c6334d9cd93127c030286
-      internalID: -315062027
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Marshmallow_Idle_6
+      name: Knitby_House_Door_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 256
-        height: 256
+        width: 200
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -263,20 +166,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3b6df4d0c72b4724498d687ba946f9a7
-      internalID: 1727665829
+      spriteID: d576fa1ec1b4e204ab4be55cf2caf6cb
+      internalID: -160870224
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marshmallow_Idle_7
+      name: Knitby_House_Door_3
       rect:
         serializedVersion: 2
-        x: 256
+        x: 200
         y: 0
-        width: 256
-        height: 256
+        width: 200
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -284,8 +187,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40549a886efab854aab22337c14b2cdc
-      internalID: 193993244
+      spriteID: 727aabd72dd68ed40bbdfe4ebf147023
+      internalID: -1202870502
       vertices: []
       indices: 
       edges: []
@@ -301,14 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Marshmallow_Idle_0: -1670557411
-      Marshmallow_Idle_1: -587509533
-      Marshmallow_Idle_2: 1861140440
-      Marshmallow_Idle_3: 188131732
-      Marshmallow_Idle_4: 1635208457
-      Marshmallow_Idle_5: -315062027
-      Marshmallow_Idle_6: 1727665829
-      Marshmallow_Idle_7: 193993244
+      Knitby_House_Door_0: -1639799632
+      Knitby_House_Door_1: -238991093
+      Knitby_House_Door_2: -160870224
+      Knitby_House_Door_3: -1202870502
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
