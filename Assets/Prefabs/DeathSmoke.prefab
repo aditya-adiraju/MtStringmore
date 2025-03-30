@@ -121,3 +121,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeDuration: 0.3
   destroyOnFadeOut: 1
+  destroyOnFade: 1

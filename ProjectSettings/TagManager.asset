@@ -10,6 +10,7 @@ TagManager:
   - Knitby
   - BounceArea
   - Trampoline
+  - Resetter
   layers:
   - Default
   - TransparentFX

@@ -42,6 +42,16 @@ public class FollowCamera : MonoBehaviour
         _fixCameraTriggers = new List<FixCameraTrigger>();
     }
 
+    private void Start()
+    {
+        GameManager.Instance.Reset += OnReset;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.Reset -= OnReset;
+    }
+
     private void LateUpdate()
     {
         Vector2 target = GetPlayerTarget();
@@ -94,6 +104,15 @@ public class FollowCamera : MonoBehaviour
     public void ExitFixCameraTrigger(FixCameraTrigger trigger)
     {
         _fixCameraTriggers.Remove(trigger);
+    }
+
+    /// <summary>
+    /// On level reset, place camera at player's position
+    /// </summary>
+    private void OnReset()
+    {
+        var playerTarget = GetPlayerTarget();
+        transform.position = new Vector3(playerTarget.x, playerTarget.y, transform.position.z);
     }
 
     #endregion

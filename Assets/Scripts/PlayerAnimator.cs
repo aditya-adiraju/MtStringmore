@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-///     Handles player animation
+/// Handles player animation
 /// </summary>
 public class PlayerAnimator : MonoBehaviour
 {
@@ -83,6 +83,11 @@ public class PlayerAnimator : MonoBehaviour
         _spriteOriginalPosition = transform.localPosition;
     }
 
+    private void Start()
+    {
+        GameManager.Instance.Reset += OnReset;
+    }
+
     private void OnEnable()
     {
         _player.Jumped += OnJumped;
@@ -103,9 +108,11 @@ public class PlayerAnimator : MonoBehaviour
         _player.DoubleJumped -= OnJumped;
         _player.GroundedChanged -= OnGroundedChanged;
         _player.WallChanged -= OnWallChanged;
-        _player.HangChanged += OnHangChanged;
+        _player.HangChanged -= OnHangChanged;
         _player.Death -= OnDeath;
         _player.Dashed -= OnDash;
+        
+        GameManager.Instance.Reset -= OnReset;
 
         // _moveParticles.Stop();
     }
@@ -127,11 +134,6 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (_player.PlayerState != PlayerController.PlayerStateEnum.Swing && _player.Velocity.x != 0)
         {
-            // float xPos = _player.Velocity.x < 0 ? -_spriteOriginalPosition.x : _spriteOriginalPosition.x;
-            // transform.localPosition = new Vector3(
-            //     xPos,
-            //     transform.localPosition.y,
-            //     transform.localPosition.z);
             sprite.flipX = _player.Velocity.x < 0;
         }
     }
@@ -207,10 +209,6 @@ public class PlayerAnimator : MonoBehaviour
             if (_source.clip == wallSlideSound)
                 _source.Stop();
             _source.PlayOneShot(landSound);
-
-            _source.clip = runSound;
-            _source.loop = true;
-            _source.Play();
 
             // _moveParticles.Play();
 
@@ -294,6 +292,21 @@ public class PlayerAnimator : MonoBehaviour
     //     var main = ps.main;
     //     main.startColor = _currentGradient;
     // }
+
+    /// <summary>
+    /// On reset, re-activate sprites and make them full opacity
+    /// </summary>
+    private void OnReset()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(true);
+            var material = child.GetComponent<Renderer>().material;
+            Color color = material.color;
+            color.a = 1;
+            material.color = color;
+        }
+    }
 
     #endregion
 }

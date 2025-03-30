@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0.5
-  yParallaxFactor: 0.9
+  yParallaxFactor: 0.999
 --- !u!1 &2374490241845695664
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0.9
-  yParallaxFactor: 0.9
+  yParallaxFactor: 0.999
 --- !u!1 &3629211917636165306
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0.9
-  yParallaxFactor: 0.9
+  yParallaxFactor: 0.999
 --- !u!1 &7918595014430618887
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0.9
-  yParallaxFactor: 0.9
+  yParallaxFactor: 0.999
 --- !u!1 &8210673943175262007
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,4 +543,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0.4
-  yParallaxFactor: 0.9
+  yParallaxFactor: 0.999

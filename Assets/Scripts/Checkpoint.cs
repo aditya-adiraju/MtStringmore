@@ -17,6 +17,9 @@ public class Checkpoint : MonoBehaviour
     [SerializeField]
     private string conversationStartNode;
 
+    [Tooltip("If checked, the player faces left when they respawn on this checkpoint")]
+    [SerializeField] private bool respawnFacingLeft;
+
     // internal properties not exposed to editor
     private DialogueRunner _dialogueRunner;
     private bool _isCurrentConversation;
@@ -32,6 +35,7 @@ public class Checkpoint : MonoBehaviour
         if (!other.CompareTag("Player") || anim.GetBool(HoistKey)) return;
         anim.SetBool(HoistKey, true);
         GameManager.Instance.CheckPointPos = transform.position;
+        GameManager.Instance.RespawnFacingLeft = respawnFacingLeft;
         StartConversation();
     }
 
