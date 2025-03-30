@@ -230,6 +230,11 @@ public class PlayerController : MonoBehaviour
         RedrawRope(); // TODO this should be moved outside player controller when knitby is real
     }
 
+    private void OnDisable()
+    {
+        GameManager.Instance.Reset -= OnReset;
+    }
+
     private void GetInput()
     {
         if (Input.GetButtonDown("Jump"))
