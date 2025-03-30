@@ -222,11 +222,6 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.Reset += OnReset;
     }
 
-    private void OnDisable()
-    {
-        GameManager.Instance.Reset -= OnReset;
-    }
-
     private void Update()
     {
         _time += Time.deltaTime;
