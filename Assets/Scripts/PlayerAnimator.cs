@@ -1,10 +1,28 @@
 ﻿using UnityEngine;
+using Random = UnityEngine.Random;
 
 /// <summary>
-/// Handles player animation
+///     Handles player animation
 /// </summary>
 public class PlayerAnimator : MonoBehaviour
 {
+    /// <summary>
+    ///     Max number of roasted states.
+    /// </summary>
+    public const int NumRoastStates = 6;
+
+    private Vector3 _lastPosition;
+    private Vector3 _spriteOriginalPosition;
+
+    /// <summary>
+    ///     RoastState of the player (i.e. how cooked they are) on a scale of 0 (not cooked) to <see cref="NumRoastStates" />
+    ///     (very cooked).
+    /// </summary>
+    public int RoastState
+    {
+        set => anim.SetInteger(RoastKey, value);
+    }
+
     #region Serialized Private Fields
 
     // @formatter:off
@@ -35,22 +53,6 @@ public class PlayerAnimator : MonoBehaviour
 
     #endregion
 
-    private Vector3 _spriteOriginalPosition;
-    
-    /// <summary>
-    /// Max number of roasted states.
-    /// </summary>
-    public const int NumRoastStates = 6;
-
-    /// <summary>
-    /// RoastState of the player (i.e. how cooked they are) on a scale of 0 (not cooked) to <see cref="NumRoastStates"/>
-    /// (very cooked).
-    /// </summary>
-    public int RoastState
-    {
-        set => anim.SetInteger(RoastKey, value);
-    }
-
     #region Private Fields
 
     private AudioSource _source;
@@ -71,6 +73,7 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int JumpKey = Animator.StringToHash("Jump");
     private static readonly int DeathKey = Animator.StringToHash("Dead");
     private static readonly int RoastKey = Animator.StringToHash("Roast");
+    private static readonly int IdleKey = Animator.StringToHash("Idle");
 
     #endregion
 
@@ -111,7 +114,7 @@ public class PlayerAnimator : MonoBehaviour
         _player.HangChanged -= OnHangChanged;
         _player.Death -= OnDeath;
         _player.Dashed -= OnDash;
-        
+
         GameManager.Instance.Reset -= OnReset;
 
         // _moveParticles.Stop();
@@ -124,18 +127,26 @@ public class PlayerAnimator : MonoBehaviour
         // DetectGroundColor();
         HandleSpriteFlip();
         HandleVerticalSpeed();
+        HandleIdle();
     }
 
     #endregion
 
     #region Event Handlers
 
+    private void HandleIdle()
+    {
+        // if paused, don't change the idle state
+        if (Time.deltaTime == 0) return;
+        // update idle state to whether position changed 
+        anim.SetBool(IdleKey, Mathf.Approximately(Vector3.Distance(_lastPosition, transform.position), 0));
+        _lastPosition = transform.position;
+    }
+
     private void HandleSpriteFlip()
     {
         if (_player.PlayerState != PlayerController.PlayerStateEnum.Swing && _player.Velocity.x != 0)
-        {
             sprite.flipX = _player.Velocity.x < 0;
-        }
     }
 
     private void HandleVerticalSpeed()
@@ -241,7 +252,9 @@ public class PlayerAnimator : MonoBehaviour
                     transform.localPosition.z);
         }
         else
+        {
             transform.localPosition = _spriteOriginalPosition;
+        }
     }
 
     /// <summary>
@@ -249,7 +262,7 @@ public class PlayerAnimator : MonoBehaviour
     /// </summary>
     private void OnDeath()
     {
-        foreach (var sound in deathSounds)
+        foreach (AudioClip sound in deathSounds)
             _source.PlayOneShot(sound);
         Instantiate(deathSmoke, transform);
         anim.SetBool(DeathKey, true);
@@ -260,17 +273,17 @@ public class PlayerAnimator : MonoBehaviour
         _source.clip = dashSound;
         _source.PlayOneShot(dashSound);
     }
-    
+
     private void OnSwingDifferentDirection(bool clockwise)
     {
         // TODO FILL IN BY AUDIO PERSON
         transform.localPosition = new Vector3(
             -transform.localPosition.x,
-            transform.localPosition.y, 
+            transform.localPosition.y,
             transform.localPosition.z);
         sprite.flipX = clockwise;
     }
-    
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -294,14 +307,14 @@ public class PlayerAnimator : MonoBehaviour
     // }
 
     /// <summary>
-    /// On reset, re-activate sprites and make them full opacity
+    ///     On reset, re-activate sprites and make them full opacity
     /// </summary>
     private void OnReset()
     {
         foreach (Transform child in transform)
         {
             child.gameObject.SetActive(true);
-            var material = child.GetComponent<Renderer>().material;
+            Material material = child.GetComponent<Renderer>().material;
             Color color = material.color;
             color.a = 1;
             material.color = color;

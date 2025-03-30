@@ -1,0 +1,29 @@
+﻿title: Level2Cutscene
+setting: on the way up the mountain 
+---
+Knitby_relieved: Whew, that was close! It's getting more and more dangerous up here.
+Marshmallow: And we're only just getting started!
+Knitby_frown: You don't know the half of it. The steepest cliffs and most treacherous drops are still ahead of us.
+Marshmallow: We're going to be fine, don't be such a wet blanket!
+// knitby sighs
+Knitby: Hey, that's uncalled for! I'm just trying to look out for you, Marshmallow. You need to be more watchful.
+// i sorta imagine marshmallow with a "hmpf" expression, like the triumph emoji
+Marshmallow: Nope! No hesitation allowed, or we won't make it to the summit.
+Knitby: That attitude is going to get you hurt, Marshmallow, or worse!
+// knitby is like pleading
+Knitby: Look, there's no shame in turning back if it gets too hard. 
+Knitby: Promise me you're going to be more careful from here on out?
+Marshmallow: C'mon Knitby, it really hasn't been that bad so far.
+Marshmallow: Like, what is there to be worried about?
+Knitby: <i>So</i> much could go wrong. We really shouldn't have come here, this is too dangerous. What if— 
+// a determined marshmallow
+Marshmallow: What if we make it to the summit? What if our climb goes down in history and we become famous? You really worry too much, Knitby.    
+// knitby, worried about abandonment, holding back tears
+Knitby: ... You're absolutely sure you still want to do this?
+Marshmallow: Yes, 100%. Now, let's go!
+// knitby reluctantly agrees
+Knitby: ... Okay.
+<<fade_out 1>>
+// <<load_scene Level2>>
+
+===

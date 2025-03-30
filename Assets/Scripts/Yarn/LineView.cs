@@ -365,7 +365,7 @@ namespace Yarn
             }
             else
             {
-                characterNameText.text = dialogueLine.CharacterName;
+                UpdateAvatarAndName(dialogueLine);
                 lineText.text = dialogueLine.TextWithoutCharacterName.Text;
                 length = dialogueLine.TextWithoutCharacterName.Text.Length;
             }
@@ -393,6 +393,20 @@ namespace Yarn
             StartCoroutine(RunLineInternal(dialogueLine, onDialogueLineFinished));
         }
 
+        private void UpdateAvatarAndName(LocalizedLine dialogueLine)
+        {
+            var charName = dialogueLine.CharacterName.Split("_", 2);
+            // we have a character name text view, show the character name
+
+            characterNameText.text = charName[0];
+            characterNameContainer.SetActive(true);
+
+            // switch avatar image to new character
+            // labels can be for different character expressions in the future
+            image.sprite = spriteLibrary.GetSprite(charName[0],
+                charName.Length > 1 ? charName[1] : "Default");
+        }
+
         private IEnumerator RunLineInternal(LocalizedLine dialogueLine, Action onDialogueLineFinished)
         {
             IEnumerator PresentLine()
@@ -402,10 +416,10 @@ namespace Yarn
 
                 // Hide the continue button until presentation is complete (if
                 // we have one).
-                if (continueButton != null) continueButton.SetActive(false);
+                continueButton?.SetActive(false);
 
                 var text = dialogueLine.TextWithoutCharacterName;
-                if (characterNameContainer != null && characterNameText != null)
+                if (characterNameContainer && characterNameText)
                 {
                     // we are set up to show a character name, but there isn't one
                     // so just hide the container
@@ -415,13 +429,7 @@ namespace Yarn
                     }
                     else
                     {
-                        // we have a character name text view, show the character name
-                        characterNameText.text = dialogueLine.CharacterName;
-                        characterNameContainer.SetActive(true);
-
-                        // switch avatar image to new character
-                        // labels can be for different character expressions in the future
-                        image.sprite = spriteLibrary.GetSprite(dialogueLine.CharacterName, "Default");
+                        UpdateAvatarAndName(dialogueLine);
                     }
                 }
                 else
@@ -434,10 +442,7 @@ namespace Yarn
                 }
 
                 // if we have a palette file need to add those colours into the text
-                if (palette != null)
-                    lineText.text = PaletteMarkedUpText(text, palette);
-                else
-                    lineText.text = AddLineBreaks(text);
+                lineText.text = palette ? PaletteMarkedUpText(text, palette) : AddLineBreaks(text);
 
                 // If we're using the typewriter effect, hide all of the
                 // text before we begin any possible fade (so we don't fade
@@ -566,12 +571,10 @@ namespace Yarn
         public override void DialogueComplete()
         {
             // do we still have a line lying around?
-            if (currentLine != null)
-            {
-                currentLine = null;
-                StopAllCoroutines();
-                StartCoroutine(DismissLineInternal(null));
-            }
+            if (currentLine == null) return;
+            currentLine = null;
+            StopAllCoroutines();
+            StartCoroutine(DismissLineInternal(null));
         }
 
         /// <summary>

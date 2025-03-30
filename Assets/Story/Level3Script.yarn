@@ -1,0 +1,18 @@
+﻿title: Level3Cutscene
+setting: a cliff
+---
+// TODO idk what to put in the cliff falling scene tbh
+Knitby: Marshmallow, wait!
+// knitby jumps and falls
+Knitby: Wait, Marshmallow, HELP!!
+// marshmallow turns around to see knitby fall
+Marshmallow: Knitby no!!!
+*big dramatic pause and sound effects or whatever*
+Marshmallow: Hang tight, buddy, I'm going to get you!
+<<wait 1>>
+Marshmallow: How am I going to get down there... 
+// stares up at a swing, unusable
+Marshmallow: Oh. This might be more difficult than I thought.
+// <<load_scene Level3>>
+
+===

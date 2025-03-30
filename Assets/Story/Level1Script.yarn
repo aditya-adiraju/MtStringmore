@@ -1,36 +1,48 @@
 ﻿title: IntroCutscene
 setting: outside Knitby's house
 ---
-<<follow_object Marshmallow>>
-<<move Marshmallow 2 1 10 true>>
-Marshmallow: <i>*knocks on Knitby's door*</i>
-Knitby: <i>*opens the door with a creak*</i>
+<<fix_coords 6.7 2>>
+<<move Marshmallow 2 1 15 true>>
+// marshmallow knocks on Knitby's door
+<<play_sound door_knock>>
+<<move Marshmallow 6 1 10>>
+// knitby opens the door
+<<play_sound door_open false>>
+<<show KnitbyHouseDoor>>
+<<set_animation KnitbyHouseDoor true>>
 <<show Knitby>>
+<<follow_object Knitby>>
+<<resize_camera 4 5>>
 <<wait 0.5>>
-<<fix_object Knitby>>
-<<move Knitby 1.5 1 10>>
-<<move Marshmallow 3 1 10>>
+<<move Knitby 4 1 10>>
 Marshmallow: Hiya Knitby, how's it going?
-Knitby: Hey, good to see you, Marshmallow! It's going well, I'm still reveling in our glorious victory on the football field the other day.  
-Marshmallow: <i>*smiling*</i> Those teddy bears didn't know what hit them! 
+Knitby: Hey, good to see you, Marshmallow! It's going well, I'm still reveling in our glorious victory on the football field the other day.   
+Marshmallow_smile: Those teddy bears didn't know what hit them! 
 Marshmallow: So... Can you teach me how to climb Mt. Stringmore? I'm going to the summit!
-Knitby: It's a really treacherous journey to get up there, why would you want to subject yourself to that?
+Knitby_confused: It's a really treacherous journey to get up there, why would you want to subject yourself to that?
 Marshmallow: I could eat a cloud from up there, and I <i>bet</i> it'll be delicious.
-Knitby: ... Why would you think that? Clouds are just... water??
-Marshmallow: Do you not trust me? Have I ever led you wrong?
-Knitby: <i>*sternly*</i> Marshmallow, these peaks have claimed many adventurers before you. Just because you have a chip on your shoulder—
-Marshmallow: I have a <i>what</i> on my shoulder?
+Knitby_confused: ... Why would you think that? Clouds are just... water??
+Marshmallow: Do you not trust me? Have I ever led you wrong? 
+Knitby_frown: Marshmallow, these peaks have claimed many adventurers before you. Just because you have a chip on your shoulder—
+Marshmallow_frown: I have a <i>what</i> on my shoulder?
 Knitby: Let me rephrase. Just because you want to prove yourself doesn't mean you should recklessly endanger yourself—
-Marshmallow: Well, okay then. Bye! <i>*takes off at a full sprint*</i>
+Marshmallow: Well, okay then. Bye!
 <<run Marshmallow 45 1 20 true>>
+<<follow_object Knitby 4.5>>
+<<wait 0.35>>
+<<resize_camera 7 5>>
 Knitby: Wait, where are you going in such a hurry?
-Marshmallow: <i>*getting further away*</i> Up the mountain, duh!
-Knitby: <i>*shouting*</i> But why?
-Marshmallow: <i>*far away*</i> Because I know you can't help but follow me anyway!
+Marshmallow_faraway: Up the mountain, duh!
+// knitby shouting
+Knitby: But why?
+// marshmallow is very far away now 
+Marshmallow_faraway: Because I know you can't help but follow me anyway!
 Knitby: <i>*sighs*</i> ...
-<<run Knitby 44 1 20>>
-Knitby: <i>*shouting*</i> Fine, I'm coming, wait up!
-Marshmallow: <i>*playfully*</i> Good, try to keep up!
+<<run Knitby 44 1 15>>
+<<wait 1>>
+<<fade_out 1>>
+Knitby: Fine, I'm coming, wait up!
+Marshmallow_smile: Good, try to keep up!
 <<load_scene Level1Trial>>
 ===
 

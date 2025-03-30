@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4868919475267528974}
   - component: {fileID: 5915865940897924245}
-  - component: {fileID: 2840611249138753973}
   - component: {fileID: 4448341723275581311}
+  - component: {fileID: 58764243366993956}
   m_Layer: 7
   m_Name: Visual
   m_TagString: Untagged
@@ -86,20 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2840611249138753973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 657823012751151630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 514a20e21260c5840b649c233b3939e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anim: {fileID: 4448341723275581311}
-  deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
 --- !u!95 &4448341723275581311
 Animator:
   serializedVersion: 5
@@ -110,7 +96,7 @@ Animator:
   m_GameObject: {fileID: 657823012751151630}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8aad1733eecfdbe41b8ab70c922edb31, type: 2}
+  m_Controller: {fileID: 9100000, guid: db291ae8c4c7f454f8c78fbaf6278d71, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -121,6 +107,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &58764243366993956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657823012751151630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79105db01207e4ed6b769939dbf779cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 4448341723275581311}
 --- !u!1 &8090917524103177417
 GameObject:
   m_ObjectHideFlags: 0

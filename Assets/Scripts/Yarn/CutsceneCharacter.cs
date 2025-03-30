@@ -6,6 +6,7 @@ namespace Yarn
 {
     public class CutsceneCharacter : MonoBehaviour
     {
+        private static readonly int JumpKey = Animator.StringToHash("Jump");
         private Animator _animator;
         private SpriteRenderer _spriteRenderer;
 
@@ -20,10 +21,10 @@ namespace Yarn
         // e.g. <<move Knitby 3 1 20 true>>
         [YarnCommand("move")]
         public IEnumerator MoveCoroutine(float x, float y, float speed, bool flipSprite = false,
-            bool disableAnimation = true)
+            bool disableAnimation = false)
         {
             _animator.enabled = true;
-            var position = new Vector3(x, y);
+            Vector3 position = new(x, y, transform.position.z);
             if (flipSprite) _spriteRenderer.flipX = !_spriteRenderer.flipX;
             while (transform.position != position)
             {
@@ -57,11 +58,10 @@ namespace Yarn
         public IEnumerator SetAnimation(bool state)
         {
             // wait until current animation is finished
-            var finishTime = Mathf.CeilToInt(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
-            yield return new WaitWhile(() => _animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= finishTime ||
-                                             Mathf.Approximately(
+            int finishTime = Mathf.CeilToInt(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            yield return new WaitWhile(() => _animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= finishTime &&
+                                             !Mathf.Approximately(
                                                  _animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 0.0f));
-            Debug.Log(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
             _animator.enabled = state;
         }
     }

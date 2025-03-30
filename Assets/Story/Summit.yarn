@@ -1,0 +1,30 @@
+﻿title: SummitCutscene
+setting: the summit of mt. stringmore
+---
+Marshmallow: You did a lot of stretching there, are you alright?
+Knitby: 
+// TODO idk what to put here
+Knitby: So, is the summit everything you hoped it would be?
+Marshmallow: Everything I hoped for and more.
+Knitby: Awwww...
+// marshmallow chomps a cloud
+Marshmallow: And, you know what?
+Knitby: What?
+Marshmallow: It really does taste like cotton candy!
+Knitby: No way. That's impossible.
+// knitby chomps a cloud, and marshmallow snickers
+Knitby: I have no idea what you're talking about. That tastes like dusty stale water.
+Marshmallow: Ha, got you!
+Knitby: Okay, but now you admit that clouds don't taste like cotton candy, right?
+// marshmallow chomps another cloud, visibly more hesitantly
+Marshmallow: No, it's... delicious...
+Marshmallow: Okay, fine, you were right. But it was totally still worth it to come here. I mean, look at that view!  
+// dramatic pan upwards to the sunset
+Knitby: Yeah. Totally worth it. Thanks for letting me come along.
+<<wait 2>>
+Knitby: So... how do we get down?
+Marshmallow: Uhhh... 
+// end
+// <<load_scene Credits>>
+
+===
