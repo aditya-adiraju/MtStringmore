@@ -17,9 +17,8 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
     #endregion
 
     private PlayerController _player;
+    private Collision2D _bounceArea;
     private Animator _animator;
-    
-    public bool IgnoreGravity => true;
 
     /// <inheritdoc />
     public Vector2 ApplyVelocity(Vector2 velocity)
@@ -27,7 +26,7 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
         // apply at most once
         if (ReferenceEquals(_player.ActiveVelocityEffector, this))
             _player.ActiveVelocityEffector = null;
-        return new Vector2(xBounceForce * Mathf.Sign(velocity.x), yBounceForce);
+        return new Vector2(xBounceForce, yBounceForce);
     }
 
     private void Awake()
