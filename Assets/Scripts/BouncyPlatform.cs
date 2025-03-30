@@ -17,26 +17,17 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
     #endregion
 
     private PlayerController _player;
-    private Collision2D _bounceArea;
     private Animator _animator;
+    
+    public bool IgnoreGravity => true;
 
     /// <inheritdoc />
     public Vector2 ApplyVelocity(Vector2 velocity)
     {
-        if (_bounceArea.contactCount == 0) return velocity;
-        Vector2 directionVector = Vector2.Reflect(velocity, _bounceArea.GetContact(0).normal);
         // apply at most once
         if (ReferenceEquals(_player.ActiveVelocityEffector, this))
             _player.ActiveVelocityEffector = null;
-        return new Vector2(xBounceForce * Mathf.Sign(directionVector.x), yBounceForce);
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (!other.gameObject.TryGetComponent(out _player)) return;
-        _bounceArea = other;
-        _player.ActiveVelocityEffector = this;
-        _player.CanDash = true;
+        return new Vector2(xBounceForce * Mathf.Sign(velocity.x), yBounceForce);
     }
 
     private void Awake()
@@ -46,17 +37,17 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the player touched the object
-        if (other.CompareTag("Player"))
-            // Trigger the animation
-            _animator.SetTrigger(BounceHash);
+        if (!other.gameObject.TryGetComponent(out _player)) return;
+        _player.ActiveVelocityEffector = this;
+        _player.CanDash = true;
+        _animator.SetTrigger(BounceHash);
     }
     
     private void OnTriggerExit2D(Collider2D other)
     {
-        // Check if the player touched the object
-        if (other.CompareTag("Player"))
-            // Trigger the animation
-            _animator.ResetTrigger(BounceHash);
+        if (!other.TryGetComponent(out PlayerController _)) return;
+        _animator.ResetTrigger(BounceHash);
+        if (ReferenceEquals(_player.ActiveVelocityEffector, this))
+            _player.ActiveVelocityEffector = null;
     }
 }

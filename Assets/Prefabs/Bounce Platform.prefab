@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6632477694576699760}
   - component: {fileID: -6712565928093763113}
   - component: {fileID: -3303350482682159041}
-  - component: {fileID: 7843742360369607039}
   m_Layer: 0
   m_Name: Bounce Platform
   m_TagString: BounceArea
@@ -118,10 +117,10 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.008024931, y: -1.7341841}
+  m_Offset: {x: -0.022682905, y: -1.0147223}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -132,7 +131,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 10.827543, y: 1.3544257}
+  m_Size: {x: 8.507746, y: 2.7933493}
   m_EdgeRadius: 0
 --- !u!50 &6632477694576699760
 Rigidbody2D:
@@ -174,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yBounceForce: 50
-  xBounceForce: 15
+  xBounceForce: -15
 --- !u!95 &-3303350482682159041
 Animator:
   serializedVersion: 5
@@ -196,38 +195,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!70 &7843742360369607039
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5815869302486538005}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.00858202, y: -0.2900754}
-  m_Size: {x: 8.494571, y: 1.3541147}
-  m_Direction: 1
