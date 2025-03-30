@@ -10,6 +10,7 @@ public class KnitbyAnimator : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer;
     private KnitbyController _knitbyController;
+    private Vector3 _lastPosition;
 
     private static readonly int JumpKey = Animator.StringToHash("Jump");
     private static readonly int LandKey = Animator.StringToHash("Land");
@@ -18,6 +19,7 @@ public class KnitbyAnimator : MonoBehaviour
     private static readonly int HitWallKey = Animator.StringToHash("HitWall");
     private static readonly int LeaveWallKey = Animator.StringToHash("LeaveWall");
     private static readonly int SwingKey = Animator.StringToHash("InSwing");
+    private static readonly int IdleKey = Animator.StringToHash("Idle");
 
     private void Awake()
     {
@@ -28,6 +30,11 @@ public class KnitbyAnimator : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.Reset += OnReset;
+    }
+
+    private void FixedUpdate()
+    {
+        HandleIdle();
     }
 
     private void OnEnable()
@@ -76,6 +83,16 @@ public class KnitbyAnimator : MonoBehaviour
     {
         Instantiate(deathSmoke, transform);
         anim.enabled = false;
+    }
+    
+    private void HandleIdle()
+    {
+        // if paused, don't change the idle state
+        if (Time.deltaTime == 0) return;
+        // update idle state to whether position changed 
+        float movement = Vector3.Distance(_lastPosition, transform.position);
+        anim.SetBool(IdleKey, Mathf.Abs(movement) < 0.01);
+        _lastPosition = transform.position;
     }
 
     /// <summary>
