@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/CollapsingPlatform.cs.meta
+guid: 3ed629248306b5746838c13067ea0bf8
+========
 guid: 60834b8c023dede4086e90fb2052814f
+>>>>>>>> 937ae0905059c52d3aa67bbbc64683e99f6b85c4:Assets/Scripts/LetterBlock.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
