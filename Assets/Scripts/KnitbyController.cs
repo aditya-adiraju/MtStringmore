@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 /// <summary>
@@ -47,6 +46,11 @@ public class KnitbyController : MonoBehaviour
 
     /// <summary>
     ///     Fires when player is dead
+    /// Fires continuously; true when player can dash, false otherwise
+    /// </summary>
+    public event Action<bool> CanDash;
+    /// <summary>
+    ///     Fires when player is dead
     /// </summary>
     public event Action PlayerDeath;
 
@@ -63,6 +67,7 @@ public class KnitbyController : MonoBehaviour
     private LineRenderer _lineRenderer;
 
     private GameObject _player;
+    private PlayerController _playerController;
     private float _queueTimer;
     private bool _wallHit;
 
@@ -71,8 +76,8 @@ public class KnitbyController : MonoBehaviour
         _col = GetComponent<CapsuleCollider2D>();
         _player = GameObject.FindGameObjectWithTag("Player");
         _lineRenderer = _player.GetComponentInChildren<LineRenderer>();
-        PlayerController playerController = _player.GetComponent<PlayerController>();
-        playerController.Death += PlayerDeath;
+        _playerController = _player.GetComponent<PlayerController>();
+        _playerController.Death += PlayerDeath;
         GameManager.Instance.Reset += OnReset;
     }
 
@@ -116,6 +121,8 @@ public class KnitbyController : MonoBehaviour
         }
 
         Swing?.Invoke(_lineRenderer.isVisible);
+
+        CanDash?.Invoke(_playerController.CanDash);
     }
 
     private void OnEnable()
@@ -127,7 +134,7 @@ public class KnitbyController : MonoBehaviour
     private void OnDisable()
     {
         GameManager.Instance.Reset -= OnReset;
-        if (_player == null) return;
+        if (!_player) return;
         PlayerController playerController = _player.GetComponent<PlayerController>();
         playerController.Death -= PlayerDeath;
     }
