@@ -31,7 +31,6 @@ public class CutsceneFade : MonoBehaviour
     [YarnCommand("fade_in")]
     public static void FadeIn(float fadeSpeed = 5)
     {
-        
         _opacity = 0;
         _fadeSpeed = fadeSpeed;
     }

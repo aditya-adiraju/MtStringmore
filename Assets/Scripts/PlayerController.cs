@@ -220,7 +220,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.Reset += OnReset;
-        
     }
 
     private void Update()
@@ -312,7 +311,6 @@ public class PlayerController : MonoBehaviour
         }
         else if (dashEnabled) HandleDash();
         ApplyMovement();
-        Debug.Log(PlayerState); 
     }
 
     #endregion
@@ -361,11 +359,7 @@ public class PlayerController : MonoBehaviour
 
         if (groundCast) _groundNormal = groundCast.normal;
 
-        if (ceilingHit)
-        {
-           // Debug.Log("ceiling hit"); 
-            _velocity.y = Mathf.Min(0, _velocity.y);
-        }
+        if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
 
         // TODO is this being fired constantly while on a wall?
         if (leftWallHit || rightWallHit)
@@ -390,7 +384,6 @@ public class PlayerController : MonoBehaviour
         {
             PlayerState = PlayerStateEnum.Run;
             _canDoubleJump = true;
-            //Debug.Log("woo1"); 
             GroundedChanged?.Invoke(true, Mathf.Abs(_velocity.y));
             _landingDust.Play();
         }
@@ -440,7 +433,6 @@ public class PlayerController : MonoBehaviour
             _releasedEarly = false;
             _canDoubleJump = true;
             Jumped?.Invoke();
-           // Debug.Log("woo2"); 
             GroundedChanged?.Invoke(false, Mathf.Abs(_velocity.y)); // TODO need a new action for wj
         }
     }
@@ -450,7 +442,6 @@ public class PlayerController : MonoBehaviour
         bool canUseCoyote = PlayerState == PlayerStateEnum.Air && _time - _timeLeftGround <= coyoteTime;
         if ((PlayerState == PlayerStateEnum.Run || canUseCoyote) && CanUseButton())
         {
-           // Debug.Log("woo3"); 
             _velocity.y = jumpPower;
             _buttonUsed = true;
             PlayerState = PlayerStateEnum.Air;
@@ -464,7 +455,6 @@ public class PlayerController : MonoBehaviour
     {
         if (CanUseButton() && _canDoubleJump && !_closeToWall)
         {
-            //Debug.Log("woo4"); 
             _velocity.y = doubleJumpPower;
             _buttonUsed = true;
             _canDoubleJump = false;
@@ -489,7 +479,6 @@ public class PlayerController : MonoBehaviour
         else if (PlayerState is PlayerStateEnum.Dash)
         {
             // move player forward at dash speed
-            //Debug.Log("woo5"); 
             _velocity.y = 0;
             _velocity.x = dashSpeed * Direction;
             // check if dash is over
@@ -545,18 +534,14 @@ public class PlayerController : MonoBehaviour
         {
             case PlayerStateEnum.Run:
                 if (_velocity.y <= 0f)
-                   // Debug.Log("woo6"); 
                     _velocity.y = -groundingForce;
                 break;
             case PlayerStateEnum.LeftWallSlide:
             case PlayerStateEnum.RightWallSlide:
                 _velocity.x = 0f;
                 if (_velocity.y <= 0f)
-                {
-                    //Debug.Log("woo7");
                     _velocity.y = Mathf.MoveTowards(_velocity.y, -wallSlideSpeed,
                         wallSlideAcceleration * Time.fixedDeltaTime);
-                }
                 else goto case PlayerStateEnum.Air;
                 break;
             case PlayerStateEnum.Air:
@@ -567,7 +552,6 @@ public class PlayerController : MonoBehaviour
                 else accel = fallAccelerationDown;
 
                 _velocity.y = Mathf.MoveTowards(_velocity.y, -maxFallSpeed, accel * Time.fixedDeltaTime);
-                //Debug.Log("woo10"); 
                 break;
         }
     }
@@ -647,7 +631,6 @@ public class PlayerController : MonoBehaviour
                 // if going down, accelerate to target swing speed
                 if (_velocity.y <= 0f && _velocity.magnitude <= maxSwingSpeed)
                 {
-                    //Debug.Log("woo11"); 
                     _velocity = _velocity.normalized * Mathf.MoveTowards(_velocity.magnitude, maxSwingSpeed,
                         swingAcceleration * Time.fixedDeltaTime);
                 }
