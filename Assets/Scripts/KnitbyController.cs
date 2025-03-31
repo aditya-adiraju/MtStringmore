@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 /// <summary>
@@ -72,6 +73,7 @@ public class KnitbyController : MonoBehaviour
         _lineRenderer = _player.GetComponentInChildren<LineRenderer>();
         PlayerController playerController = _player.GetComponent<PlayerController>();
         playerController.Death += PlayerDeath;
+        GameManager.Instance.Reset += OnReset;
     }
 
     private void Update()
@@ -118,7 +120,8 @@ public class KnitbyController : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.Reset += OnReset;
+        if (GameManager.Instance)
+            GameManager.Instance.Reset += OnReset;
     }
 
     private void OnDisable()
