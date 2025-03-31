@@ -85,6 +85,11 @@ public class PlayerController : MonoBehaviour
     public float Direction { get; private set; }
 
     /// <summary>
+    /// Time when the most recent dash would have ended (may be a time in the future).
+    /// </summary>
+    public float TimeDashEnded => _timeDashed + dashTime;
+
+    /// <summary>
     /// Active velocity effector.
     /// </summary>
     public IPlayerVelocityEffector ActiveVelocityEffector
