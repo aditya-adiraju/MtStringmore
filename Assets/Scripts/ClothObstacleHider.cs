@@ -80,6 +80,26 @@ public class ClothObstacleHider : MonoBehaviour
     }
 
     /// <summary>
+    /// Called on reset: stops motion and resets to the start.
+    /// </summary>
+    private void OnReset()
+    {
+        transform.localPosition = firstPosition;
+        if (_activeMotion != null) StopCoroutine(_activeMotion);
+        _activeMotion = null;
+    }
+
+    private void Awake()
+    {
+        GameManager.Instance.Reset += OnReset;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.Reset -= OnReset;
+    }
+
+    /// <summary>
     /// Starts moving from the first position.
     /// </summary>
     [UsedImplicitly]

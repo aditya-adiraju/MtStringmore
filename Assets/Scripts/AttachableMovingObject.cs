@@ -253,10 +253,24 @@ public class AttachableMovingObject : AbstractPlayerInteractable
     {
         StopMotion();
     }
+    
+    /// <summary>
+    /// Called on reset: resets back to the first position.
+    /// </summary>
+    private void OnReset()
+    {
+        transform.position = firstPosition;
+    }
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        GameManager.Instance.Reset += OnReset;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.Reset -= OnReset;
     }
 
     private void OnValidate()

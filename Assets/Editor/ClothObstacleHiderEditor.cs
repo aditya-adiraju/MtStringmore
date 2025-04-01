@@ -9,6 +9,15 @@ namespace Editor
     [CustomEditor(typeof(ClothObstacleHider)), CanEditMultipleObjects]
     public class ClothObstacleHiderEditor : UnityEditor.Editor
     {
+        private SerializedProperty firstPositionProperty;
+        private SerializedProperty secondPositionProperty;
+        
+        private void OnEnable()
+        {
+            firstPositionProperty = serializedObject.FindProperty(nameof(ClothObstacleHider.firstPosition));
+            secondPositionProperty = serializedObject.FindProperty(nameof(ClothObstacleHider.secondPosition));
+        }
+        
         /// <inheritdoc />
         public override void OnInspectorGUI()
         {
@@ -21,13 +30,13 @@ namespace Editor
 
             if (GUILayout.Button("Set First Position As Current"))
             {
-                hider.firstPosition = hider.transform.localPosition;
+                firstPositionProperty.vector2Value= hider.transform.localPosition;
                 serializedObject.ApplyModifiedProperties();
             }
 
             if (GUILayout.Button("Set Second Position As Current"))
             {
-                hider.secondPosition = hider.transform.localPosition;
+                secondPositionProperty.vector2Value= hider.transform.localPosition;
                 serializedObject.ApplyModifiedProperties();
             }
 

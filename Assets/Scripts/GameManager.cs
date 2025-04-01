@@ -9,7 +9,15 @@ using Action = System.Action;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    private static GameManager _instance;
+
+    /// <summary>
+    /// Finds the singleton in the scene if present.
+    /// </summary>
+    /// <remarks>
+    /// Bypasses the lifetime check since it's DontDestroyOnLoad.
+    /// </remarks>
+    public static GameManager Instance => _instance ??= FindObjectOfType<GameManager>();
 
     /// <summary>
     /// Last checkpoint position. The player should respawn here if they die.
@@ -33,16 +41,15 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-        else
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+        
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void Update()

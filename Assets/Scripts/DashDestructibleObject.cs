@@ -17,6 +17,21 @@ public class DashDestructibleObject : MonoBehaviour
     private void Awake()
     {
         _collider = GetComponent<Collider2D>();
+        GameManager.Instance.Reset += OnReset;
+    }
+
+    /// <summary>
+    /// Called on reset: re-enables the collider.
+    /// </summary>
+    private void OnReset()
+    {
+        destroyed = false;
+        _collider.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.Reset -= OnReset;
     }
 
     /// <summary>

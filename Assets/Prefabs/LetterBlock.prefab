@@ -111,6 +111,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  dashEndTolerance: 1
 --- !u!212 &7907048460438451200
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -177,6 +178,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   letter: {fileID: 9049336575698353907}
   particles: {fileID: 4573120003948009498}
+  childRenderers:
+  - {fileID: 5443037520854214380}
   blockBreakDelay: 0.25
   delayBetweenShakes: 0.002
   distance: 0.5
@@ -5108,7 +5111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeDuration: 0.3
-  destroyOnFadeOut: 1
+  deactivateOnFade: 0
+  destroyOnFade: 0
 --- !u!1 &9049336575698353907
 GameObject:
   m_ObjectHideFlags: 0
