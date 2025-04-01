@@ -245,8 +245,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4935123090305946392, guid: 9ff0a2e273d206240a83b32bc801114b, type: 3}
+      propertyPath: m_text
+      value: Here's a big long line of dialogue, ready to be shown to the player.
+        Very very long, actually.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4935123090305946392, guid: 9ff0a2e273d206240a83b32bc801114b, type: 3}
       propertyPath: m_margin.x
       value: 202.98553
+      objectReference: {fileID: 0}
+    - target: {fileID: 4935123090305946392, guid: 9ff0a2e273d206240a83b32bc801114b, type: 3}
+      propertyPath: m_margin.z
+      value: 21.28772
       objectReference: {fileID: 0}
     - target: {fileID: 4935123090305946392, guid: 9ff0a2e273d206240a83b32bc801114b, type: 3}
       propertyPath: m_fontColor.b

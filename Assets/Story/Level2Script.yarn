@@ -1,28 +1,51 @@
 ﻿title: Level2Cutscene
 setting: on the way up the mountain 
 ---
-Knitby_relieved: Whew, that was close! It's getting more and more dangerous up here.
+<<fade_in>>
+<<fix_coords 1 1>>
+<<resize_camera 4 2>>
+<<run Marshmallow 2 1 11>>
+<<move Knitby 0 1 9>>
+<<wait 1>>
+Knitby: Whew, that was close! It's getting more and more dangerous up here.
+<<flip Marshmallow>>
 Marshmallow: And we're only just getting started!
-Knitby_frown: You don't know the half of it. The steepest cliffs and most treacherous drops are still ahead of us.
-Marshmallow: We're going to be fine, don't be such a wet blanket!
+Knitby_relieved: You don't know the half of it. The steepest cliffs and most treacherous drops are still ahead of us.
+Marshmallow_smile: We're going to be fine, don't be such a wet blanket!
 // knitby sighs
-Knitby: Hey, that's uncalled for! I'm just trying to look out for you, Marshmallow. You need to be more watchful.
+Knitby_frown: Hey, that's uncalled for! I'm just trying to look out for you, Marshmallow. You need to be more watchful.
 // i sorta imagine marshmallow with a "hmpf" expression, like the triumph emoji
-Marshmallow: Nope! No hesitation allowed, or we won't make it to the summit.
-Knitby: That attitude is going to get you hurt, Marshmallow, or worse!
+Marshmallow_frown: <b>NOPE!</b> No hesitation allowed, or we won't make it to the summit.
+Knitby_frown: That attitude is going to get you hurt, Marshmallow, or <i>worse</i>!
 // knitby is like pleading
-Knitby: Look, there's no shame in turning back if it gets too hard. 
-Knitby: Promise me you're going to be more careful from here on out?
-Marshmallow: C'mon Knitby, it really hasn't been that bad so far.
-Marshmallow: Like, what is there to be worried about?
-Knitby: <i>So</i> much could go wrong. We really shouldn't have come here, this is too dangerous. What if— 
+<<flip Knitby>>
+<<move Knitby -2 1 7>>
+<<wait 1>>
+Knitby_confused: ...
+<<flip Knitby>>
+Knitby: Look, there's no shame in turning back if it gets too hard.
+<<flip Knitby>>
+Knitby_relieved: Promise me you're going to be more careful from here on out?
+<<run Marshmallow 0.5 1 10>>
+Marshmallow_faraway: C'mon Knitby, it really hasn't been that bad so far.
+Marshmallow_smile: Like, what is there to be worried about?
+<<flip Knitby>>
+Knitby_frown: <i>So</i> much could go wrong. We really shouldn't have come here, this is too dangerous. What if— 
 // a determined marshmallow
-Marshmallow: What if we make it to the summit? What if our climb goes down in history and we become famous? You really worry too much, Knitby.    
+<<flip Marshmallow>>
+Marshmallow: What if we make it to the summit? What if our climb goes down in history and we become famous?
+<<flip Marshmallow>>
+Marshmallow_smile: You really worry too much, Knitby. We'll be fine!  
 // knitby, worried about abandonment, holding back tears
-Knitby: ... You're absolutely sure you still want to do this?
+<<flip Knitby>>
+Knitby_confused: ... You're absolutely sure you still want to do this?
 Marshmallow: Yes, 100%. Now, let's go!
 // knitby reluctantly agrees
-Knitby: ... Okay.
+Knitby_relieved: ... Okay.
+<<run Marshmallow 44 1 15 true>>
+<<wait 0.5>>
+<<resize_camera 7 2>>
+<<run Knitby 44 1 15>>
 <<fade_out 1>>
 // <<load_scene Level2>>
 

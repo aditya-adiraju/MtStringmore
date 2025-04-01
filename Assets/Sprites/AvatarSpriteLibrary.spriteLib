@@ -27,8 +27,18 @@ MonoBehaviour:
       m_Sprite: {fileID: 21300000, guid: 3a3446836f00e419a851731b1539f7c9, type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 21300000, guid: 3a3446836f00e419a851731b1539f7c9, type: 3}
+    - m_Name: faraway
+      m_Hash: 850113596
+      m_Sprite: {fileID: 21300000, guid: 852d43e840a44478f9d9cd65ab362d37, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 852d43e840a44478f9d9cd65ab362d37, type: 3}
+    - m_Name: smile
+      m_Hash: 42599183
+      m_Sprite: {fileID: 21300000, guid: adacc0c072c2c4ae18e7f7b0c94c2f4a, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: adacc0c072c2c4ae18e7f7b0c94c2f4a, type: 3}
     m_FromMain: 0
-    m_EntryOverrideCount: 2
+    m_EntryOverrideCount: 4
   - m_Name: Knitby
     m_Hash: 429599384
     m_CategoryList: []
@@ -43,8 +53,18 @@ MonoBehaviour:
       m_Sprite: {fileID: 21300000, guid: 4f5d8c55e349f4820b31bee13c0e0bb8, type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 21300000, guid: 4f5d8c55e349f4820b31bee13c0e0bb8, type: 3}
+    - m_Name: confused
+      m_Hash: 976688382
+      m_Sprite: {fileID: 21300000, guid: 45e8ef905092649558dce57141365ddc, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 45e8ef905092649558dce57141365ddc, type: 3}
+    - m_Name: relieved
+      m_Hash: 924637611
+      m_Sprite: {fileID: 21300000, guid: 8174be4b0074944ffb8da4e1046c0a59, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 8174be4b0074944ffb8da4e1046c0a59, type: 3}
     m_FromMain: 0
-    m_EntryOverrideCount: 2
+    m_EntryOverrideCount: 4
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638782416821538620
+  m_ModificationHash: 638789740222042570
   m_Version: 1

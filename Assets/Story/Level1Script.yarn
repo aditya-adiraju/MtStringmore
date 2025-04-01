@@ -1,7 +1,7 @@
 ﻿title: IntroCutscene
 setting: outside Knitby's house
 ---
-<<fix_coords 6.7 2>>
+<<fix_coords 6.9 2>>
 <<move Marshmallow 2 1 15 true>>
 // marshmallow knocks on Knitby's door
 <<play_sound door_knock>>
@@ -14,7 +14,7 @@ setting: outside Knitby's house
 <<follow_object Knitby>>
 <<resize_camera 4 5>>
 <<wait 0.5>>
-<<move Knitby 4 1 10>>
+<<move Knitby 4 1 10 false false 1>>
 Marshmallow: Hiya Knitby, how's it going?
 Knitby: Hey, good to see you, Marshmallow! It's going well, I'm still reveling in our glorious victory on the football field the other day.   
 Marshmallow_smile: Those teddy bears didn't know what hit them! 
@@ -25,18 +25,18 @@ Knitby_confused: ... Why would you think that? Clouds are just... water??
 Marshmallow: Do you not trust me? Have I ever led you wrong? 
 Knitby_frown: Marshmallow, these peaks have claimed many adventurers before you. Just because you have a chip on your shoulder—
 Marshmallow_frown: I have a <i>what</i> on my shoulder?
-Knitby: Let me rephrase. Just because you want to prove yourself doesn't mean you should recklessly endanger yourself—
-Marshmallow: Well, okay then. Bye!
+Knitby_relieved: Let me rephrase. Just because you want to prove yourself doesn't mean you should recklessly endanger yourself—
+Marshmallow_frown: Well, okay then. <b>BYE!</b>
 <<run Marshmallow 45 1 20 true>>
 <<follow_object Knitby 4.5>>
 <<wait 0.35>>
 <<resize_camera 7 5>>
 Knitby: Wait, where are you going in such a hurry?
-Marshmallow_faraway: Up the mountain, duh!
+Marshmallow_smile: Up the mountain, duh!
 // knitby shouting
 Knitby: But why?
 // marshmallow is very far away now 
-Marshmallow_faraway: Because I know you can't help but follow me anyway!
+Marshmallow: Because I know you can't help but follow me anyway!
 Knitby: <i>*sighs*</i> ...
 <<run Knitby 44 1 15>>
 <<wait 1>>
@@ -61,9 +61,9 @@ title: SwingTutorial
 Knitby: Press space to attach and release from the swing!
 ===
 
-title: DemoEnd
+title: Level1End
 ---
-Knitby: Hey, not too shabby!
-Marshmallow: ...thanks?
+<<fade_out>>
+<<load_scene_nonblock Manager SecondCutscene 0.5>>
 ===
 

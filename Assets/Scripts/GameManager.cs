@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Yarn.Unity;
@@ -76,9 +77,16 @@ public class GameManager : MonoBehaviour
         sceneTransitionCanvas.FadeIn -= OnFadeIn;
     }
 
-    [YarnCommand("load_scene")]
-    public static void LoadScene(string sceneName)
+    [YarnCommand("load_scene_nonblock")]
+    public void InvokeLoadScene(string sceneName, float duration = 0)
     {
+        StartCoroutine(LoadScene(sceneName, duration));
+    }
+    
+    [YarnCommand("load_scene")]
+    public static IEnumerator LoadScene(string sceneName, float duration = 0)
+    {
+        yield return new WaitForSecondsRealtime(duration);
         SceneManager.LoadScene(sceneName);
     }
 }
