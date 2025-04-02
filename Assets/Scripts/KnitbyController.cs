@@ -84,7 +84,10 @@ public class KnitbyController : MonoBehaviour
     private void Update()
     {
         if (_currentPathPosition == Vector3.zero) return;
-        SetIdle?.Invoke(Vector3.Distance(transform.position, _currentPathPosition) <= idleThreshold);
+        
+        if (Swing.Equals(false))
+            SetIdle?.Invoke(Vector3.Distance(transform.position, _currentPathPosition) <= idleThreshold);
+        
         Vector3 direction = _currentPathPosition - transform.position;
 
         DirectionUpdated?.Invoke(direction.x, direction.y);

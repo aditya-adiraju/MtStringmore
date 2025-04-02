@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4712854387440985193}
   - component: {fileID: 5657639526338190048}
   - component: {fileID: 4137540215766658076}
+  - component: {fileID: 9142872608815845680}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -74,12 +75,12 @@ SpriteRenderer:
   m_SortingLayerID: 1775649197
   m_SortingLayer: 2
   m_SortingOrder: 15
-  m_Sprite: {fileID: 21300000, guid: 3c9fdafafd2adae48b629235223837c6, type: 3}
+  m_Sprite: {fileID: 2078464505, guid: 912c3e2694bc5a44b8ce52b363793629, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 9.8, y: 9.71}
+  m_Size: {x: 24, y: 16.804688}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -121,9 +122,30 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  motionTime: 1
+  motionTime: 2
   firstPosition: {x: 0, y: 0}
-  secondPosition: {x: 0, y: -8}
+  secondPosition: {x: 0, y: -30}
+--- !u!95 &9142872608815845680
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 477438802549588962}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d87770f4aa48cf1418678d5991b8eadd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8959911608445900695
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +212,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -25}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -201,7 +223,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 20, y: 15}
+  m_Size: {x: 30, y: 30}
   m_EdgeRadius: 0
 --- !u!114 &2067321712332372970
 MonoBehaviour:

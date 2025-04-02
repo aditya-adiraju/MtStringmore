@@ -39,6 +39,7 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
         if (!other.gameObject.TryGetComponent(out _player)) return;
         _player.ActiveVelocityEffector = this;
         _player.CanDash = true;
+        _player.ForceCancelEarlyRelease();
         if (_player.PlayerState == PlayerController.PlayerStateEnum.Dash)
         {
             _player.ForceCancelDash();

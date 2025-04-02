@@ -350,6 +350,14 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// Disallows early release for this jump.
+    /// </summary>
+    public void ForceCancelEarlyRelease()
+    {
+        _canReleaseEarly = false;
+    }
+
+    /// <summary>
     /// Force kills the player.
     /// </summary>
     public void ForceKill()
@@ -401,6 +409,7 @@ public class PlayerController : MonoBehaviour
         {
             PlayerState = PlayerStateEnum.Run;
             _canDoubleJump = true;
+            _canDash = true;
             GroundedChanged?.Invoke(true, Mathf.Abs(_velocity.y));
             _landingDust.Play();
         }
