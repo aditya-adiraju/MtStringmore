@@ -1,5 +1,6 @@
 
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Yarn.Unity;
@@ -12,7 +13,13 @@ public class CutsceneManager : MonoBehaviour
 
     private void Awake()
     {
+        var allAudioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
+        if (allAudioSources == null) return;
+        foreach (var audioSource in allAudioSources)
+            audioSource.Stop();
+        
         _source = GetComponent<AudioSource>();
+        _source.Play();
     }
 
     private void Update()
@@ -32,5 +39,28 @@ public class CutsceneManager : MonoBehaviour
         _source.PlayOneShot(Resources.Load<AudioClip>(soundName));
         if (blockUntilDone)
             yield return new WaitUntil(() => !_source.isPlaying);
+    }
+
+    [YarnCommand("stop_sound")]
+    public static async void StopSound(float fadeDuration = 0)
+    {
+        if (fadeDuration == 0)
+        {
+            _source.Stop();
+            return;
+        }
+        
+        float startVolume = _source.volume;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+            _source.volume = Mathf.Lerp(startVolume, 0, elapsedTime / fadeDuration);
+            await Task.Yield(); // Non-blocking
+        }
+
+        _source.Stop();
+        _source.volume = startVolume;
     }
 }

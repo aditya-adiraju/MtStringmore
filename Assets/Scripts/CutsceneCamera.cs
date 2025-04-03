@@ -12,8 +12,9 @@ public class CutsceneCamera : MonoBehaviour
     private static Camera _camera;
     private static float _cameraResizeSpeed;
     private static float _cameraSize;
+    private static float _smoothTime;
 
-    [SerializeField] private float smoothTime = 0.5f;
+    [SerializeField] private float defaultSmoothTime = 0.5f;
     private Vector2 _velocity;
 
     private void Awake()
@@ -28,7 +29,9 @@ public class CutsceneCamera : MonoBehaviour
 
         // apply smoothing to the camera
         Vector3 camPosition = transform.position;
-        Vector2 smoothed = Vector2.SmoothDamp(camPosition, _target, ref _velocity, smoothTime);
+        if (_smoothTime < 0)
+            _smoothTime = defaultSmoothTime;
+        Vector2 smoothed = Vector2.SmoothDamp(camPosition, _target, ref _velocity, _smoothTime);
         transform.position = new Vector3(smoothed.x, smoothed.y, camPosition.z);
 
         // resize camera
@@ -46,11 +49,12 @@ public class CutsceneCamera : MonoBehaviour
     }
 
     [YarnCommand("fix_coords")]
-    public static void FixCoords(float x, float y)
+    public static void FixCoords(float x, float y, float panTime = -1)
     {
         _targetObject = null;
         _lead = Vector2.zero;
         _target = new Vector2(x, y);
+        _smoothTime = panTime;
     }
 
     [YarnCommand("fix_object")]

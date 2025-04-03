@@ -13,7 +13,8 @@ Marshmallow: And we're only just getting started!
 Knitby_relieved: You don't know the half of it. The steepest cliffs and most treacherous drops are still ahead of us.
 Marshmallow_smile: We're going to be fine, don't be such a wet blanket!
 // knitby sighs
-Knitby_frown: Hey, that's uncalled for! I'm just trying to look out for you, Marshmallow. You need to be more watchful.
+Knitby_frown: Hey, that's uncalled for!
+Knitby: I'm just trying to look out for you, Marshmallow. You need to be more watchful.
 // i sorta imagine marshmallow with a "hmpf" expression, like the triumph emoji
 Marshmallow_frown: <b>NOPE!</b> No hesitation allowed, or we won't make it to the summit.
 Knitby_frown: That attitude is going to get you hurt, Marshmallow, or <i>worse</i>!
@@ -43,9 +44,16 @@ Marshmallow: Yes, 100%. Now, let's go!
 // knitby reluctantly agrees
 Knitby_relieved: ... Okay.
 <<run Marshmallow 44 1 15 true>>
-<<wait 0.5>>
-<<resize_camera 7 2>>
+<<wait 1>>
+<<flip Knitby>>
 <<run Knitby 44 1 15>>
+<<stop_sound 4>>
+<<wait 2>>
+<<hide Knitby>>
+<<hide Marshmallow>>
+<<resize_camera 16 2>>
+<<fix_coords 110 10 4>>
+<<wait 7>>
 <<fade_out 1>>
 // <<load_scene Level2>>
 
