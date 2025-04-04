@@ -29,11 +29,6 @@ public class KnitbyAnimator : MonoBehaviour
         _knitbyController = GetComponentInParent<KnitbyController>();
     }
 
-    private void Start()
-    {
-        GameManager.Instance.Reset += OnReset;
-    }
-
     private void OnEnable()
     {
         _knitbyController.DirectionUpdated += OnMove;
@@ -43,9 +38,8 @@ public class KnitbyAnimator : MonoBehaviour
         _knitbyController.CanDash += OnPlayerCanDash;
         _knitbyController.PlayerDeath += OnPlayerDeath;
         _knitbyController.SetIdle += OnIdle;
-        
-        if (GameManager.Instance)
-            GameManager.Instance.Reset += OnReset;
+
+        GameManager.Instance.Reset += OnReset;
     }
 
     private void OnDisable()

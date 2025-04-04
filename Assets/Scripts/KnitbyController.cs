@@ -78,7 +78,6 @@ public class KnitbyController : MonoBehaviour
         _lineRenderer = _player.GetComponentInChildren<LineRenderer>();
         _playerController = _player.GetComponent<PlayerController>();
         _playerController.Death += PlayerDeath;
-        GameManager.Instance.Reset += OnReset;
     }
 
     private void Update()
@@ -130,8 +129,7 @@ public class KnitbyController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (GameManager.Instance)
-            GameManager.Instance.Reset += OnReset;
+        GameManager.Instance.Reset += OnReset;
     }
 
     private void OnDisable()

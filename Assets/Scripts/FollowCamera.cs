@@ -106,14 +106,14 @@ public class FollowCamera : MonoBehaviour
         _fixCameraTriggers.Remove(trigger);
     }
 
+    #endregion
+
     /// <summary>
     /// On level reset, place camera at player's position
     /// </summary>
     private void OnReset()
     {
-        var playerTarget = GetPlayerTarget();
-        transform.position = new Vector3(playerTarget.x, playerTarget.y, transform.position.z);
+        var checkpointPos = GameManager.Instance.CheckPointPos;
+        transform.position = new Vector3(checkpointPos.x, checkpointPos.y, transform.position.z);
     }
-
-    #endregion
 }
