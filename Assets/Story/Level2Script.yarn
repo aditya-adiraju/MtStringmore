@@ -5,7 +5,7 @@ setting: on the way up the mountain
 <<fix_coords 1 1>>
 <<resize_camera 4 2>>
 <<run Marshmallow 2 1 11>>
-<<move Knitby 0 1 9>>
+<<move Knitby 0 1.04 9>>
 <<wait 1>>
 Knitby: Whew, that was close! It's getting more and more dangerous up here.
 <<flip Marshmallow>>
@@ -20,7 +20,7 @@ Marshmallow_frown: <b>NOPE!</b> No hesitation allowed, or we won't make it to th
 Knitby_frown: That attitude is going to get you hurt, Marshmallow, or <i>worse</i>!
 // knitby is like pleading
 <<flip Knitby>>
-<<move Knitby -2 1 7>>
+<<move Knitby -2 1.04 7>>
 <<wait 1>>
 Knitby_confused: ...
 <<flip Knitby>>

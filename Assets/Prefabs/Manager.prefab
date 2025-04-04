@@ -3445,6 +3445,7 @@ GameObject:
   - component: {fileID: 5130713523581019797}
   - component: {fileID: 2257474230385962516}
   - component: {fileID: 5101892580008084914}
+  - component: {fileID: 7492377907174578259}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3598,6 +3599,27 @@ MonoBehaviour:
   startBgmVolume: 0.5
   startSfxVolume: 0.5
   startMasterVolume: 0.5
+--- !u!114 &7492377907174578259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7818288281639424406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8abfb80a3d854b32a497b1896bd94fa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneMusicPairings:
+  - sceneName: MainMenu
+    audioClip: {fileID: 8300000, guid: f23f3aac074ac0e4bbbce2bbb30f4fed, type: 3}
+  - sceneName: IntroCutscene
+    audioClip: {fileID: 8300000, guid: f23f3aac074ac0e4bbbce2bbb30f4fed, type: 3}
+  - sceneName: Level1Trial
+    audioClip: {fileID: 8300000, guid: f23f3aac074ac0e4bbbce2bbb30f4fed, type: 3}
+  - sceneName: SecondCutscene
+    audioClip: {fileID: 8300000, guid: f23f3aac074ac0e4bbbce2bbb30f4fed, type: 3}
 --- !u!1 &8121803134615645257
 GameObject:
   m_ObjectHideFlags: 0

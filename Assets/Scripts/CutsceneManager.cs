@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -13,11 +12,6 @@ public class CutsceneManager : MonoBehaviour
 
     private void Awake()
     {
-        var allAudioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
-        if (allAudioSources == null) return;
-        foreach (var audioSource in allAudioSources)
-            audioSource.Stop();
-        
         _source = GetComponent<AudioSource>();
         _source.Play();
     }
