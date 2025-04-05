@@ -3828,7 +3828,7 @@ Transform:
   m_GameObject: {fileID: 1282380705}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 4.27, z: 0.5}
+  m_LocalPosition: {x: -2, y: 4.27, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3901,8 +3901,25 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6964292186168748787, guid: ae467fca31521479d920e449f3fcb866, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1467725560}
   m_SourcePrefab: {fileID: 100100000, guid: ae467fca31521479d920e449f3fcb866, type: 3}
+--- !u!1 &1467725559 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6964292186168748787, guid: ae467fca31521479d920e449f3fcb866, type: 3}
+  m_PrefabInstance: {fileID: 1467725558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!45 &1467725560
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467725559}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: 76e2847411455a24fb68a0c0b4cae6f9, type: 2}
 --- !u!1001 &1578995724
 PrefabInstance:
   m_ObjectHideFlags: 0
