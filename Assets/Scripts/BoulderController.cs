@@ -1,26 +1,25 @@
 using UnityEngine;
-using Random = UnityEngine.Random;
-
 
 /// <summary>
 /// Handles the physics and features behind the boulders 
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(AudioSource))]
 public class BoulderController : MonoBehaviour
 {
+    [SerializeField, Tooltip("ParticleSystem prefab to instantiate")]
+    private ParticleSystem liquidMolecule;
+
+    [SerializeField, Tooltip("Whether the projectile explodes")]
+    private bool toExplode;
+
+    [Range(0, 5)] [SerializeField] private float minGravityScale = 3f;
+    [Range(0, 5)] [SerializeField] private float maxGravityScale = 5f;
+
     private Rigidbody2D _rb;
-    [SerializeField] private ParticleSystem liquidMolecule;
-    [SerializeField] private bool toExplode;
-    
-    [Range(0, 5)]
-    [SerializeField] private float minGravityScale = 3f;
-    [Range(0, 5)]
-    [SerializeField] private float maxGravityScale = 5f;
-    
-    private void Start()
+
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        
         float randomGravityScale = Random.Range(minGravityScale, maxGravityScale);
         _rb.gravityScale = randomGravityScale;
     }
@@ -33,6 +32,7 @@ public class BoulderController : MonoBehaviour
             {
                 TurnIntoParticles();
             }
+
             Destroy(gameObject);
         }
     }
@@ -53,5 +53,4 @@ public class BoulderController : MonoBehaviour
             Destroy(particles.gameObject, particles.main.duration + particles.main.startLifetime.constantMax);
         }
     }
-
 }

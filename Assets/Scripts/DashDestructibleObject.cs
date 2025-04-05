@@ -4,7 +4,7 @@ using UnityEngine.Events;
 /// <summary>
 /// Object that is 'destroyed' on dash. And by destroy, I mean disable the collider.
 /// </summary>
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Collider2D), typeof(AudioSource))]
 public class DashDestructibleObject : MonoBehaviour
 {
     [SerializeField] private bool destroyed;
@@ -13,10 +13,12 @@ public class DashDestructibleObject : MonoBehaviour
     private float dashEndTolerance = 1f;
 
     private Collider2D _collider;
+    private AudioSource _audioSource;
 
     private void Awake()
     {
         _collider = GetComponent<Collider2D>();
+        _audioSource = GetComponent<AudioSource>();
         GameManager.Instance.Reset += OnReset;
     }
 
@@ -61,6 +63,7 @@ public class DashDestructibleObject : MonoBehaviour
         {
             destroyed = true;
             _collider.enabled = false;
+            _audioSource.Play();
             onDestroyed?.Invoke();
         }
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Controls player movement and invokes events for different player states
 /// </summary>
+[RequireComponent(typeof(Rigidbody2D), typeof(AudioSource), typeof(CapsuleCollider2D))]
 public class PlayerController : MonoBehaviour
 {
     #region Serialized Private Fields
@@ -53,6 +54,10 @@ public class PlayerController : MonoBehaviour
     // this is just here for battle of the concepts
     [Header("Temporary")]
     [SerializeField] private GameObject poofSmoke;
+    [Header("Audio")]
+    [SerializeField] private AudioClip swingAttach;
+    [SerializeField] private AudioClip swingDetach;
+    [SerializeField] private AudioClip[] swingChangeDirection;
     // @formatter:on
 
     #endregion
@@ -162,6 +167,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D _rb;
     private CapsuleCollider2D _col;
+    private AudioSource _audioSource;
     private IPlayerVelocityEffector _activeEffector;
     private ParticleSystem _runningDust;
     private ParticleSystem _landingDust;
@@ -198,6 +204,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<CapsuleCollider2D>();
+        _audioSource = GetComponent<AudioSource>();
         ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
         
         foreach (ParticleSystem ps in particleSystems)
@@ -638,6 +645,8 @@ public class PlayerController : MonoBehaviour
         {
             // in swing area, button pressed
             PlayerState = PlayerStateEnum.Swing;
+            _audioSource.clip = swingAttach;
+            _audioSource.Play();
             ropeRenderer.enabled = true;
             HangChanged?.Invoke(true, _velocity.x < 0);
         }
@@ -671,6 +680,8 @@ public class PlayerController : MonoBehaviour
                 {
                     SwingDifferentDirection?.Invoke(_wasSwingClockwise);
                     _wasSwingClockwise = !_wasSwingClockwise;
+                    _audioSource.clip = RandomUtil.SelectRandom(swingChangeDirection);
+                    _audioSource.Play();
                 }
             }
         }
@@ -681,6 +692,8 @@ public class PlayerController : MonoBehaviour
             PlayerState = PlayerStateEnum.Air;
             ropeRenderer.enabled = false;
             _canSwing = false;
+            _audioSource.clip = swingDetach;
+            _audioSource.Play();
             HangChanged?.Invoke(false, _velocity.x < 0);
 
             if (_swingStarted)

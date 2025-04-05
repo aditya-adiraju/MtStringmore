@@ -648,11 +648,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4285282938280575208, guid: c69ea3016f5934a33b844fde9f97bda5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 95.29
+      value: 95
       objectReference: {fileID: 0}
     - target: {fileID: 4285282938280575208, guid: c69ea3016f5934a33b844fde9f97bda5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.72
+      value: 8.75
       objectReference: {fileID: 0}
     - target: {fileID: 4285282938280575208, guid: c69ea3016f5934a33b844fde9f97bda5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -689,18 +689,6 @@ PrefabInstance:
     - target: {fileID: 7387206486072600662, guid: c69ea3016f5934a33b844fde9f97bda5, type: 3}
       propertyPath: angle
       value: -180
-      objectReference: {fileID: 0}
-    - target: {fileID: 7387206486072600662, guid: c69ea3016f5934a33b844fde9f97bda5, type: 3}
-      propertyPath: speed
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 7387206486072600662, guid: c69ea3016f5934a33b844fde9f97bda5, type: 3}
-      propertyPath: boulder
-      value: 
-      objectReference: {fileID: 1348632799004380023, guid: 39b40047733bc4a1fa6160f73ca3a197, type: 3}
-    - target: {fileID: 7387206486072600662, guid: c69ea3016f5934a33b844fde9f97bda5, type: 3}
-      propertyPath: maxTimeBetweenShots
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8589015569945651293, guid: c69ea3016f5934a33b844fde9f97bda5, type: 3}
       propertyPath: m_Name

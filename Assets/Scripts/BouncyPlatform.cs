@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Class represents a bouncy platform that is a 2D collider
 /// </summary>
-[DisallowMultipleComponent, RequireComponent(typeof(Collider2D), typeof(Animator))]
+[DisallowMultipleComponent, RequireComponent(typeof(Collider2D), typeof(Animator), typeof(AudioSource))]
 public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
 {
     private static readonly int BounceHash = Animator.StringToHash("Bounce");
@@ -13,12 +13,14 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
     [Header("Bouncing")]
     [SerializeField] private float yBounceForce;
     [SerializeField] private float xBounceForce;
+    [Header("Sounds")] [SerializeField] private AudioClip[] bounceSounds;
 
     #endregion
 
     private PlayerController _player;
     private Collision2D _bounceArea;
     private Animator _animator;
+    private AudioSource _audioSource;
 
     /// <inheritdoc />
     public Vector2 ApplyVelocity(Vector2 velocity)
@@ -32,6 +34,7 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -45,6 +48,8 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
             _player.ForceCancelDash();
         }
         _animator.SetTrigger(BounceHash);
+        _audioSource.clip = RandomUtil.SelectRandom(bounceSounds);
+        _audioSource.Play();
     }
     
     private void OnTriggerExit2D(Collider2D other)

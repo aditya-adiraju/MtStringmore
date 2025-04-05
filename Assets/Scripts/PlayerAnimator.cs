@@ -186,9 +186,9 @@ public class PlayerAnimator : MonoBehaviour
         anim.SetTrigger(JumpKey);
         anim.SetBool(GroundedKey, false);
 
-        int randomSound = Random.Range(0, jumpSound.Length);
-        _source.clip = jumpSound[randomSound];
-        _source.PlayOneShot(jumpSound[randomSound]);
+        AudioClip clip = RandomUtil.SelectRandom(jumpSound);
+        _source.clip = clip;
+        _source.PlayOneShot(clip);
 
         // if (_grounded) // Avoid coyote
         // {

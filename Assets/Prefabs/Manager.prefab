@@ -3460,6 +3460,8 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: f23f3aac074ac0e4bbbce2bbb30f4fed, type: 3}
   - sceneName: SecondCutscene
     audioClip: {fileID: 8300000, guid: f23f3aac074ac0e4bbbce2bbb30f4fed, type: 3}
+  - sceneName: Level2
+    audioClip: {fileID: 8300000, guid: 243a490f23d23774bb4075fd58beec36, type: 3}
 --- !u!1 &8121803134615645257
 GameObject:
   m_ObjectHideFlags: 0
