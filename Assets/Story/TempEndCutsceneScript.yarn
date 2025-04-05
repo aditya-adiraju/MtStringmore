@@ -1,0 +1,20 @@
+﻿title: TempEndCutscene
+setting: temporary ending after level 2
+---
+<<fade_out 0>>
+<<wait 1>>
+Marshmallow: Whoa! Why did it turn dark all of a sudden?
+Knitby: I've warned you, Marshmallow, this mountain is a force to be reckoned with.
+Marshmallow: Did the total solar eclipse come early?!
+Narrator: Hi, this is the game dev team.
+Narrator: We're afraid this is the end of the game for now...
+Narrator: Thank you for playing, we hope you enjoyed Mt. Stringmore!
+Narrator: You'll see more of Marshmallow and Knitby in the summer!
+Marshmallow: Knitby, did you hear that?
+Knitby_relieved: What shall become of us...
+Marshmallow_smile: Oh well, if it's gonna be dark all the time, you can tell me 1000 bedtime stories!
+Knitby: Bedtime stories?! We're about to cease to exist!
+Narrator: Oops, you weren't supposed to hear that...
+<<wait 1>>
+<<fade_in 3>>
+===
