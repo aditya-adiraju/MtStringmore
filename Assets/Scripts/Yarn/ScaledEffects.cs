@@ -14,7 +14,7 @@ namespace Yarn
     ///     Contains coroutine methods that apply visual effects. This class is used
     ///     by <see cref="LineView" /> to handle animating the presentation of lines.
     /// </summary>
-    public static class UnscaledEffects
+    public static class ScaledEffects
     {
         /// <summary>
         ///     A coroutine that fades a <see cref="CanvasGroup" /> object's opacity
@@ -43,16 +43,16 @@ namespace Yarn
 
             canvasGroup.alpha = from;
 
-            var timeElapsed = 0f;
+            float timeElapsed = 0f;
 
             while (timeElapsed < fadeTime)
             {
                 if (stopToken?.WasInterrupted ?? false) yield break;
 
-                var fraction = timeElapsed / fadeTime;
-                timeElapsed += Time.unscaledDeltaTime;
+                float fraction = timeElapsed / fadeTime;
+                timeElapsed += Time.deltaTime;
 
-                var a = Mathf.Lerp(from, to, fraction);
+                float a = Mathf.Lerp(from, to, fraction);
 
                 canvasGroup.alpha = a;
                 yield return null;
@@ -141,7 +141,7 @@ namespace Yarn
                 if (stopToken?.WasInterrupted ?? false) yield break;
 
                 yield return null;
-                accumulator += Time.unscaledDeltaTime;
+                accumulator += Time.deltaTime;
             }
         }
 
@@ -149,7 +149,7 @@ namespace Yarn
         ///     A coroutine that gradually reveals the text in a <see cref="TextMeshProUGUI" /> object over time.
         /// </summary>
         /// <remarks>
-        ///     Essentially identical to <see cref="UnscaledEffects.Typewriter" /> but supports pausing the animation based on
+        ///     Essentially identical to <see cref="ScaledEffects.Typewriter" /> but supports pausing the animation based on
         ///     <paramref name="pausePositions" /> values.
         ///     <para>
         ///         This method works by adjusting the value of the <paramref name="text" /> parameter's
@@ -190,7 +190,7 @@ namespace Yarn
             yield return null;
 
             // How many visible characters are present in the text?
-            var characterCount = text.textInfo.characterCount;
+            int characterCount = text.textInfo.characterCount;
 
             // Early out if letter speed is zero, text length is zero
             if (lettersPerSecond <= 0 || characterCount == 0)
@@ -202,7 +202,7 @@ namespace Yarn
             }
 
             // Convert 'letters per second' into its inverse
-            var secondsPerLetter = 1.0f / lettersPerSecond;
+            float secondsPerLetter = 1.0f / lettersPerSecond;
 
             // If lettersPerSecond is larger than the average framerate, we
             // need to show more than one letter per frame, so simply
@@ -213,7 +213,7 @@ namespace Yarn
             // Instead, we'll accumulate time every frame, and display as
             // many letters in that frame as we need to in order to achieve
             // the requested speed.
-            var accumulator = Time.unscaledDeltaTime;
+            float accumulator = Time.deltaTime;
 
             while (text.maxVisibleCharacters < characterCount)
             {
@@ -229,31 +229,30 @@ namespace Yarn
                     if (pausePositions != null && pausePositions.Count != 0)
                         if (text.maxVisibleCharacters == pausePositions.Peek().Item1)
                         {
-                            var pause = pausePositions.Pop();
+                            (_, float duration) = pausePositions.Pop();
                             onPauseStarted?.Invoke();
-                            yield return InterruptableWait(pause.Item2, stopToken);
+                            yield return InterruptableWait(duration, stopToken);
                             onPauseEnded?.Invoke();
 
                             // need to reset the accumulator
-                            accumulator = Time.unscaledDeltaTime;
+                            accumulator = Time.deltaTime;
                         }
 
                     text.maxVisibleCharacters += 1;
 
                     onCharacterTyped?.Invoke();
                     accumulator -= secondsPerLetter;
-                    
+
                     // Don't pause on the last character
                     if (text.maxVisibleCharacters >= characterCount) continue;
 
                     // Extra pause on punctuation
-                    var nextChar = text.text[text.maxVisibleCharacters - 1];
-                    if (nextChar.Equals('.') || nextChar.Equals(',') || nextChar.Equals('?') || nextChar.Equals('!')) {
+                    char nextChar = text.text[text.maxVisibleCharacters - 1];
+                    if (nextChar.Equals('.') || nextChar.Equals(',') || nextChar.Equals('?') || nextChar.Equals('!'))
                         yield return new WaitForSecondsRealtime(0.3f);
-                    }
                 }
 
-                accumulator += Time.unscaledDeltaTime;
+                accumulator += Time.deltaTime;
 
                 yield return null;
             }

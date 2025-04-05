@@ -278,7 +278,7 @@ namespace Yarn
         /// <summary>
         ///     A stop token that is used to interrupt the current animation.
         /// </summary>
-        private readonly UnscaledEffects.CoroutineInterruptToken currentStopToken = new();
+        private readonly ScaledEffects.CoroutineInterruptToken currentStopToken = new();
 
         /// <summary>
         ///     The current <see cref="LocalizedLine" /> that this line view is
@@ -299,8 +299,8 @@ namespace Yarn
 
         private void Update()
         {
-            // if hitting spacebar during update, trigger dialogue advancement
-            if (Input.GetButtonDown("Jump")) UserRequestedViewAdvancement();
+            // if hitting spacebar during update and not paused, trigger dialogue advancement
+            if (Input.GetButtonDown("Jump") && Time.timeScale != 0) UserRequestedViewAdvancement();
         }
 
         /// <inheritdoc />
@@ -315,14 +315,14 @@ namespace Yarn
         {
             // disabling interaction temporarily while dismissing the line
             // we don't want people to interrupt a dismissal
-            var interactable = canvasGroup.interactable;
+            bool interactable = canvasGroup.interactable;
             canvasGroup.interactable = false;
 
             // If we're using a fade effect, run it, and wait for it to finish.
             if (useFadeEffect)
             {
                 yield return
-                    StartCoroutine(UnscaledEffects.FadeAlpha(canvasGroup, 1, 0, fadeOutTime, currentStopToken));
+                    StartCoroutine(ScaledEffects.FadeAlpha(canvasGroup, 1, 0, fadeOutTime, currentStopToken));
                 currentStopToken.Complete();
             }
 
@@ -395,7 +395,7 @@ namespace Yarn
 
         private void UpdateAvatarAndName(LocalizedLine dialogueLine)
         {
-            var charName = dialogueLine.CharacterName.Split("_", 2);
+            string[] charName = dialogueLine.CharacterName.Split("_", 2);
             // we have a character name text view, show the character name
 
             characterNameText.text = charName[0];
@@ -418,19 +418,15 @@ namespace Yarn
                 // we have one).
                 continueButton?.SetActive(false);
 
-                var text = dialogueLine.TextWithoutCharacterName;
+                MarkupParseResult text = dialogueLine.TextWithoutCharacterName;
                 if (characterNameContainer && characterNameText)
                 {
                     // we are set up to show a character name, but there isn't one
                     // so just hide the container
                     if (string.IsNullOrWhiteSpace(dialogueLine.CharacterName))
-                    {
                         characterNameContainer.SetActive(false);
-                    }
                     else
-                    {
                         UpdateAvatarAndName(dialogueLine);
-                    }
                 }
                 else
                 {
@@ -458,7 +454,7 @@ namespace Yarn
                 // finish.
                 if (useFadeEffect)
                 {
-                    yield return StartCoroutine(UnscaledEffects.FadeAlpha(canvasGroup, 0, 1, fadeInTime,
+                    yield return StartCoroutine(ScaledEffects.FadeAlpha(canvasGroup, 0, 1, fadeInTime,
                         currentStopToken));
                     if (currentStopToken.WasInterrupted)
                         // The fade effect was interrupted. Stop this entire
@@ -470,14 +466,14 @@ namespace Yarn
                 // it to finish.
                 if (useTypewriterEffect)
                 {
-                    var pauses = GetPauseDurationsInsideLine(text);
+                    Stack<(int position, float duration)> pauses = GetPauseDurationsInsideLine(text);
 
                     // setting the canvas all back to its defaults because if we didn't also fade we don't have anything visible
                     canvasGroup.alpha = 1f;
                     canvasGroup.interactable = true;
                     canvasGroup.blocksRaycasts = true;
 
-                    yield return StartCoroutine(UnscaledEffects.PausableTypewriter(
+                    yield return StartCoroutine(ScaledEffects.PausableTypewriter(
                         lineText,
                         typewriterEffectSpeed,
                         () => onCharacterTyped.Invoke(),
@@ -591,12 +587,12 @@ namespace Yarn
         private static string PaletteMarkedUpText(MarkupParseResult line, MarkupPalette palette,
             bool applyLineBreaks = true)
         {
-            var lineOfText = line.Text;
+            string lineOfText = line.Text;
             line.Attributes.Sort((a, b) => b.Position.CompareTo(a.Position));
-            foreach (var attribute in line.Attributes)
+            foreach (MarkupAttribute attribute in line.Attributes)
             {
                 // we have a colour that matches the current marker
-                if (palette.ColorForMarker(attribute.Name, out var markerColour))
+                if (palette.ColorForMarker(attribute.Name, out Color markerColour))
                 {
                     // we use the range on the marker to insert the TMP <color> tags
                     // not the best approach but will work ok for this use case
@@ -614,7 +610,7 @@ namespace Yarn
 
         private static string AddLineBreaks(MarkupParseResult line)
         {
-            var lineOfText = line.Text;
+            string lineOfText = line.Text;
             line.Attributes.Sort((a, b) => b.Position.CompareTo(a.Position));
             return line.Attributes.Where(a => a.Name == "br").Aggregate(lineOfText,
                 (current, attribute) => current.Insert(attribute.Position, "<br>"));
@@ -624,7 +620,7 @@ namespace Yarn
         ///     Creates a stack of typewriter pauses to use to temporarily halt the typewriter effect.
         /// </summary>
         /// <remarks>
-        ///     This is intended to be used in conjunction with the <see cref="UnscaledEffects.PausableTypewriter" /> effect.
+        ///     This is intended to be used in conjunction with the <see cref="ScaledEffects.PausableTypewriter" /> effect.
         ///     The stack of tuples created are how the typewriter effect knows when, and for how long, to halt the effect.
         ///     <para>
         ///         The pause duration property is in milliseconds but all the effects code assumes seconds
@@ -635,19 +631,19 @@ namespace Yarn
         /// <returns>A stack of positions and duration pause tuples from within the line</returns>
         public static Stack<(int position, float duration)> GetPauseDurationsInsideLine(MarkupParseResult line)
         {
-            var pausePositions = new Stack<(int, float)>();
+            Stack<(int, float)> pausePositions = new();
             const string label = "pause";
 
             // sorting all the attributes in reverse positional order
             // this is so we can build the stack up in the right positioning
-            var attributes = line.Attributes;
+            List<MarkupAttribute> attributes = line.Attributes;
             attributes.Sort((a, b) => b.Position.CompareTo(a.Position));
-            foreach (var attribute in line.Attributes.Where(attribute => attribute.Name == label))
+            foreach (MarkupAttribute attribute in line.Attributes.Where(attribute => attribute.Name == label))
                 // did they set a custom duration or not, as in did they do this:
                 //     Alice: this is my line with a [pause = 1000 /]pause in the middle
                 // or did they go:
                 //     Alice: this is my line with a [pause /]pause in the middle
-                if (attribute.Properties.TryGetValue(label, out var value))
+                if (attribute.Properties.TryGetValue(label, out MarkupValue value))
                     // depending on the property value we need to take a different path
                     // this is because they have made it an integer or a float which are roughly the same
                     // note to self: integer and float really ought to be convertible...
