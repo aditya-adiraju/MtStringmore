@@ -14,7 +14,9 @@ setting: outside Knitby's house
 <<follow_object Knitby>>
 <<resize_camera 4 5>>
 <<wait 0.5>>
-<<move Knitby 4 1.04 10 false false 1>>
+<<move Knitby 4 1.2 10 false false>>
+// tweak Knitby's Z to 0 at the end
+<<run Knitby 4 1.2 10 false false -0.1>>
 Marshmallow: Hiya Knitby, how's it going?
 Knitby: Hey, good to see you, Marshmallow! It's going well, I'm still reveling in our glorious victory on the football field the other day.   
 Marshmallow_smile: Those teddy bears didn't know what hit them! 

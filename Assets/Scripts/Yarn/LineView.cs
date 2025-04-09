@@ -209,29 +209,6 @@ namespace Yarn
         [SerializeField] [Min(0)] internal float typewriterEffectSpeed;
 
         /// <summary>
-        ///     The game object that represents an on-screen button that the user
-        ///     can click to continue to the next piece of dialogue.
-        /// </summary>
-        /// <remarks>
-        ///     <para>
-        ///         This game object will be made inactive when a line begins
-        ///         appearing, and active when the line has finished appearing.
-        ///     </para>
-        ///     <para>
-        ///         This field will generally refer to an object that has a
-        ///         <see
-        ///             cref="Button" />
-        ///         component on it that, when clicked, calls
-        ///         <see
-        ///             cref="OnContinueClicked" />
-        ///         . However, if your game requires specific
-        ///         UI needs, you can provide any object you need.
-        ///     </para>
-        /// </remarks>
-        /// <seealso cref="autoAdvance" />
-        [SerializeField] internal GameObject continueButton;
-
-        /// <summary>
         ///     The amount of time to wait after any line
         /// </summary>
         [SerializeField] [Min(0)] internal float holdTime = 1f;
@@ -414,10 +391,6 @@ namespace Yarn
                 lineText.gameObject.SetActive(true);
                 canvasGroup.gameObject.SetActive(true);
 
-                // Hide the continue button until presentation is complete (if
-                // we have one).
-                continueButton?.SetActive(false);
-
                 MarkupParseResult text = dialogueLine.TextWithoutCharacterName;
                 if (characterNameContainer && characterNameText)
                 {
@@ -505,10 +478,7 @@ namespace Yarn
             // Our view should at be at full opacity.
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = true;
-
-            // Show the continue button, if we have one.
-            continueButton?.SetActive(true);
-
+            
             // If we have a hold time, wait that amount of time, and then
             // continue.
             if (holdTime > 0) yield return new WaitForSeconds(holdTime);
@@ -547,17 +517,6 @@ namespace Yarn
                 // No animation is now running. Signal that we want to
                 // interrupt the line instead.
                 requestInterrupt?.Invoke();
-        }
-
-        /// <summary>
-        ///     Called when the <see cref="continueButton" /> is clicked.
-        /// </summary>
-        public void OnContinueClicked()
-        {
-            // When the Continue button is clicked, we'll do the same thing as
-            // if we'd received a signal from any other part of the game (for
-            // example, if a DialogueAdvanceInput had signalled us.)
-            UserRequestedViewAdvancement();
         }
 
         /// <inheritdoc />
