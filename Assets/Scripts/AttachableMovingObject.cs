@@ -223,6 +223,7 @@ public class AttachableMovingObject : AbstractPlayerInteractable
     /// <inheritdoc />
     public override void StartInteract(PlayerController player)
     {
+        player.CanDash = true;
         _player = player;
         _audioSource.Play();
         if (_rigidbody.position == secondPosition)

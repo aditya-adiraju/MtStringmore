@@ -55,6 +55,13 @@ Knitby_relieved: ... Okay.
 <<fix_coords 110 10 4>>
 <<wait 7>>
 <<fade_out 1>>
-// <<load_scene Level2>>
+<<wait 1>>
+<<load_scene Level2>>
 
+===
+
+title: Level2End
+---
+<<fade_out>>
+<<load_scene_nonblock Manager EndCutscene 0.5>>
 ===

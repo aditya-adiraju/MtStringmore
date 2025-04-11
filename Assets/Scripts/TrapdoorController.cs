@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(HingeJoint2D))]
@@ -7,61 +6,93 @@ public class TrapdoorController : MonoBehaviour
 {
     #region Serialized Public Fields
     [Header("Platform Properties")] 
-    [SerializeField] float collapsePlatTimer;
-    [SerializeField] float restorePlatTimer;
-    [SerializeField] bool isLeftWall;
-    //this value should be smaller than the player/rb's "weight"
-    [SerializeField] float motorForce;
-    [SerializeField] float motorSpeed;
-    [SerializeField] Rigidbody2D rb;
+    [SerializeField] private float collapsePlatTimer;
+    [SerializeField] private float removeCollisionTimer;
+    [SerializeField] private float restorePlatTimer;
+    [SerializeField] private float fixPlatTimer;
     #endregion
 
     #region Private Properties
     private HingeJoint2D _hinge;
-    private JointMotor2D _motor;
+    private Rigidbody2D _rb;
+    private BoxCollider2D[] _colliders;
+    private float _motorSpeed;
+    private Vector3 _initPos;
+    private Quaternion _initRot;
+    
     private IEnumerator _activeRoutine;
     #endregion
 
-    void Awake()
+    private void Awake()
     {
         _hinge = GetComponent<HingeJoint2D>();
-        _motor = _hinge.motor;
+        _rb = GetComponent<Rigidbody2D>();
+        _colliders = GetComponents<BoxCollider2D>();
+        _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        _motorSpeed = _hinge.motor.motorSpeed;
+        _initPos = transform.position;
+        _initRot = transform.rotation;
+
+        GameManager.Instance.Reset += OnReset;
+    }
+    
+    private void OnDestroy() {
+        GameManager.Instance.Reset -= OnReset;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && _activeRoutine == null)
         {
-            StartCoroutine(_activeRoutine = Folding());    
+            StartCoroutine(_activeRoutine = FoldRoutine());    
         }
     }
 
-    IEnumerator Folding()
+    private IEnumerator FoldRoutine()
     {
-        //freeze platform to prevent motor from running prematurely
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-
         yield return new WaitForSeconds(collapsePlatTimer);
-        rb.constraints = RigidbodyConstraints2D.None;
-        _hinge.useMotor = false;
-        _motor.motorSpeed = motorSpeed;
-        _motor.maxMotorTorque = motorForce;
         
-        //assign motor back to hinge object for updated motor properties to be applied to the hinge object
-        _hinge.motor = _motor;
-         _hinge.useMotor = true;
-        //restore the platform after time has passed
+        // collapse
+        _rb.constraints = RigidbodyConstraints2D.None;
+        SetMotorSpeed(_motorSpeed);
+        yield return new WaitForSeconds(removeCollisionTimer);
+        
+        // remove collision from platform
+        _colliders[0].enabled = false;  // not sure which one of these is the collider, just do both
+        _colliders[1].enabled = false;
         yield return new WaitForSeconds(restorePlatTimer);
         
-        if(isLeftWall) 
-        {
-            _motor.motorSpeed = -100f;
-        } else 
-        {
-            _motor.motorSpeed = 100f;
-        }
-        _motor.maxMotorTorque = 30f;
-        _hinge.motor = _motor;
+        // restore platform
+        _colliders[0].enabled = true;
+        _colliders[1].enabled = true;
+        SetMotorSpeed(-_motorSpeed);
+        yield return new WaitForSeconds(fixPlatTimer);
+        
+        // fix platform rb back in place and end
+        _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        transform.position = _initPos;
+        transform.rotation = _initRot;
         _activeRoutine = null;
+    }
+
+    private void SetMotorSpeed(float speed)
+    {
+        var motor = _hinge.motor;
+        motor.motorSpeed = speed;
+        _hinge.motor = motor;
+    }
+
+    private void OnReset()
+    {
+        if (_activeRoutine != null)
+        {
+            StopCoroutine(_activeRoutine);
+            _activeRoutine = null;
+        }
+        _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        transform.position = _initPos;
+        transform.rotation = _initRot;
+        _colliders[0].enabled = true;
+        _colliders[1].enabled = true;
     }
 }
