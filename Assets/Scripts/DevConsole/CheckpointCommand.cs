@@ -34,7 +34,7 @@ namespace DevConsole
 
             bool result = IDevCommand.TryGetPosOrCheckpointPos(args, sw, out Vector2 pos);
             if (!result) return;
-            GameManager.Instance.CheckPointPos = pos;
+            GameManager.Instance.UpdateCheckpointData(pos);
         }
 
         /// <inheritdoc />

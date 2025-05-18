@@ -148,10 +148,11 @@ MonoBehaviour:
   sprite: {fileID: 6233932863109230516}
   runSound: {fileID: 8300000, guid: 6bf00bd78aa7cc44ca3aeb9158e8bd12, type: 3}
   jumpSound:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  dashSound: {fileID: 0}
+  - {fileID: 8300000, guid: 8abbc66e3f16bff488ce21cc82ac1745, type: 3}
+  - {fileID: 8300000, guid: 1b204d783914ee546b6a7f8231255ba2, type: 3}
+  - {fileID: 8300000, guid: 181ba71da646aaf4f93b5f384785ce56, type: 3}
+  - {fileID: 8300000, guid: 26eb9aa74b4fe8d4882f29398cba0fac, type: 3}
+  dashSound: {fileID: 8300000, guid: 8651851e0ad36d34da97e4c6c4edcbd4, type: 3}
   landSound: {fileID: 8300000, guid: 632e2ef2dd1e97b439f2aa7375153a25, type: 3}
   wallSlideSound: {fileID: 8300000, guid: 7840a60655380b045a800a67dd581a66, type: 3}
   deathSounds:
@@ -267,6 +268,7 @@ GameObject:
   - component: {fileID: 5301496585393855472}
   - component: {fileID: 8627366452016212239}
   - component: {fileID: 4348829522379409488}
+  - component: {fileID: 289292537334288753}
   m_Layer: 7
   m_Name: Cutscene Marshmallow
   m_TagString: Player
@@ -338,6 +340,9 @@ MonoBehaviour:
   ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 2
   poofSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
+  swingAttach: {fileID: 0}
+  swingDetach: {fileID: 0}
+  swingChangeDirection: []
 --- !u!50 &5301496585393855472
 Rigidbody2D:
   serializedVersion: 4
@@ -412,6 +417,102 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d72ffc402e70f4e65b8ad67be2880f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!82 &289292537334288753
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4217790213014453210}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4714043931189080348
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -95,26 +97,6 @@ public class PlayerController : MonoBehaviour
     public float TimeDashEnded { get; private set; }
 
     /// <summary>
-    /// Active velocity effector.
-    /// </summary>
-    public IPlayerVelocityEffector ActiveVelocityEffector
-    {
-        get => _activeEffector;
-        set
-        {
-            if (_activeEffector != null && value != null && _activeEffector != value
-                && _activeEffector.IgnoreOtherEffectors)
-            {
-                Debug.LogWarning("Ignoring other effector as current active effector ignores other effectors.");
-            }
-            else
-            {
-                _activeEffector = value;
-            }
-        }
-    }
-
-    /// <summary>
     /// Fires when the player becomes grounded or leaves the ground.
     /// Parameters:
     ///     bool: false if leaving the ground, true if becoming grounded
@@ -131,6 +113,7 @@ public class PlayerController : MonoBehaviour
 
     public event Action Jumped;
     public event Action Dashed;
+
     /// <summary>
     /// Fires when the player hangs onto an interactable object.
     /// Parameters:
@@ -138,6 +121,7 @@ public class PlayerController : MonoBehaviour
     ///     bool (facingLeft): True when facing left, false otherwise
     /// </summary>
     public event Action<bool, bool> HangChanged;
+
     public event Action DoubleJumped;
     public event Action Death;
     public event Action<bool> SwingDifferentDirection;
@@ -151,7 +135,7 @@ public class PlayerController : MonoBehaviour
     /// Current interactable in range.
     /// </summary>
     public AbstractPlayerInteractable CurrentInteractableArea { get; set; }
-    
+
     /// <summary>
     /// Whether the player can use their dash in the air.
     /// </summary>
@@ -179,7 +163,7 @@ public class PlayerController : MonoBehaviour
     private float _timeLeftGround;
     private float _timeDashed;
 
-    private bool _buttonUsed;
+    private bool _buttonNotPressedPreviousFrame;
     private bool _isButtonHeld;
     private bool _canReleaseEarly;
     private bool _releasedEarly;
@@ -190,6 +174,8 @@ public class PlayerController : MonoBehaviour
     private bool _closeToWall;
     private Vector2 _groundNormal;
 
+    private readonly List<IPlayerVelocityEffector> _playerVelocityEffectors = new();
+    private readonly List<IPlayerVelocityEffector> _impulseVelocityEffectors = new();
     private Collider2D _swingArea;
     private float _swingRadius;
     private bool _canSwing;
@@ -206,7 +192,7 @@ public class PlayerController : MonoBehaviour
         _col = GetComponent<CapsuleCollider2D>();
         _audioSource = GetComponent<AudioSource>();
         ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
-        
+
         foreach (ParticleSystem ps in particleSystems)
         {
             switch (ps.gameObject.name)
@@ -225,12 +211,9 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        _buttonUsed = true;
-        Direction = startDirection;
-    }
 
-    private void Start()
-    {
+        _buttonNotPressedPreviousFrame = true;
+        Direction = startDirection;
         GameManager.Instance.Reset += OnReset;
     }
 
@@ -242,7 +225,7 @@ public class PlayerController : MonoBehaviour
         RedrawRope(); // TODO this should be moved outside player controller when knitby is real
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         GameManager.Instance.Reset -= OnReset;
     }
@@ -252,7 +235,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             _timeButtonPressed = _time;
-            _buttonUsed = false;
+            _buttonNotPressedPreviousFrame = false;
         }
 
         _isButtonHeld = Input.GetButton("Jump");
@@ -280,7 +263,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     private void OnParticleCollision(GameObject other)
     {
         if (other.CompareTag("Death"))
@@ -316,13 +299,43 @@ public class PlayerController : MonoBehaviour
         HandleEarlyRelease();
         HandleWalk();
         HandleGravity();
-        if (ActiveVelocityEffector != null)
-            _velocity = ActiveVelocityEffector.ApplyVelocity(_velocity);
-        else if (dashEnabled) HandleDash();
+        _velocity = _playerVelocityEffectors
+            .Aggregate(_velocity, (initial, effector) => effector.ApplyVelocity(initial));
+        _velocity = _impulseVelocityEffectors
+            .Aggregate(_velocity, (initial, effector) => effector.ApplyVelocity(initial));
+        bool hadVelocityEffectors = _playerVelocityEffectors.Count > 0 || _impulseVelocityEffectors.Count > 0;
+        _impulseVelocityEffectors.Clear();
+        if (!hadVelocityEffectors && dashEnabled) HandleDash();
         ApplyMovement();
     }
 
     #endregion
+
+    public bool HasPlayerVelocityEffector(IPlayerVelocityEffector playerVelocityEffector)
+    {
+        return _playerVelocityEffectors.Contains(playerVelocityEffector) ||
+               _impulseVelocityEffectors.Contains(playerVelocityEffector);
+    }
+
+    public void AddPlayerVelocityEffector(IPlayerVelocityEffector effector, bool impulse = false)
+    {
+        IPlayerVelocityEffector ignores =
+            _impulseVelocityEffectors.FirstOrDefault(effect => effect.IgnoreOtherEffectors);
+        ignores ??= _playerVelocityEffectors.FirstOrDefault(effect => effect.IgnoreOtherEffectors);
+        if (ignores != null)
+        {
+            Debug.LogWarning($"Ignoring effector {effector} as existing effector {ignores} ignores other effectors");
+            return;
+        }
+
+        (impulse ? _impulseVelocityEffectors : _playerVelocityEffectors).Add(effector);
+    }
+
+    public void RemovePlayerVelocityEffector(IPlayerVelocityEffector effector)
+    {
+        _playerVelocityEffectors.Remove(effector);
+        _impulseVelocityEffectors.Remove(effector);
+    }
 
     /// <summary>
     /// Stops interacting with the interactable.
@@ -334,8 +347,9 @@ public class PlayerController : MonoBehaviour
     /// </remarks>
     public void StopInteraction(AbstractPlayerInteractable interactable)
     {
-        Debug.Assert(CurrentInteractableArea == interactable, $"Requested to stop interaction on inactive interactable: {interactable} vs Current {CurrentInteractableArea}");
-        _buttonUsed = true;
+        Debug.Assert(CurrentInteractableArea == interactable,
+            $"Requested to stop interaction on inactive interactable: {interactable} vs Current {CurrentInteractableArea}");
+        _buttonNotPressedPreviousFrame = true;
         CurrentInteractableArea.EndInteract(this);
         PlayerState = PlayerStateEnum.Air;
         HangChanged?.Invoke(false, _velocity.x < 0);
@@ -425,18 +439,22 @@ public class PlayerController : MonoBehaviour
         if (PlayerState == PlayerStateEnum.RightWallSlide && !rightWallHit ||
             PlayerState == PlayerStateEnum.LeftWallSlide && !leftWallHit)
             PlayerState = PlayerStateEnum.Air;
-        
+
         UpdateParticleSystemState(_runningDust, PlayerStateEnum.Run);
         UpdateParticleSystemState(_leftWallSlideDust, PlayerStateEnum.LeftWallSlide);
         UpdateParticleSystemState(_rightWallSlideDust, PlayerStateEnum.RightWallSlide);
     }
 
-    private void UpdateParticleSystemState(ParticleSystem system, PlayerStateEnum targetState) {
-      if (PlayerState == targetState) {
-        if (!system.isPlaying) system.Play();
-      } else if (system.isPlaying) {
-        system.Stop();
-      }
+    private void UpdateParticleSystemState(ParticleSystem system, PlayerStateEnum targetState)
+    {
+        if (PlayerState == targetState)
+        {
+            if (!system.isPlaying) system.Play();
+        }
+        else if (system.isPlaying)
+        {
+            system.Stop();
+        }
     }
 
     private void HandleDeath()
@@ -456,12 +474,12 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallJump()
     {
-        if (CanUseButton() && PlayerState is PlayerStateEnum.LeftWallSlide or PlayerStateEnum.RightWallSlide)
+        if (IsButtonUsed() && PlayerState is PlayerStateEnum.LeftWallSlide or PlayerStateEnum.RightWallSlide)
         {
             _velocity = new Vector2(Mathf.Cos(wallJumpAngle), Mathf.Sin(wallJumpAngle)) * wallJumpPower;
             if (PlayerState == PlayerStateEnum.RightWallSlide) _velocity.x = -_velocity.x;
 
-            _buttonUsed = true;
+            _buttonNotPressedPreviousFrame = true;
             PlayerState = PlayerStateEnum.Air;
             _canReleaseEarly = false;
             _releasedEarly = false;
@@ -474,10 +492,10 @@ public class PlayerController : MonoBehaviour
     private void HandleJump()
     {
         bool canUseCoyote = PlayerState == PlayerStateEnum.Air && _time - _timeLeftGround <= coyoteTime;
-        if ((PlayerState == PlayerStateEnum.Run || canUseCoyote) && CanUseButton())
+        if ((PlayerState == PlayerStateEnum.Run || canUseCoyote) && IsButtonUsed())
         {
             _velocity.y = jumpPower;
-            _buttonUsed = true;
+            _buttonNotPressedPreviousFrame = true;
             PlayerState = PlayerStateEnum.Air;
             _canReleaseEarly = true;
             Jumped?.Invoke();
@@ -487,10 +505,10 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDoubleJump()
     {
-        if (CanUseButton() && _canDoubleJump && !_closeToWall)
+        if (IsButtonUsed() && _canDoubleJump && !_closeToWall)
         {
             _velocity.y = doubleJumpPower;
-            _buttonUsed = true;
+            _buttonNotPressedPreviousFrame = true;
             _canDoubleJump = false;
             _canReleaseEarly = true;
             DoubleJumped?.Invoke();
@@ -499,11 +517,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDash()
     {
-        if (PlayerState is PlayerStateEnum.Air && CanUseButton() && _canDash && !_closeToWall)
+        if (PlayerState is PlayerStateEnum.Air && IsButtonUsed() && _canDash && !_closeToWall)
         {
             // start a dash
             _canDash = false;
-            _buttonUsed = true;
+            _buttonNotPressedPreviousFrame = true;
             PlayerState = PlayerStateEnum.Dash;
             Dashed?.Invoke();
             _timeDashed = _time;
@@ -565,7 +583,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleGravity()
     {
-        if (ActiveVelocityEffector?.IgnoreGravity ?? false) return;
+        if (_playerVelocityEffectors.Any(effector => effector.IgnoreGravity)) return;
         switch (PlayerState)
         {
             case PlayerStateEnum.Run:
@@ -599,10 +617,11 @@ public class PlayerController : MonoBehaviour
     {
         if (!CurrentInteractableArea) return;
         bool previouslyGrounded = PlayerState == PlayerStateEnum.Run;
-        if (CanUseButton())
+        if (IsButtonUsed())
         {
-            // CanUseButton can be true multiple frames so don't re-call StartInteract jic
+            // IsButtonUsed can be true multiple frames so don't re-call StartInteract jic
             if (PlayerState == PlayerStateEnum.OnObject) return;
+            _buttonNotPressedPreviousFrame = true;
             PlayerState = PlayerStateEnum.OnObject;
             CurrentInteractableArea.StartInteract(this);
             HangChanged?.Invoke(true, _velocity.x < 0);
@@ -618,11 +637,12 @@ public class PlayerController : MonoBehaviour
         // thus setting the state to Run/Air without re-setting the player object state
         // I suspect the swing may have this problem but who puts the swing in contact with the ground?
         // should we just have the grounded check first check if you're on an object?
-        if (ReferenceEquals(ActiveVelocityEffector, CurrentInteractableArea) && PlayerState != PlayerStateEnum.OnObject)
+        if (_playerVelocityEffectors.Contains(CurrentInteractableArea) && PlayerState != PlayerStateEnum.OnObject)
         {
-            Debug.LogWarning($"ActiveVelocityEffector == CurrentInteractableArea while State != PlayerStateEnum.OnObject, actual state: {PlayerState}");
+            Debug.LogWarning(
+                $"_playerVelocityEffectors.Contains(CurrentInteractableArea) while State != PlayerStateEnum.OnObject, actual state: {PlayerState}");
             PlayerState = PlayerStateEnum.OnObject;
-            
+
             // not sure if it's guaranteed for the player to not be on the ground when on the object
             // (e.g. if we build objects that push the player along the ground or something like that)
             // but this is required to stop the footsteps from playing.
@@ -632,8 +652,8 @@ public class PlayerController : MonoBehaviour
                 GroundedChanged?.Invoke(false, 0);
             }
         }
-        
-        if (!CanUseButton() && PlayerState == PlayerStateEnum.OnObject && !_isButtonHeld)
+
+        if (!IsButtonUsed() && PlayerState == PlayerStateEnum.OnObject && !_isButtonHeld)
         {
             StopInteraction(CurrentInteractableArea);
         }
@@ -641,7 +661,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSwing()
     {
-        if (_canSwing && CanUseButton())
+        if (_canSwing && IsButtonUsed())
         {
             // in swing area, button pressed
             PlayerState = PlayerStateEnum.Swing;
@@ -702,7 +722,7 @@ public class PlayerController : MonoBehaviour
                 float boostDirection = transform.position.x >= _swingArea.transform.position.x ? 1f : -1f;
                 if (Mathf.Abs(_velocity.x) <= minSwingReleaseX)
                     _velocity.x = minSwingReleaseX * boostDirection;
-                _buttonUsed = true;
+                _buttonNotPressedPreviousFrame = true;
                 _swingStarted = false;
             }
         }
@@ -725,9 +745,9 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(transform.position, _velocity, Color.magenta);
     }
 
-    private bool CanUseButton()
+    private bool IsButtonUsed()
     {
-        return !_buttonUsed && _time <= _timeButtonPressed + buttonBufferTime;
+        return !_buttonNotPressedPreviousFrame && _time <= _timeButtonPressed + buttonBufferTime;
     }
 
     #endregion
@@ -737,10 +757,24 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void OnReset()
     {
-        var checkpointPos = GameManager.Instance.CheckPointPos;
-        var spawnPos = new Vector3(checkpointPos.x, checkpointPos.y, transform.position.z);
+        Vector2 checkpointPos = GameManager.Instance.CheckPointPos;
+        Vector3 spawnPos = new(checkpointPos.x, checkpointPos.y, transform.position.z);
         transform.position = spawnPos;
         Direction = GameManager.Instance.RespawnFacingLeft ? -1.0f : 1.0f;
+        if (CurrentInteractableArea)
+        {
+            CurrentInteractableArea.EndInteract(this);
+            CurrentInteractableArea = null;
+        }
+
+        if (PlayerState == PlayerStateEnum.OnObject)
+        {
+            PlayerState = PlayerStateEnum.Air;
+        }
+
+        _playerVelocityEffectors.Clear();
+        _impulseVelocityEffectors.Clear();
         PlayerState = PlayerStateEnum.Run;
+        _velocity = Vector2.zero;
     }
 }

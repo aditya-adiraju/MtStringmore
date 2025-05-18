@@ -1,6 +1,8 @@
 # Custom
 /Assets/Examples/
 **/.DS_Store
+/Assets/Editor/Replays/
+/Assets/Editor/Replays.meta
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #

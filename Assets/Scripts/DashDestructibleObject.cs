@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 /// <summary>
 /// Object that is 'destroyed' on dash. And by destroy, I mean disable the collider.
+///
+/// If there's a trigger, it also detects if the player enters the trigger.
 /// </summary>
 [RequireComponent(typeof(Collider2D), typeof(AudioSource))]
 public class DashDestructibleObject : MonoBehaviour
@@ -55,16 +57,37 @@ public class DashDestructibleObject : MonoBehaviour
         };
     }
 
+    /// <summary>
+    /// "Destroys" this object.
+    /// </summary>
+    private void DestroyObject()
+    {
+        destroyed = true;
+        _collider.enabled = false;
+        _audioSource.Play();
+        onDestroyed?.Invoke();
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (destroyed) return;
         if (collision.collider.TryGetComponent(out PlayerController playerController) &&
             ShouldPlayerDestroy(playerController))
         {
-            destroyed = true;
-            _collider.enabled = false;
-            _audioSource.Play();
-            onDestroyed?.Invoke();
+            DestroyObject();
+        }
+    }
+
+    // hack to allow tolerance without collisions
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (destroyed) return;
+        if (other.TryGetComponent(out PlayerController playerController) &&
+            // because in some wacky cases you can enter trigger while moving in the opposite direction
+            Vector2.Dot(transform.position - playerController.transform.position, playerController.Velocity) > 0 &&
+            playerController.PlayerState == PlayerController.PlayerStateEnum.Dash)
+        {
+            DestroyObject();
         }
     }
 }

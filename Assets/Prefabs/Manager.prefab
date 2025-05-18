@@ -3286,6 +3286,8 @@ GameObject:
   - component: {fileID: 2257474230385962516}
   - component: {fileID: 5101892580008084914}
   - component: {fileID: 7492377907174578259}
+  - component: {fileID: 3119184382528755020}
+  - component: {fileID: 8822614558980979940}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3462,6 +3464,33 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: f23f3aac074ac0e4bbbce2bbb30f4fed, type: 3}
   - sceneName: Level2
     audioClip: {fileID: 8300000, guid: 243a490f23d23774bb4075fd58beec36, type: 3}
+--- !u!114 &3119184382528755020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7818288281639424406}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283f3d2604454451a440b2fdfd7dc269, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneReplayPreview: {fileID: 0}
+  showPreview: 1
+--- !u!114 &8822614558980979940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7818288281639424406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69c078820794990850290a503d3378c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuScene: MainMenu
 --- !u!1 &8121803134615645257
 GameObject:
   m_ObjectHideFlags: 0

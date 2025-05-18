@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Object that modifies player velocity (e.g. a trampoline or bouncy platform).
@@ -23,4 +24,22 @@ public interface IPlayerVelocityEffector
     /// <param name="velocity">Original player velocity</param>
     /// <returns>Affected velocity</returns>
     Vector2 ApplyVelocity(Vector2 velocity);
+}
+
+/// <summary>
+/// Simple velocity effector that takes in an input function.
+/// </summary>
+public class SimpleVelocityEffector : IPlayerVelocityEffector
+{
+    private readonly Func<Vector2, Vector2> _velocityFunction;
+
+    public SimpleVelocityEffector(Func<Vector2, Vector2> velocityFunction)
+    {
+        _velocityFunction = velocityFunction;
+    }
+
+    public Vector2 ApplyVelocity(Vector2 velocity)
+    {
+        return _velocityFunction(velocity);
+    }
 }

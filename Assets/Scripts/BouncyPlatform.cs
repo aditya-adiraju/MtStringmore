@@ -25,9 +25,6 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
     /// <inheritdoc />
     public Vector2 ApplyVelocity(Vector2 velocity)
     {
-        // apply at most once
-        if (ReferenceEquals(_player.ActiveVelocityEffector, this))
-            _player.ActiveVelocityEffector = null;
         return new Vector2(xBounceForce, yBounceForce);
     }
 
@@ -40,7 +37,7 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.gameObject.TryGetComponent(out _player)) return;
-        _player.ActiveVelocityEffector = this;
+        _player.AddPlayerVelocityEffector(this, true);
         _player.CanDash = true;
         _player.ForceCancelEarlyRelease();
         if (_player.PlayerState == PlayerController.PlayerStateEnum.Dash)
@@ -56,7 +53,5 @@ public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
     {
         if (!other.TryGetComponent(out PlayerController _)) return;
         _animator.ResetTrigger(BounceHash);
-        if (ReferenceEquals(_player.ActiveVelocityEffector, this))
-            _player.ActiveVelocityEffector = null;
     }
 }

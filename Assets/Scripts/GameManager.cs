@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Yarn.Unity;
@@ -22,12 +23,17 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Last checkpoint position. The player should respawn here if they die.
     /// </summary>
-    public Vector2 CheckPointPos { get; set; }
+    public Vector2 CheckPointPos { get; private set; }
 
     /// <summary>
     /// If true, the player faces left when they respawn
     /// </summary>
-    public bool RespawnFacingLeft { get; set; }
+    public bool RespawnFacingLeft { get; private set; }
+    
+    /// <summary>
+    /// Number of checkpoints reached.
+    /// </summary>
+    public List<Vector2> CheckpointsReached { get; } = new();
 
     /// <summary>
     /// Action that gets invoked when level reloads, e.g. respawns
@@ -35,9 +41,23 @@ public class GameManager : MonoBehaviour
     public event Action Reset;
 
     /// <summary>
+    /// Action invoked on game data changed.
+    /// </summary>
+    public event Action GameDataChanged;
+
+    /// <summary>
     /// Canvas to fade in/out when transitioning between scenes
     /// </summary>
     [SerializeField] private FadeEffects sceneTransitionCanvas;
+    
+    private readonly HashSet<Vector2> _prevCheckpoints = new();
+    
+    /// <summary>
+    /// So it turns out that onSceneChanged happens after modifying game data on save.
+    ///
+    /// So we need to check that we're doing that LOL.
+    /// </summary>
+    private bool _dontClearDataOnSceneChanged;
 
     private void Awake()
     {
@@ -66,6 +86,52 @@ public class GameManager : MonoBehaviour
     {
         sceneTransitionCanvas.InvokeFadeOut();
         Time.timeScale = 1f;
+        if (!_dontClearDataOnSceneChanged)
+        {
+            CheckpointsReached.Clear();
+            _prevCheckpoints.Clear();
+            GameDataChanged?.Invoke();
+        }
+        _dontClearDataOnSceneChanged = false;
+    }
+
+    /// <summary>
+    /// Sets the checkpoint location and left facing spawn point.
+    /// 
+    /// Checks if we've already visited this checkpoint before setting spawn (to avoid backtracking).
+    /// </summary>
+    /// <param name="newCheckpointLocation">New checkpoint location</param>
+    /// <param name="shouldFaceLeft">Whether respawn should face left</param>
+    public void UpdateCheckpointData(Vector2 newCheckpointLocation, bool shouldFaceLeft = false)
+    {
+        if (!_prevCheckpoints.Add(newCheckpointLocation))
+        {
+            Debug.Log("Reached previous checkpoint.");
+            return;
+        }
+
+        CheckPointPos = newCheckpointLocation;
+        RespawnFacingLeft = shouldFaceLeft;
+        CheckpointsReached.Add(newCheckpointLocation);
+        GameDataChanged?.Invoke();
+    }
+
+    /// <summary>
+    /// Sets checkpoint location/data from save data.
+    /// </summary>
+    /// <param name="shouldFaceLeft">Whether respawn should face left</param>
+    /// <param name="checkpointsReached">List of previous checkpoints reached</param>
+    public void UpdateFromSaveData(bool shouldFaceLeft, Vector2[] checkpointsReached)
+    {
+        if (checkpointsReached.Length > 0) CheckPointPos = checkpointsReached[^1];
+        RespawnFacingLeft = shouldFaceLeft;
+        CheckpointsReached.Clear();
+        _prevCheckpoints.Clear();
+        CheckpointsReached.AddRange(checkpointsReached);
+        foreach (Vector2 checkpointReached in checkpointsReached)
+            _prevCheckpoints.Add(checkpointReached);
+        GameDataChanged?.Invoke();
+        _dontClearDataOnSceneChanged = true;
     }
 
     /// <summary>
