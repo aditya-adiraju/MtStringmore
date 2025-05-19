@@ -34,6 +34,12 @@ public class GameManager : MonoBehaviour
     /// Number of checkpoints reached.
     /// </summary>
     public List<Vector2> CheckpointsReached { get; } = new();
+    
+    /// <summary>
+    /// The number of collectables collected.
+    /// Should be reset to 0 after being displayed (e.g. after a end-of-level cutscene).
+    /// </summary>
+    public int NumCollected { get; set; }
 
     /// <summary>
     /// Action that gets invoked when level reloads, e.g. respawns
