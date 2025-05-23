@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Managers;
+using Player;
+using StringmoreCamera;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
