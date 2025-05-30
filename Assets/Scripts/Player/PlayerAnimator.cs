@@ -1,4 +1,5 @@
 ﻿using Managers;
+using UI;
 using UnityEngine;
 using Util;
 
@@ -317,10 +318,7 @@ namespace Player
             foreach (Transform child in transform)
             {
                 child.gameObject.SetActive(true);
-                Material material = child.GetComponent<Renderer>().material;
-                Color color = material.color;
-                color.a = 1;
-                material.color = color;
+                FadeEffects.GetFadeEffectHandler(child, 1).SetAlpha(1);
             }
         }
 

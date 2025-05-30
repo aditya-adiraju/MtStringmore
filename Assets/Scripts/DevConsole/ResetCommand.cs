@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using UnityEngine.SceneManagement;
+using Managers;
 
 namespace DevConsole
 {
@@ -18,7 +18,7 @@ namespace DevConsole
         /// <inheritdoc />
         public void Run(string[] args, StringWriter sw)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.Instance.Respawn();
         }
 
         /// <inheritdoc />

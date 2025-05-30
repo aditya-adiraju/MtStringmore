@@ -6,27 +6,28 @@ namespace Managers
 {
     public class SoundManager : MonoBehaviour
     {
-        public static SoundManager Instance { get; private set; }
+        private static SoundManager _instance;
+
+        public static SoundManager Instance => _instance ??= FindObjectOfType<SoundManager>();
 
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private Slider masterSlider;
         [SerializeField] private Slider bgmSlider;
         [SerializeField] private Slider sfxSlider;
-        [SerializeField] private float startBgmVolume = 0.5f;
-        [SerializeField] private float startSfxVolume = 0.5f;
-        [SerializeField] private float startMasterVolume = 0.5f;
+        [SerializeField, Range(float.Epsilon, 1)] private float startBgmVolume = 0.5f;
+        [SerializeField, Range(float.Epsilon, 1)] private float startSfxVolume = 0.5f;
+        [SerializeField, Range(float.Epsilon, 1)] private float startMasterVolume = 0.5f;
 
         private void Awake()
         {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
+            if (Instance != this) Destroy(gameObject);
         }
 
         private void Start()
         {
-            var savedMasterVolume = PlayerPrefs.GetFloat("Master", startMasterVolume);
-            var savedBgmVolume = PlayerPrefs.GetFloat("BGM", startBgmVolume);
-            var savedSfxVolume = PlayerPrefs.GetFloat("SFX", startSfxVolume);
+            float savedMasterVolume = PlayerPrefs.GetFloat("Master", startMasterVolume);
+            float savedBgmVolume = PlayerPrefs.GetFloat("BGM", startBgmVolume);
+            float savedSfxVolume = PlayerPrefs.GetFloat("SFX", startSfxVolume);
             SetMasterVolume(savedMasterVolume);
             SetBgmVolume(savedBgmVolume);
             SetSfxVolume(savedSfxVolume);

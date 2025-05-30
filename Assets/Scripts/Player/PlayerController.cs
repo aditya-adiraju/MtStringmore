@@ -237,13 +237,13 @@ namespace Player
 
         private void GetInput()
         {
-            if (Input.GetButtonDown("Jump"))
+            if (InputUtil.StartJumpOrTouch())
             {
                 _timeButtonPressed = _time;
                 _buttonNotPressedPreviousFrame = false;
             }
 
-            _isButtonHeld = Input.GetButton("Jump");
+            _isButtonHeld = InputUtil.HoldJumpOrTouch();
 
             if (Input.GetButtonDown("Debug Reset"))
             {

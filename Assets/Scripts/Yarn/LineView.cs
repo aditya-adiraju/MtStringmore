@@ -12,6 +12,7 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.U2D.Animation;
 using UnityEngine.UI;
+using Util;
 using Yarn.Markup;
 using Yarn.Unity;
 
@@ -277,7 +278,7 @@ namespace Yarn
         private void Update()
         {
             // if hitting spacebar during update and not paused, trigger dialogue advancement
-            if (Input.GetButtonDown("Jump") && Time.timeScale != 0) UserRequestedViewAdvancement();
+            if (InputUtil.StartJumpOrTouch() && Time.timeScale != 0) UserRequestedViewAdvancement();
         }
 
         /// <inheritdoc />

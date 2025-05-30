@@ -5,18 +5,28 @@ namespace Parallax
     /// <summary>
     /// Controls parallax background layer to move with respect to camera movement
     /// </summary>
-    [DisallowMultipleComponent, RequireComponent(typeof(SpriteRenderer))]
+    [DisallowMultipleComponent]
     public class ParallaxLayer : MonoBehaviour
     {
         [SerializeField] private float xParallaxFactor;
         [SerializeField] private float yParallaxFactor = 0.99f;
+        [SerializeField, Min(0)] private float fallbackSpriteBounds = 10;
         private const float SmoothTime = 0.01f;
-        private SpriteRenderer _spriteRenderer;
+        private float _bgWidth;
         private Vector3 _velocity;
 
         private void Awake()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            _bgWidth = spriteRenderer ? spriteRenderer.bounds.size.x : fallbackSpriteBounds;
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            _bgWidth = spriteRenderer ? spriteRenderer.bounds.size.x : fallbackSpriteBounds;
+            Vector3 size = new(_bgWidth, spriteRenderer ? spriteRenderer.bounds.size.y : 10, 1);
+            Gizmos.DrawWireCube(transform.position, transform.TransformVector(size));
         }
 
         /// <summary>
@@ -41,16 +51,14 @@ namespace Parallax
         /// <param name="screenWidth">Orthographic camera view width</param>
         public void Reposition(Vector2 camPos, float screenWidth)
         {
-            float bgWidth = _spriteRenderer.bounds.size.x;
-
             Vector3 pos = transform.position;
-            if (pos.x + bgWidth / 2f <= camPos.x + screenWidth / 2f)
+            if (pos.x + _bgWidth / 2f <= camPos.x + screenWidth / 2f)
             {
-                pos.x += bgWidth / 3f;
+                pos.x += _bgWidth / 3f;
             }
-            else if (pos.x - bgWidth / 2f >= camPos.x - screenWidth / 2f)
+            else if (pos.x - _bgWidth / 2f >= camPos.x - screenWidth / 2f)
             {
-                pos.x -= bgWidth / 3f;
+                pos.x -= _bgWidth / 3f;
             }
 
             transform.position = pos;

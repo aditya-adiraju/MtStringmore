@@ -79,6 +79,11 @@ namespace Managers
             _instance = this;
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
+            if (SystemInfo.deviceType == DeviceType.Handheld)
+            {
+                // TODO make maxFrameRate a setting
+                Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+            }
         }
 
         private void Update()
