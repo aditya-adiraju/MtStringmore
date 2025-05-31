@@ -114,7 +114,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 256
+        y: 512
         width: 512
         height: 256
       alignment: 0
@@ -135,7 +135,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 512
-        y: 256
+        y: 512
         width: 512
         height: 256
       alignment: 0
@@ -156,7 +156,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1024
-        y: 256
+        y: 512
         width: 512
         height: 256
       alignment: 0
@@ -176,8 +176,8 @@ TextureImporter:
       name: Tutorial_Player_Swing_3
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 1536
+        y: 512
         width: 512
         height: 256
       alignment: 0
@@ -197,8 +197,8 @@ TextureImporter:
       name: Tutorial_Player_Swing_4
       rect:
         serializedVersion: 2
-        x: 512
-        y: 0
+        x: 0
+        y: 256
         width: 512
         height: 256
       alignment: 0
@@ -218,8 +218,8 @@ TextureImporter:
       name: Tutorial_Player_Swing_5
       rect:
         serializedVersion: 2
-        x: 1024
-        y: 0
+        x: 512
+        y: 256
         width: 512
         height: 256
       alignment: 0
@@ -231,6 +231,132 @@ TextureImporter:
       bones: []
       spriteID: 45b16a8d5a8a16144a590910aa09ae2e
       internalID: -1331055201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Swing_6
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 256
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d67e2f53a9c88349966a821091e59ec
+      internalID: -90214885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Swing_7
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 256
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48fe78ad9974cfc438b83518b73fb4ac
+      internalID: -2526279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Swing_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f648ac97407288f4b9b7f4c2aff03fc2
+      internalID: -706701158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Swing_9
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3376133cb754264796f95b240dbd87e
+      internalID: 373736314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Swing_10
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 0
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 473857f0706e0a14e9e653da2fe1416f
+      internalID: 165878199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Swing_11
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a5786ab20e9fb14485424b059b99a87
+      internalID: 286798905
       vertices: []
       indices: 
       edges: []
@@ -248,10 +374,16 @@ TextureImporter:
     nameFileIdTable:
       Tutorial_Player_Swing_0: 1233184778
       Tutorial_Player_Swing_1: -532151880
+      Tutorial_Player_Swing_10: 165878199
+      Tutorial_Player_Swing_11: 286798905
       Tutorial_Player_Swing_2: -1394204450
       Tutorial_Player_Swing_3: 1141748452
       Tutorial_Player_Swing_4: -2056987705
       Tutorial_Player_Swing_5: -1331055201
+      Tutorial_Player_Swing_6: -90214885
+      Tutorial_Player_Swing_7: -2526279
+      Tutorial_Player_Swing_8: -706701158
+      Tutorial_Player_Swing_9: 373736314
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

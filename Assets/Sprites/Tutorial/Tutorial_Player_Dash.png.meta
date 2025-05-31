@@ -114,7 +114,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 256
         width: 512
         height: 256
       alignment: 0
@@ -135,7 +135,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 512
-        y: 0
+        y: 256
         width: 512
         height: 256
       alignment: 0
@@ -147,6 +147,69 @@ TextureImporter:
       bones: []
       spriteID: e315eacd2f414a24ea90aa235ade2adf
       internalID: 18597319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Dash_2
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 256
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92a488afa84d3ed4ca7d365364aeffbb
+      internalID: 959212661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Dash_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b849ca3d1674fce499259c5b4bfed0bf
+      internalID: 1286033271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tutorial_Player_Dash_4
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 512
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5f209102e7ea1f44aacd36c38463de2
+      internalID: -1253166852
       vertices: []
       indices: 
       edges: []
@@ -164,6 +227,9 @@ TextureImporter:
     nameFileIdTable:
       Tutorial_Player_Dash_0: 1229154519
       Tutorial_Player_Dash_1: 18597319
+      Tutorial_Player_Dash_2: 959212661
+      Tutorial_Player_Dash_3: 1286033271
+      Tutorial_Player_Dash_4: -1253166852
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
