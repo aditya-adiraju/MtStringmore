@@ -1,3 +1,4 @@
+using System;
 using Managers;
 using UnityEngine;
 using Yarn.Unity;
@@ -26,22 +27,33 @@ namespace Interactables
         // internal properties not exposed to editor
         private DialogueRunner _dialogueRunner;
         private bool _isCurrentConversation;
-
+        
+        public bool hasBeenHit;
+        public event Action OnCheckpointHit;
+        
         public void Start()
         {
+            hasBeenHit = false;
             _dialogueRunner = FindObjectOfType<DialogueRunner>();
             if (_dialogueRunner) _dialogueRunner.onDialogueComplete.AddListener(EndConversation);
+        }
+
+        private void HitCheckpoint()
+        {
+            if (hasBeenHit) return;
+            hasBeenHit = true;
+            OnCheckpointHit?.Invoke();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!other.CompareTag("Player") || anim.GetBool(HoistKey)) return;
+            HitCheckpoint();
             anim.SetBool(HoistKey, true);
             GameManager.Instance.UpdateCheckpointData(transform.position, respawnFacingLeft);
-            StartConversation();
         }
 
-        private void StartConversation()
+        public void StartConversation()
         {
             if (conversationStartNode == "") return;
             Debug.Log("Started dialogue at checkpoint.");

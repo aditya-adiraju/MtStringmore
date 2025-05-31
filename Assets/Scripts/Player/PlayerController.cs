@@ -245,7 +245,7 @@ namespace Player
 
             _isButtonHeld = InputUtil.HoldJumpOrTouch();
 
-            if (Input.GetButtonDown("Debug Reset"))
+            if (Input.GetButtonDown("Debug Reset") && !ResultsManager.isResultsPageOpen)
             {
                 GameManager.Instance.Respawn();
             }
