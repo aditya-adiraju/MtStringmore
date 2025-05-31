@@ -1,5 +1,6 @@
 using Managers;
 using Save;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -26,6 +27,7 @@ namespace UI
         private static bool _gameIsPaused;
         [SerializeField] private GameObject pauseMenuUI;
         [SerializeField] private Button pauseButton;
+        [SerializeField] private TextMeshProUGUI versionNumber;
         [SerializeField] private string mainMenuSceneName = "MainMenu";
         private float _prevTimescale;
         private SaveDataManager _saveDataManager;
@@ -39,6 +41,7 @@ namespace UI
         {
             _prevTimescale = Time.timeScale;
             _saveDataManager = FindObjectOfType<SaveDataManager>();
+            versionNumber.text = Application.version;
             Resume();
             SceneManager.activeSceneChanged += OnSceneChanged;
         }

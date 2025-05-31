@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Interactables;
 using Player;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DevConsole
 {
@@ -19,6 +21,11 @@ namespace DevConsole
         /// Command name (i.e. name [args]).
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Any aliases of the command.
+        /// </summary>
+        string[] Aliases => Array.Empty<string>();
 
         /// <summary>
         /// Executes the command given arguments, writing any log messages to the StringWriter.

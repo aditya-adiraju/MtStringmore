@@ -13,6 +13,9 @@ namespace DevConsole
         public string Name => "tp";
 
         /// <inheritdoc />
+        public string[] Aliases => new[] { "teleport" };
+
+        /// <inheritdoc />
         public void Run(string[] args, StringWriter sw)
         {
             if (args.Length is < 1 or > 2)

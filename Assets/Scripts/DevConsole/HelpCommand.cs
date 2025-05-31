@@ -54,9 +54,13 @@ namespace DevConsole
                 case 0:
                 {
                     sw.WriteLine("Commands:");
-                    foreach (IDevCommand command in commands)
+                    foreach (IDevCommand command in commands.Distinct())
                     {
                         sw.Write(" - " + command.Name);
+                        if (command.Aliases is { Length: > 0 })
+                        {
+                            sw.Write($" (aliases: {string.Join(", ", command.Aliases)})");
+                        }
                         if (command.RequiresCheats)
                             sw.WriteLine(" (requires sv_cheats 1)");
                         else

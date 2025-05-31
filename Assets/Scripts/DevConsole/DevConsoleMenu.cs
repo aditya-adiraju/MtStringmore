@@ -68,6 +68,9 @@ namespace DevConsole
         private void RegisterCommand(IDevCommand command)
         {
             _commands.Add(command.Name, command);
+            if (command.Aliases is not { Length: > 0 }) return;
+            foreach (string alias in command.Aliases)
+                _commands.Add(alias, command);
         }
 
         /// <summary>

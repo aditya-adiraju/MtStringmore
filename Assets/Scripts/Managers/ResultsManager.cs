@@ -1,10 +1,8 @@
-﻿using System;
-using Interactables;
+﻿using Interactables;
 using Save;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Managers
 {
@@ -51,7 +49,7 @@ namespace Managers
 
         private void UpdateCollectableCount()
         {
-            int collectedCount = GameManager.Instance.NumCollected;
+            int collectedCount = GameManager.Instance.NumCollectablesCollected;
             collectableResultsText.text = collectedCount + " / " + maxCount;
         }
 
@@ -66,7 +64,7 @@ namespace Managers
         public void RestartLevel() 
         {
             Time.timeScale = 1f;
-            GameManager.Instance.NumCollected = 0;
+            GameManager.Instance.ResetCandyCollected();
             isResultsPageOpen = false;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
@@ -82,7 +80,7 @@ namespace Managers
             resultsPane.SetActive(false);
             isResultsPageOpen = false;
             Time.timeScale = 1f;
-            GameManager.Instance.NumCollected = 0;
+            GameManager.Instance.ResetCandyCollected();
             finalCheckpoint.StartConversation();
         }
     }

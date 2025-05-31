@@ -11,7 +11,10 @@ namespace DevConsole
     public class LoadSceneCommand : IDevCommand
     {
         /// <inheritdoc />
-        public string Name => "scene";
+        public string Name => "load_scene";
+
+        /// <inheritdoc />
+        public string[] Aliases => new[] { "load", "scene" };
 
         /// <inheritdoc />
         public void Run(string[] args, StringWriter sw)

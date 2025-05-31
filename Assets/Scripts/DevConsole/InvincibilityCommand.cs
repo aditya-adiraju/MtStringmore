@@ -19,6 +19,9 @@ namespace DevConsole
         /// <inheritdoc />
         public string Name => "sv_invincibility";
 
+        /// <inheritdoc />
+        public string[] Aliases => new[] { "invincibility", "god" };
+
         /// <summary>
         /// Constructor - initializes the scene change listener.
         /// </summary>

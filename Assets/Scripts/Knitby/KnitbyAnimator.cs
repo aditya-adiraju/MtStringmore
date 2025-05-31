@@ -17,6 +17,7 @@ namespace Knitby
         private static readonly int LeaveWallKey = Animator.StringToHash("LeaveWall");
         private static readonly int SwingKey = Animator.StringToHash("InSwing");
         private static readonly int IdleKey = Animator.StringToHash("Idle");
+        private static readonly int PlayerDeadKey = Animator.StringToHash("PlayerDead");
         private static readonly int FadeControl = Shader.PropertyToID("_FadeControl");
         [SerializeField] private Animator anim;
         [SerializeField] private GameObject deathSmoke;
@@ -96,7 +97,7 @@ namespace Knitby
         private void OnPlayerDeath()
         {
             Instantiate(deathSmoke, transform);
-            anim.enabled = false;
+            anim.SetBool(PlayerDeadKey, true);
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace Knitby
         /// </summary>
         private void OnReset()
         {
-            anim.enabled = true;
+            anim.SetBool(PlayerDeadKey, false);
         }
     }
 }

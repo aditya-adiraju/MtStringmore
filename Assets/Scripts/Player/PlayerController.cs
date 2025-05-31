@@ -56,6 +56,7 @@ namespace Player
         [SerializeField] private float swingAcceleration;
         [SerializeField] private float minSwingReleaseX;
         [Header("Visual")]
+        [SerializeField, Min(0)] private float runParticleVelocityThreshold = 0.1f;
         [SerializeField] private LineRenderer ropeRenderer;
         [SerializeField] private float deathTime;
         // this is just here for battle of the concepts
@@ -129,6 +130,7 @@ namespace Player
 
         public event Action DoubleJumped;
         public event Action Death;
+        public event Action<Vector2> OnSwingStart;
         public event Action<bool> SwingDifferentDirection;
 
         /// <summary>
@@ -149,6 +151,11 @@ namespace Player
             get => _canDash;
             set => _canDash = value;
         }
+
+        /// <summary>
+        /// Current ground Y level; null if none.
+        /// </summary>
+        public float? CurrentGroundY { get; private set; }
 
         #endregion
 
@@ -177,6 +184,7 @@ namespace Player
 
         private Vector2 _velocity;
         private bool _closeToWall;
+        private float? _groundY;
         private Vector2 _groundNormal;
 
         private readonly List<IPlayerVelocityEffector> _playerVelocityEffectors = new();
@@ -410,6 +418,7 @@ namespace Player
             _closeToWall = CapsuleCastCollision(_velocity, wallCloseDistance);
 
             if (groundCast) _groundNormal = groundCast.normal;
+            CurrentGroundY = groundCast ? groundCast.point.y : null;
 
             if (ceilingHit) _velocity.y = Mathf.Min(0, _velocity.y);
 
@@ -445,14 +454,14 @@ namespace Player
                 PlayerState == PlayerStateEnum.LeftWallSlide && !leftWallHit)
                 PlayerState = PlayerStateEnum.Air;
 
-            UpdateParticleSystemState(_runningDust, PlayerStateEnum.Run);
+            UpdateParticleSystemState(_runningDust, PlayerStateEnum.Run, () => Mathf.Abs(_rb.velocity.x) > runParticleVelocityThreshold);
             UpdateParticleSystemState(_leftWallSlideDust, PlayerStateEnum.LeftWallSlide);
             UpdateParticleSystemState(_rightWallSlideDust, PlayerStateEnum.RightWallSlide);
         }
 
-        private void UpdateParticleSystemState(ParticleSystem system, PlayerStateEnum targetState)
+        private void UpdateParticleSystemState(ParticleSystem system, PlayerStateEnum targetState, Func<bool> optionalPredicate = null)
         {
-            if (PlayerState == targetState)
+            if (PlayerState == targetState && (optionalPredicate == null || optionalPredicate()))
             {
                 if (!system.isPlaying) system.Play();
             }
@@ -683,6 +692,7 @@ namespace Player
                 {
                     // reached max radius, start swing
                     _swingStarted = true;
+                    OnSwingStart?.Invoke(_swingArea.transform.position);
                     Vector2 relPos = transform.position - _swingArea.transform.position;
                     _wasSwingClockwise = Vector3.Cross(relPos, _velocity).z > 0f;
                 }
@@ -779,6 +789,7 @@ namespace Player
 
             _playerVelocityEffectors.Clear();
             _impulseVelocityEffectors.Clear();
+            ropeRenderer.enabled = false;
             PlayerState = PlayerStateEnum.Run;
             _velocity = Vector2.zero;
         }

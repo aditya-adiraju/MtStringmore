@@ -16,6 +16,9 @@ namespace DevConsole
         public string Name => "reset";
 
         /// <inheritdoc />
+        public string[] Aliases => new[] { "r" };
+
+        /// <inheritdoc />
         public void Run(string[] args, StringWriter sw)
         {
             GameManager.Instance.Respawn();

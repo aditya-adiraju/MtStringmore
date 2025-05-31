@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Managers;
 using Player;
@@ -15,10 +15,12 @@ namespace Save
     /// </summary>
     public class SaveDataManager : MonoBehaviour
     {
+        private static readonly string SaveFileName = "data.save";
         [SerializeField] private string mainMenuScene;
 
+        private int _farthestSceneIndexReached;
+        private string _farthestSceneName;
         private Thread _saveThread;
-        private string _currentSaveFile;
         private Vector2? _forcedNextFramePosition;
 
         private void Awake()
@@ -43,10 +45,12 @@ namespace Save
         /// </remarks>
         private void SceneManagerOnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == mainMenuScene)
+            if (scene.name == mainMenuScene) return;
+
+            if (scene.buildIndex > _farthestSceneIndexReached)
             {
-                _currentSaveFile = null;
-                return;
+                _farthestSceneName = scene.name;
+                _farthestSceneIndexReached = scene.buildIndex;
             }
 
             if (_forcedNextFramePosition != null)
@@ -70,48 +74,74 @@ namespace Save
         /// Returns the current save state data.
         /// </summary>
         /// <returns>Current save state date</returns>
-        private static SaveData GetCurrentSaveData(string sceneOverride = null)
+        private SaveFileData GetCurrentSaveData(string sceneOverride = null)
         {
-            return new SaveData
+            return new SaveFileData
             {
-                checkpointsReached = GameManager.Instance.CheckpointsReached.ToArray(),
-                checkpointFacesLeft = GameManager.Instance.RespawnFacingLeft,
-                dateTimeBinary = DateTime.Now.ToBinary(),
-                sceneName = sceneOverride ?? SceneManager.GetActiveScene().name
+                farthestSceneReached = _farthestSceneName,
+                farthestSceneIndexReached = _farthestSceneIndexReached,
+                saveData = new SaveData
+                {
+                    candiesCollected = GameManager.Instance.CollectablePositionsCollected.ToArray(),
+                    checkpointsReached = GameManager.Instance.CheckpointsReached.ToArray(),
+                    checkpointFacesLeft = GameManager.Instance.RespawnFacingLeft,
+                    dateTimeBinary = DateTime.Now.ToBinary(),
+                    sceneName = sceneOverride ?? SceneManager.GetActiveScene().name
+                }
             };
+        }
+
+        /// <summary>
+        /// Determines if the save file is present.
+        /// </summary>
+        /// <returns>True if file is present</returns>
+        public static bool HasExistingSave()
+        {
+            return File.Exists(Path.Combine(Application.persistentDataPath, "saves", SaveFileName));
+        }
+
+        /// <summary>
+        /// Reads from the save file and returns the saved file data, if present.
+        /// </summary>
+        /// <returns>Save file data, or null if not present</returns>
+        public SaveFileData? ReadExistingSave()
+        {
+            string folderLocation = Path.Combine(Application.persistentDataPath, "saves");
+            if (!EnsureSaveFolderExists(folderLocation)) return null;
+            string filePath = Path.Combine(folderLocation, SaveFileName);
+            if (!File.Exists(filePath)) return null;
+            try
+            {
+                SaveFileData saveFileData = JsonUtility.FromJson<SaveFileData>(File.ReadAllText(filePath));
+                _farthestSceneName = saveFileData.farthestSceneReached;
+                _farthestSceneIndexReached = saveFileData.farthestSceneIndexReached;
+                return saveFileData;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Couldn't read from save data: {filePath}: {e.Message}");
+                return null;
+            }
         }
 
         /// <summary>
         /// Loads an existing save from a file name.
         /// </summary>
-        /// <param name="fileName">File name in the saves folder</param>
         /// <returns>True if successful, false otherwise</returns>
-        public bool LoadExistingSave(string fileName)
+        public bool LoadExistingSave()
         {
-            string folderLocation = Path.Combine(Application.persistentDataPath, "saves");
-            if (!EnsureSaveFolderExists(folderLocation)) return false;
-            string filePath = Path.Combine(folderLocation, fileName);
-            if (!File.Exists(filePath)) return false;
-            try
+            SaveFileData? optionalData = ReadExistingSave();
+            if (optionalData == null) return false;
+            SaveData saveData = optionalData.Value.saveData;
+            GameManager.Instance.UpdateFromSaveData(saveData);
+            SceneManager.LoadScene(saveData.sceneName);
+            if (saveData.checkpointsReached.Length > 0)
             {
-                SaveData data = JsonUtility.FromJson<SaveData>(File.ReadAllText(filePath));
-                _currentSaveFile = fileName;
-                GameManager.Instance.UpdateFromSaveData(data.checkpointFacesLeft, data.checkpointsReached);
-                SceneManager.LoadScene(data.sceneName);
-                if (data.checkpointsReached.Length > 0)
-                {
-                    // TODO very hacky
-                    _forcedNextFramePosition = data.checkpointsReached[^1];
-                }
+                // TODO very hacky
+                _forcedNextFramePosition = saveData.checkpointsReached[^1];
+            }
 
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning($"Couldn't read from save data: {filePath}: {e.Message}");
-                _currentSaveFile = null;
-                return false;
-            }
+            return true;
         }
 
         /// <summary>
@@ -121,32 +151,14 @@ namespace Save
         {
             string folderLocation = Path.Combine(Application.persistentDataPath, "saves");
             if (!EnsureSaveFolderExists(folderLocation)) return;
-            int i;
-            string outputFile;
-            for (i = 0; File.Exists(outputFile = Path.Combine(folderLocation, $"{i}.save")); i++) ;
+            string outputFile = Path.Combine(folderLocation, SaveFileName);
             try
             {
                 File.WriteAllText(outputFile, JsonUtility.ToJson(GetCurrentSaveData(startingScene)));
-                _currentSaveFile = $"{i}.save";
             }
             catch (Exception e)
             {
                 Debug.LogWarning($"Couldn't write to save data folder: {outputFile}: {e.Message}");
-            }
-        }
-
-        public static void DeleteSave(string fileName)
-        {
-            string folderLocation = Path.Combine(Application.persistentDataPath, "saves");
-            if (!EnsureSaveFolderExists(folderLocation)) return;
-            string filePath = Path.Combine(folderLocation, fileName);
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-            else
-            {
-                Debug.LogWarning($"Tried to delete file that doesn't exist: {filePath}");
             }
         }
 
@@ -160,15 +172,15 @@ namespace Save
         /// </remarks>
         public void SaveFile()
         {
-            if (_currentSaveFile == null) return;
             if (SceneManager.GetActiveScene().name == mainMenuScene)
             {
                 Debug.LogWarning("Saving to main menu scene. Hopefully we're loading from it and not loading to it.");
                 return;
             }
+
             _saveThread?.Join();
             string folderLocation = Path.Combine(Application.persistentDataPath, "saves");
-            SaveFileWriter saveFileWriter = new(folderLocation, _currentSaveFile, GetCurrentSaveData());
+            SaveFileWriter saveFileWriter = new(folderLocation, GetCurrentSaveData());
             _saveThread = new Thread(saveFileWriter.SaveFile);
             _saveThread.Start();
         }
@@ -179,23 +191,20 @@ namespace Save
         private class SaveFileWriter
         {
             private readonly string folderPath;
-            private readonly string fileName;
-            private readonly SaveData saveData;
+            private readonly SaveFileData saveFileData;
 
             /// <summary>
             /// Constructor.
             /// </summary>
             /// <param name="folderPath">Folder path of saves directory</param>
-            /// <param name="fileName">File name</param>
-            /// <param name="saveData">Data to save</param>
+            /// <param name="saveFileData">Data to save</param>
             /// <remarks>
             /// <see cref="Application.persistentDataPath"/> needs to be called in the main thread.
             /// </remarks>
-            public SaveFileWriter(string folderPath, string fileName, SaveData saveData)
+            public SaveFileWriter(string folderPath, SaveFileData saveFileData)
             {
                 this.folderPath = folderPath;
-                this.fileName = fileName;
-                this.saveData = saveData;
+                this.saveFileData = saveFileData;
             }
 
             /// <summary>
@@ -203,19 +212,12 @@ namespace Save
             /// </summary>
             public void SaveFile()
             {
-                if (fileName == null)
-                {
-                    // debug log *should* be threadsafe
-                    Debug.LogWarning("Attempted to save with null file path.");
-                    return;
-                }
-
                 if (!EnsureSaveFolderExists(folderPath)) return;
-                string jsonData = JsonUtility.ToJson(saveData);
-                string outputFilePath = Path.Combine(folderPath, fileName);
+                string jsonData = JsonUtility.ToJson(saveFileData);
+                string outputFilePath = Path.Combine(folderPath, SaveFileName);
                 try
                 {
-                    File.WriteAllText(Path.Combine(folderPath, fileName), jsonData);
+                    File.WriteAllText(outputFilePath, jsonData);
                     Debug.Log($"Wrote to save file: {outputFilePath}");
                 }
                 catch (Exception e)
@@ -244,36 +246,6 @@ namespace Save
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Gets all the save files in the save file directory.
-        /// </summary>
-        /// <returns>Lookup of file name to save data</returns>
-        /// <remarks>
-        /// If the file couldn't be parsed, the save data will be null.
-        /// </remarks>
-        public static Dictionary<string, SaveData?> GetSaveFiles()
-        {
-            string folderLocation = Path.Combine(Application.persistentDataPath, "saves");
-            EnsureSaveFolderExists(folderLocation);
-            string[] files = Directory.GetFiles(folderLocation);
-            Dictionary<string, SaveData?> filesDictionary = new();
-            foreach (string file in files)
-            {
-                try
-                {
-                    SaveData data = JsonUtility.FromJson<SaveData>(File.ReadAllText(file));
-                    filesDictionary.Add(file, data);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning($"Couldn't parse file {file}: {e.Message}");
-                    filesDictionary.Add(file, null);
-                }
-            }
-
-            return filesDictionary;
         }
     }
 }

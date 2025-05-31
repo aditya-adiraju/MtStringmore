@@ -14,6 +14,9 @@ namespace DevConsole
         public string Name => "checkpoint";
 
         /// <inheritdoc />
+        public string[] Aliases => new[] { "cp" };
+
+        /// <inheritdoc />
         public void Run(string[] args, StringWriter sw)
         {
             if (args.Length is < 1 or > 2)

@@ -3,7 +3,6 @@ using System.Linq;
 using Managers;
 using Player;
 using UnityEngine;
-using static Player.PlayerController;
 
 namespace StringmoreCamera
 {
@@ -75,9 +74,9 @@ namespace StringmoreCamera
         /// <summary>
         /// Returns the intended target of the camera based on the player's position.
         /// </summary>
-        public Vector2 GetPlayerTarget()
+        private Vector2 GetPlayerTarget()
         {
-            if (_playerController.PlayerState == PlayerStateEnum.Run) _lastGroundedY = _playerTransform.position.y;
+            if (_playerController.CurrentGroundY != null) _lastGroundedY = _playerController.CurrentGroundY.Value;
             float playerY = _playerTransform.position.y;
 
             // when player is above their last grounded position + a threshold or below their last grounded position,

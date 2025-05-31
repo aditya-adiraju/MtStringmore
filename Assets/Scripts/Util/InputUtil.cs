@@ -10,14 +10,14 @@ namespace Util
     public static class InputUtil
     {
         /// <summary>
-        /// Whether a given touch is on the pause button transform.
+        /// Whether a given screen position is on the pause button transform.
         /// </summary>
-        /// <param name="touch"></param>
+        /// <param name="screenPosition">Screen position</param>
         /// <returns></returns>
-        private static bool TouchOnPauseButton(Touch touch)
+        private static bool OnPauseButton(Vector2 screenPosition)
         {
             return PauseMenu.Instance?.PauseButtonTransform &&
-                   RectTransformUtility.RectangleContainsScreenPoint(PauseMenu.Instance.PauseButtonTransform, touch.position);
+                   RectTransformUtility.RectangleContainsScreenPoint(PauseMenu.Instance.PauseButtonTransform, screenPosition);
         }
         
         /// <summary>
@@ -26,7 +26,10 @@ namespace Util
         /// <returns>True if player started to jump (press space bar/touch screen)</returns>
         public static bool StartJumpOrTouch()
         {
-            return Input.GetButtonDown("Jump") || (Input.touches.Any(touch => touch.phase == TouchPhase.Began && !TouchOnPauseButton(touch)) && Time.timeScale > 0);
+            return Input.GetButtonDown("Jump") ||
+                   (Time.timeScale > 0 && (
+                       (!OnPauseButton(Input.mousePosition) && Input.GetButtonDown("Fire1")) ||
+                       (Input.touches.Any(touch => touch.phase == TouchPhase.Began && !OnPauseButton(touch.position)))));
         }
 
         /// <summary>
@@ -35,7 +38,7 @@ namespace Util
         /// <returns>True if player holds the jump action</returns>
         public static bool HoldJumpOrTouch()
         {
-            return Input.GetButton("Jump") || Input.touchCount > 0;
+            return Input.GetButton("Jump") || Input.GetButton("Fire1") || Input.touchCount > 0;
         }
     }
 }

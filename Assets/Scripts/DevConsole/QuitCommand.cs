@@ -15,6 +15,9 @@ namespace DevConsole
         public string Name => "quit";
 
         /// <inheritdoc />
+        public string[] Aliases => new[] { "q" };
+
+        /// <inheritdoc />
         public void Run(string[] args, StringWriter sw)
         {
             Application.Quit();

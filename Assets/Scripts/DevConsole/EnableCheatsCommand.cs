@@ -16,6 +16,9 @@ namespace DevConsole
         /// <inheritdoc />
         public string Name => "sv_cheats";
 
+        /// <inheritdoc />
+        public string[] Aliases => new[] { "cheats" };
+
         private readonly DevConsoleMenu _devConsole;
 
         /// <summary>

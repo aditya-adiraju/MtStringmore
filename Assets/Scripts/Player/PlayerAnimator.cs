@@ -53,6 +53,7 @@ namespace Player
         [Header("Visual")]
         [Tooltip("Player position offset when hanging onto object (small red wire sphere gizmo)")]
         [SerializeField] private Vector2 hangOffset;
+        [SerializeField, Range(0, 1), Tooltip("Multiplier of swing angle")] private float swingDeltaMultiplier = 0.5f;
         // @formatter:on
 
         #endregion
@@ -63,6 +64,8 @@ namespace Player
         private PlayerController _player;
 
         private bool _grounded;
+
+        private Vector2? _swingPos;
         // private ParticleSystem.MinMaxGradient _currentGradient;
 
         #endregion
@@ -105,6 +108,7 @@ namespace Player
             _player.Death += OnDeath;
             _player.Dashed += OnDash;
             _player.SwingDifferentDirection += OnSwingDifferentDirection;
+            _player.OnSwingStart += OnSwingStart;
 
             // _moveParticles.Play();
         }
@@ -118,6 +122,7 @@ namespace Player
             _player.HangChanged -= OnHangChanged;
             _player.Death -= OnDeath;
             _player.Dashed -= OnDash;
+            _player.OnSwingStart -= OnSwingStart;
 
             GameManager.Instance.Reset -= OnReset;
 
@@ -132,12 +137,26 @@ namespace Player
             HandleSpriteFlip();
             HandleVerticalSpeed();
             HandleIdle();
+            HandleSwingRotation();
         }
 
         #endregion
 
         #region Event Handlers
 
+        private void HandleSwingRotation()
+        {
+            if (_swingPos == null)
+            {
+                transform.localEulerAngles = Vector3.zero;
+                return;
+            }
+            Vector2 diff = ((Vector2)transform.position) - _swingPos.Value;
+            // yes, this is meant to be Atan2(x, y) as we want the vector perpendicular
+            float angle = Mathf.Atan2(diff.x, -diff.y) * Mathf.Rad2Deg;
+            transform.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(angle, 0, 1-swingDeltaMultiplier));
+        }
+        
         private void HandleIdle()
         {
             // if paused, don't change the idle state
@@ -239,6 +258,11 @@ namespace Player
             }
         }
 
+        private void OnSwingStart(Vector2 swingPos)
+        {
+            _swingPos = swingPos;
+        }
+
         private void OnHangChanged(bool hanging, bool facingLeft)
         {
             anim.SetBool(HangKey, hanging);
@@ -258,6 +282,7 @@ namespace Player
             else
             {
                 transform.localPosition = _spriteOriginalPosition;
+                _swingPos = null;
             }
         }
 
@@ -315,6 +340,7 @@ namespace Player
         /// </summary>
         private void OnReset()
         {
+            _swingPos = null;
             foreach (Transform child in transform)
             {
                 child.gameObject.SetActive(true);
