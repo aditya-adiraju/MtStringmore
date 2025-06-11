@@ -1,5 +1,6 @@
 using System;
 using Managers;
+using Player;
 using UnityEngine;
 using Yarn.Unity;
 
@@ -8,7 +9,7 @@ namespace Interactables
     /// <summary>
     ///     Checkpoint flag that sets checkpoint position when player collides with it
     /// </summary>
-    public class Checkpoint : MonoBehaviour
+    public class Checkpoint : MonoBehaviour, IPlayerVelocityEffector
     {
         private static readonly int HoistKey = Animator.StringToHash("Hoisted");
 
@@ -47,7 +48,11 @@ namespace Interactables
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.CompareTag("Player") || anim.GetBool(HoistKey)) return;
+            if (!other.CompareTag("Player")) return;
+            PlayerController player = other.GetComponent<PlayerController>();
+            if (player)
+                player.AddPlayerVelocityEffector(this, true);
+            if (anim.GetBool(HoistKey)) return;
             HitCheckpoint();
             anim.SetBool(HoistKey, true);
             GameManager.Instance.UpdateCheckpointData(transform.position, respawnFacingLeft);
@@ -68,6 +73,17 @@ namespace Interactables
             _isCurrentConversation = false;
             Debug.Log("Ended dialogue at checkpoint.");
             Time.timeScale = 1;
+        }
+
+        /// <summary>
+        /// Flips the player if they're going the wrong direction.
+        /// </summary>
+        /// <param name="velocity">Player's velocity</param>
+        /// <returns>New velocity</returns>
+        public Vector2 ApplyVelocity(Vector2 velocity)
+        {
+            float signX = respawnFacingLeft ? -1 : 1;
+            return Mathf.Sign(velocity.x * signX) < 0 ? new Vector2(signX, velocity.y) : velocity;
         }
     }
 }

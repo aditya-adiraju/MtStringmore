@@ -25,7 +25,7 @@ namespace Managers
         
         private void Start()
         {
-            maxCount = FindObjectsOfType<Collectable>().Length;
+            maxCount = GameManager.Instance.MaxCollectablesCount;
             levelHeaderText.text = "Level " + SceneManager.GetActiveScene().buildIndex / 2 + " Complete!";
             resultsPane.SetActive(false);
             _saveDataManager = FindObjectOfType<SaveDataManager>();

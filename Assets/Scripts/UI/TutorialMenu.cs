@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -11,21 +12,41 @@ namespace UI
     public class TutorialMenu : MonoBehaviour
     {
         private static TutorialMenu _instance;
+
         /// <summary>
         /// Access the 'singleton' instance of this object.
         /// </summary>
         public static TutorialMenu Instance => _instance ??= FindObjectOfType<TutorialMenu>();
 
         [SerializeField] private Animator animator;
-        [SerializeField, Min(0), Tooltip("Fade duration (sec)")] private float fadeDuration = 0.5f;
-        
+
+        [SerializeField, Min(0), Tooltip("Fade duration (sec)")]
+        private float fadeDuration = 0.5f;
+
         private CanvasGroup _canvasGroup;
         private Coroutine _fadeInCoroutine;
         private Coroutine _fadeOutCoroutine;
-        
+
         private void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
+            SceneManager.activeSceneChanged += OnSceneChanged;
+        }
+
+        private void OnDestroy()
+        {
+            SceneManager.activeSceneChanged -= OnSceneChanged;
+        }
+
+        /// <summary>
+        /// Called on scene change: force hides the tutorial menu.
+        /// </summary>
+        /// <param name="current">Current scene</param>
+        /// <param name="next">next scene</param>
+        private void OnSceneChanged(Scene current, Scene next)
+        {
+            _canvasGroup.alpha = 0;
+            animator.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -43,6 +64,7 @@ namespace UI
                 animator.gameObject.SetActive(false);
                 return;
             }
+
             animator.SetTrigger(tutorialNameHash);
 
             if (_fadeInCoroutine != null)
@@ -89,6 +111,7 @@ namespace UI
                 _canvasGroup.alpha = Mathf.Clamp01(1f - elapsedTime / fadeDuration);
                 yield return null;
             }
+
             _canvasGroup.alpha = 0;
             animator.gameObject.SetActive(false);
         }

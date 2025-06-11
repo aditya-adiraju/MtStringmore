@@ -25,8 +25,7 @@ namespace Knitby
         private LayerMask collisionLayer;
 
         [SerializeField] private float collisionDistance;
-    
-    
+
         public event Action<bool> SetIdle;
 
         /// <summary>
@@ -53,6 +52,7 @@ namespace Knitby
         /// Fires continuously; true when player can dash, false otherwise
         /// </summary>
         public event Action<bool> CanDash;
+
         /// <summary>
         ///     Fires when player is dead
         /// </summary>
@@ -63,7 +63,7 @@ namespace Knitby
         ///     False if leaving the wall, true if hitting a wall
         /// </summary>
         public event Action<bool> WallHitChanged;
-    
+
         private readonly Queue<Vector3> _path = new();
         private CapsuleCollider2D _col;
         private Vector3 _currentPathPosition;
@@ -74,6 +74,7 @@ namespace Knitby
         private PlayerController _playerController;
         private float _queueTimer;
         private bool _wallHit;
+        private bool _isSwinging;
 
         private void Start()
         {
@@ -87,10 +88,10 @@ namespace Knitby
         private void Update()
         {
             if (_currentPathPosition == Vector3.zero) return;
-        
-            if (Swing.Equals(false))
+
+            if (!_isSwinging)
                 SetIdle?.Invoke(Vector3.Distance(transform.position, _currentPathPosition) <= idleThreshold);
-        
+
             Vector3 direction = _currentPathPosition - transform.position;
 
             DirectionUpdated?.Invoke(direction.x, direction.y);
@@ -105,7 +106,7 @@ namespace Knitby
                 return;
             _queueTimer -= Time.fixedDeltaTime;
 
-            if (!(_queueTimer <= 0)) return;
+            if (_queueTimer > 0) return;
             _queueTimer = timeOffset / granularity;
             if (_path.Count == granularity)
                 _currentPathPosition = _path.Dequeue();
@@ -126,7 +127,8 @@ namespace Knitby
                 WallHitChanged?.Invoke(wallHit);
             }
 
-            Swing?.Invoke(_lineRenderer.isVisible);
+            _isSwinging = _lineRenderer.isVisible;
+            Swing?.Invoke(_isSwinging);
 
             CanDash?.Invoke(_playerController.CanDash);
         }

@@ -15,12 +15,17 @@ namespace Interactables
         private SpriteRenderer _spriteRenderer;
         private AudioSource _audioSource;
         private Collider2D _collider;
+        
+        private void Awake()
+        {
+            _audioSource = GetComponent<AudioSource>();
+            _collider = GetComponent<Collider2D>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+        }
 
         private void OnValidate()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _audioSource = GetComponent<AudioSource>();
-            _collider = GetComponent<Collider2D>();
         }
         
         private void OnTriggerEnter2D(Collider2D other)

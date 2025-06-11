@@ -78,9 +78,12 @@ namespace StringmoreCamera
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(_bound, Vector3.one);
             Gizmos.color = Color.white;
-            UnityEngine.Camera cam = _cam.GetComponent<UnityEngine.Camera>();
-            Vector3 cameraBounds = new(cam.orthographicSize * cam.aspect * 2, cam.orthographicSize * 2, 1);
-            Gizmos.DrawWireCube(_bound, cameraBounds);
+            if (_cam)
+            {
+                Camera cam = _cam.GetComponent<Camera>();
+                Vector3 cameraBounds = new(cam.orthographicSize * cam.aspect * 2, cam.orthographicSize * 2, 1);
+                Gizmos.DrawWireCube(_bound, cameraBounds);
+            }
             Gizmos.color = Color.green;
             if (fixTypeX is FixCameraType.AllowGreater or FixCameraType.None)
             {
