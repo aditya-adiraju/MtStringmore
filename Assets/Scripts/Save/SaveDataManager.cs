@@ -86,7 +86,8 @@ namespace Save
                     checkpointsReached = GameManager.Instance.CheckpointsReached.ToArray(),
                     checkpointFacesLeft = GameManager.Instance.RespawnFacingLeft,
                     dateTimeBinary = DateTime.Now.ToBinary(),
-                    sceneName = sceneOverride ?? SceneManager.GetActiveScene().name
+                    sceneName = sceneOverride ?? SceneManager.GetActiveScene().name,
+                    levelsAccessed = GameManager.Instance.LevelsAccessed
                 }
             };
         }
@@ -124,25 +125,36 @@ namespace Save
             }
         }
 
-        /// <summary>
-        /// Loads an existing save from a file name.
-        /// </summary>
-        /// <returns>True if successful, false otherwise</returns>
-        public bool LoadExistingSave()
+        private SaveData? LoadAndApplySaveData()
         {
             SaveFileData? optionalData = ReadExistingSave();
-            if (optionalData == null) return false;
+            if (optionalData == null) return null;
+
             SaveData saveData = optionalData.Value.saveData;
             GameManager.Instance.UpdateFromSaveData(saveData);
-            SceneManager.LoadScene(saveData.sceneName);
-            if (saveData.checkpointsReached.Length > 0)
+            return saveData;
+        }
+
+        public bool LoadExistingSave()
+        {
+            SaveData? saveData = LoadAndApplySaveData();
+            if (saveData == null) return false;
+
+            SceneManager.LoadScene(saveData.Value.sceneName);
+
+            if (saveData.Value.checkpointsReached.Length > 0)
             {
-                // TODO very hacky
-                _forcedNextFramePosition = saveData.checkpointsReached[^1];
+                _forcedNextFramePosition = saveData.Value.checkpointsReached[^1];
             }
 
             return true;
         }
+
+        public bool PreloadSaveData()
+        {
+            return LoadAndApplySaveData() != null;
+        }
+
 
         /// <summary>
         /// Creates a new save file.

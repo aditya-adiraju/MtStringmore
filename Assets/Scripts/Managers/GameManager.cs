@@ -40,7 +40,12 @@ namespace Managers
         /// Number of checkpoints reached.
         /// </summary>
         public List<Vector2> CheckpointsReached { get; } = new();
-
+        
+        /// <summary>
+        /// Number of checkpoints reached.
+        /// </summary>
+        public List<string> LevelsAccessed { get; } = new();
+    
         /// <summary>
         /// The number of collectables collected.
         /// Should be reset to 0 after being displayed (e.g. after a end-of-level cutscene).
@@ -113,6 +118,10 @@ namespace Managers
         {
             sceneTransitionCanvas.InvokeFadeOut();
             Time.timeScale = 1f;
+            if (!LevelsAccessed.Contains(scene.name))
+            {
+                LevelsAccessed.Add(scene.name);
+            }
             if (!_dontClearDataOnSceneChanged)
             {
                 PlayerController player = FindObjectOfType<PlayerController>();
@@ -183,6 +192,9 @@ namespace Managers
             _collectedCollectables.Clear();
             foreach (Vector2 candyCollected in saveData.candiesCollected)
                 _collectedCollectables.Add(candyCollected);
+    
+            LevelsAccessed.AddRange(saveData.levelsAccessed);
+
             GameDataChanged?.Invoke();
             _dontClearDataOnSceneChanged = true;
         }
