@@ -11,7 +11,6 @@ namespace UI
     /// </summary>
     public class MainMenu : MonoBehaviour
     {
-        [SerializeField] private string startingScene;
         [SerializeField] private TextMeshProUGUI versionNumber;
         [SerializeField] private string levelSelectScene;
         [SerializeField] private Button loadGameButton;
@@ -35,13 +34,6 @@ namespace UI
             Destroy(loadGameButton.gameObject);
 #endif
         }
-
-        public void PlayGame()
-        {
-            _saveDataManager?.CreateNewSave(startingScene);
-            SceneManager.LoadScene(startingScene);
-        }
-
         public void QuitGame()
         {
             Debug.Log("Quit!");

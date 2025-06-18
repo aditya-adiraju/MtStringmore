@@ -118,10 +118,6 @@ namespace Managers
         {
             sceneTransitionCanvas.InvokeFadeOut();
             Time.timeScale = 1f;
-            if (!LevelsAccessed.Contains(scene.name))
-            {
-                LevelsAccessed.Add(scene.name);
-            }
             if (!_dontClearDataOnSceneChanged)
             {
                 PlayerController player = FindObjectOfType<PlayerController>();

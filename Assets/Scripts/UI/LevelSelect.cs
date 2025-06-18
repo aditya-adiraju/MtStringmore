@@ -19,9 +19,9 @@ public class LevelSelectMenu : MonoBehaviour
     
     [SerializeField] private AudioSource canvasAudioSource;
     [SerializeField] private AudioClip buttonClickSound;
+    [SerializeField] private string level1 = "IntroCutscene";
     
     private List<string> unlockedScenes;
-
     private string selectedScene;
     private List<Button> levelButtons = new List<Button>();
 
@@ -30,6 +30,7 @@ public class LevelSelectMenu : MonoBehaviour
         LazyLoad();
         unlockedScenes = GameManager.Instance.LevelsAccessed;
         playButton.interactable = false;
+        unlockedScenes.Add(level1);
 
         foreach (string sceneName in allLevelSceneNames)
         {
@@ -40,6 +41,8 @@ public class LevelSelectMenu : MonoBehaviour
 
             bool isUnlocked = unlockedScenes.Contains(sceneName);
             int levelNumber = allLevelSceneNames.IndexOf(sceneName) + 1;
+            
+            Debug.Log(sceneName + " is " + isUnlocked);
 
             if (isUnlocked)
             {
