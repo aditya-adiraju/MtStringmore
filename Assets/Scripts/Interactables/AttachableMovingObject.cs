@@ -5,6 +5,7 @@ using Managers;
 using Player;
 using UI;
 using UnityEngine;
+using Util;
 
 namespace Interactables
 {
@@ -115,15 +116,7 @@ namespace Interactables
         /// Since people may or may not adjust the position in the editor while moving,
         /// this computes the vector projection along the actual path in case someone changes the direction while running.
         /// </remarks>
-        private float DistanceAlongPath
-        {
-            get
-            {
-                Vector2 direction = secondPosition - firstPosition;
-                Vector2 travelled = _rigidbody.position - firstPosition;
-                return Vector2.Dot(direction, travelled) / direction.magnitude;
-            }
-        }
+        private float DistanceAlongPath => VectorUtil.DistanceAlongPath(firstPosition, secondPosition, _rigidbody.position);
 
         /// <summary>
         /// Evaluates the velocity at a specific time since motion start.

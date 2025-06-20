@@ -158,6 +158,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c81b8a0512e132e4cbdff16ff3c341e9, type: 3}
   - {fileID: 8300000, guid: e9de9b181cfc6804e9e615db52c9d7ad, type: 3}
   hangOffset: {x: 0, y: 0}
+  swingDeltaMultiplier: 0.5
 --- !u!1 &4217790213014453210
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,6 +244,10 @@ MonoBehaviour:
   maxSwingSpeed: 47
   swingAcceleration: 75
   minSwingReleaseX: 25
+  enableSwingHacks: 1
+  maxHackAcceleration: 200
+  hackRange: 0.4
+  runParticleVelocityThreshold: 0.1
   ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 1
   poofSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}

@@ -46,7 +46,7 @@ namespace Interactables
                 yield return new WaitForSeconds(timeToDeath / PlayerAnimator.NumRoastStates);
             }
 
-            _playerController.ForceKill();
+            _playerController.TryKill();
             _coroutine = null;
         }
     }

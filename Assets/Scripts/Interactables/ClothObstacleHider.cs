@@ -31,11 +31,7 @@ namespace Interactables
         /// </remarks>
         [Tooltip("Second position, local coordinates")]
         public Vector2 secondPosition;
-
-        /// <remarks>
-        /// I know the new reset logic hasn't been merged in yet,
-        /// but we need to save a copy of the enumerator to reset the object later.
-        /// </remarks>
+        
         private IEnumerator _activeMotion;
 
         /// <summary>

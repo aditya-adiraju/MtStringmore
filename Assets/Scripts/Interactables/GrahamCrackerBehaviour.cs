@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Managers;
 using Player;
 using UnityEngine;
 
@@ -41,6 +42,12 @@ namespace Interactables
             _startingY = _rigidbody2D.position.y;
             _state = State.WaitTop;
             StartCoroutine(SlamRoutine());
+            GameManager.Instance.Reset += OnReset;
+        }
+
+        private void OnDestroy()
+        {
+            GameManager.Instance.Reset -= OnReset;
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -48,7 +55,7 @@ namespace Interactables
             if (_state != State.MoveDown || Vector2.Dot(other.GetContact(0).normal, Vector2.up) < 0) return;
             if (other.collider.TryGetComponent(out PlayerController playerController))
             {
-                playerController.ForceKill();
+                playerController.TryKill();
                 _rigidbody2D.bodyType = RigidbodyType2D.Static;
             } else StartCoroutine(RecoverCoroutine());
         }
@@ -59,6 +66,18 @@ namespace Interactables
             {
                 StartCoroutine(RecoverCoroutine());
             }
+        }
+
+        /// <summary>
+        /// Called on reset: stops coroutines and resets to be at the top.
+        /// </summary>
+        private void OnReset()
+        {
+            StopAllCoroutines();
+            _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+            _rigidbody2D.position = new Vector2(_rigidbody2D.position.x, _startingY);
+            _rigidbody2D.velocity = Vector2.zero;
+            if (_state != State.WaitTop) StartCoroutine(SlamRoutine());
         }
 
         /// <summary>
