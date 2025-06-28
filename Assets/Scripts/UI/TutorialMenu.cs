@@ -16,7 +16,14 @@ namespace UI
         /// <summary>
         /// Access the 'singleton' instance of this object.
         /// </summary>
-        public static TutorialMenu Instance => _instance ??= FindObjectOfType<TutorialMenu>();
+        public static TutorialMenu Instance
+        {
+            get
+            {
+                if (!_instance) _instance = FindObjectOfType<TutorialMenu>();
+                return _instance;
+            }
+        }
 
         [SerializeField] private Animator animator;
 

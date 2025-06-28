@@ -4116,6 +4116,14 @@ MonoBehaviour:
   startBgmVolume: 0.5
   startSfxVolume: 0.5
   startMasterVolume: 0.5
+  collectableClips:
+  - {fileID: 8300000, guid: efde65e288ccde64b8f303a7bb665400, type: 3}
+  - {fileID: 8300000, guid: 41102d087087d404c97677c62da56e56, type: 3}
+  - {fileID: 8300000, guid: bfad4451eeeb44341a0868d5533eade9, type: 3}
+  - {fileID: 8300000, guid: 9d4d21c2f568c3346bc1dcbb24fac63f, type: 3}
+  - {fileID: 8300000, guid: d9ba8e99e2fdf6c4f86b071d2b21524b, type: 3}
+  - {fileID: 8300000, guid: c612d11b6ce948545badd835e0f892cd, type: 3}
+  collectableComboWindow: 1
 --- !u!114 &7492377907174578259
 MonoBehaviour:
   m_ObjectHideFlags: 0

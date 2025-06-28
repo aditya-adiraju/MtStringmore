@@ -7,9 +7,18 @@ namespace Managers
     public class SoundManager : MonoBehaviour
     {
         private static SoundManager _instance;
+        public static SoundManager Instance
+        {
+            get
+            {
+                if (!_instance)
+                    _instance = FindObjectOfType<SoundManager>();
 
-        public static SoundManager Instance => _instance ??= FindObjectOfType<SoundManager>();
+                return _instance;
+            }
+        }
 
+        [Header("Audio Control")]
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private Slider masterSlider;
         [SerializeField] private Slider bgmSlider;
@@ -18,9 +27,21 @@ namespace Managers
         [SerializeField, Range(float.Epsilon, 1)] private float startSfxVolume = 0.5f;
         [SerializeField, Range(float.Epsilon, 1)] private float startMasterVolume = 0.5f;
 
+        [Header("Collectable SFX")]
+        [SerializeField] private AudioClip[] collectableClips;
+        [SerializeField, Tooltip("Max time between collections to continue combo (in seconds)")]
+        private float collectableComboWindow = 0.6f;
+
+        private float _timeSinceLastCollect = Mathf.Infinity;
+        private int _audioIndex;
+        private AudioSource _collectableAudioSource;
+
         private void Awake()
         {
             if (Instance != this) Destroy(gameObject);
+
+            _collectableAudioSource = gameObject.AddComponent<AudioSource>();
+            _collectableAudioSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("SFX")[0];
         }
 
         private void Start()
@@ -31,6 +52,11 @@ namespace Managers
             SetMasterVolume(savedMasterVolume);
             SetBgmVolume(savedBgmVolume);
             SetSfxVolume(savedSfxVolume);
+        }
+
+        private void Update()
+        {
+            _timeSinceLastCollect += Time.deltaTime;
         }
 
         public static float SliderToVolume(float sliderValue)
@@ -46,7 +72,6 @@ namespace Managers
             PlayerPrefs.Save();
         }
 
-        /// <summary> Sets BGM volume (0.0001 to 1). </summary>
         public void SetBgmVolume(float volume)
         {
             audioMixer.SetFloat("BGM", SliderToVolume(volume));
@@ -55,7 +80,6 @@ namespace Managers
             PlayerPrefs.Save();
         }
 
-        /// <summary> Sets SFX volume (0.0001 to 1). </summary>
         public void SetSfxVolume(float volume)
         {
             audioMixer.SetFloat("SFX", SliderToVolume(volume));
@@ -64,11 +88,32 @@ namespace Managers
             PlayerPrefs.Save();
         }
 
-        /// <summary> Mutes or unmutes all audio. </summary>
         public void SetMute(bool isMuted)
         {
             audioMixer.SetFloat("Master",
                 isMuted ? -80f : SliderToVolume(PlayerPrefs.GetFloat("Master", startMasterVolume)));
+        }
+
+        /// <summary>
+        /// Plays a collectable sound in sequence with combo logic using PlayOneShot.
+        /// </summary>
+        public void PlayCollectableComboSound()
+        {
+            if (collectableClips == null || collectableClips.Length == 0) return;
+
+            if (_timeSinceLastCollect > collectableComboWindow)
+            {
+                _audioIndex = 0;
+            }
+            else
+            {
+                if (_audioIndex < collectableClips.Length - 1)
+                    _audioIndex++;
+
+            }
+
+            _collectableAudioSource.PlayOneShot(collectableClips[_audioIndex]);
+            _timeSinceLastCollect = 0f;
         }
     }
 }
