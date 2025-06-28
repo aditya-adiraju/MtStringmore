@@ -2,6 +2,7 @@
 using Player;
 using UnityEngine;
 using UnityEngine.Events;
+using StringmoreCamera;
 
 namespace Interactables
 {
@@ -15,17 +16,26 @@ namespace Interactables
     {
         [SerializeField] private bool destroyed;
         [SerializeField] private UnityEvent onDestroyed;
+        [Header("Camera Shake")]
+        [SerializeField] private float shakeDuration;
+        [SerializeField] private float shakeIntensity;
+        [SerializeField, Tooltip("Set to true for shake along x-axis")] private bool xShake;
+        [SerializeField, Tooltip("Set to true for shake along y-axis")] private bool yShake;
+        [SerializeField, Tooltip("Set to true if object is destructible")] private bool destructibleObject;
         [SerializeField, Tooltip("Tolerance to allow destruction after player dash (seconds)"), Min(0)]
+        
         private float dashEndTolerance = 1f;
 
         private Collider2D _collider;
         private AudioSource _audioSource;
-
+        private ShakeCamera _shake;
+        
         private void Awake()
         {
             _collider = GetComponent<Collider2D>();
             _audioSource = GetComponent<AudioSource>();
             GameManager.Instance.Reset += OnReset;
+            _shake = FindObjectOfType<ShakeCamera>(); 
         }
 
         /// <summary>
@@ -66,6 +76,7 @@ namespace Interactables
         /// </summary>
         private void DestroyObject()
         {
+            _shake?.Shake(shakeDuration, shakeIntensity, xShake, yShake,destructibleObject);
             destroyed = true;
             _collider.enabled = false;
             _audioSource.Play();
@@ -91,6 +102,7 @@ namespace Interactables
                 Vector2.Dot(transform.position - playerController.transform.position, playerController.Velocity) > 0 &&
                 playerController.PlayerState == PlayerController.PlayerStateEnum.Dash)
             {
+            
                 DestroyObject();
             }
         }

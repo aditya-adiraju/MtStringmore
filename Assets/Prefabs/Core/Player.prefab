@@ -259,6 +259,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 78f48d0db42925547ba8ce7fd2ad7418, type: 3}
   - {fileID: 8300000, guid: 6fb1a0b06cb75c54d9b787cce07ba288, type: 3}
   - {fileID: 8300000, guid: 4f5a3bff415e8334896f690121980b49, type: 3}
+  shakeDuration: 0.5
+  shakeIntensity: 0
+  xShake: 1
+  yShake: 0
+  destructibleObject: 0
 --- !u!50 &5301496585393855472
 Rigidbody2D:
   serializedVersion: 4

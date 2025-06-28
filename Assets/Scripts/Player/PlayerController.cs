@@ -5,6 +5,7 @@ using Interactables;
 using Managers;
 using UnityEngine;
 using Util;
+using StringmoreCamera;
 
 namespace Player
 {
@@ -71,6 +72,12 @@ namespace Player
         [SerializeField] private AudioClip swingAttach;
         [SerializeField] private AudioClip swingDetach;
         [SerializeField] private AudioClip[] swingChangeDirection;
+        [Header("Dashing Camera Shake")]
+        [SerializeField] private float shakeDuration;
+        [SerializeField] private float shakeIntensity;
+        [SerializeField, Tooltip("Set to true for shake along x-axis")] private bool xShake;
+        [SerializeField, Tooltip("Set to true for shake along y-axis")] private bool yShake;
+        [SerializeField, Tooltip("Set to true if object is destructible")] private bool destructibleObject;
         // @formatter:on
 
         #endregion
@@ -199,7 +206,7 @@ namespace Player
         private bool _canSwing;
         private bool _swingStarted;
         private bool _wasSwingClockwise;
-
+        private ShakeCamera _shake;
         #endregion
 
         #region Unity Event Handlers
@@ -209,8 +216,8 @@ namespace Player
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<CapsuleCollider2D>();
             _audioSource = GetComponent<AudioSource>();
+            _shake = FindObjectOfType<ShakeCamera>();
             ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
-
             foreach (ParticleSystem ps in particleSystems)
             {
                 switch (ps.gameObject.name)
@@ -548,6 +555,7 @@ namespace Player
                 _canDash = false;
                 _buttonNotPressedPreviousFrame = true;
                 PlayerState = PlayerStateEnum.Dash;
+                _shake?.Shake(shakeDuration, shakeIntensity, xShake, yShake,destructibleObject);
                 Dashed?.Invoke();
                 _timeDashed = _time;
                 TimeDashEnded = Time.time + dashTime;
