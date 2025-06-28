@@ -32,6 +32,16 @@ namespace Interactables
         [SerializeField, Tooltip("Bottom collider")]
         private Collider2D bottomCollider;
 
+        [SerializeField]
+        private AudioSource warningSound;
+
+        [SerializeField, Min(0), Tooltip("Time (sec) prior to closing to play warning")]
+        private float warningSoundTime = 1;
+        [SerializeField]
+        private AudioSource closingSound;
+        [SerializeField, Min(0), Tooltip("Time(sec) after closing starts to play closing sound")]
+        private float closingSoundDelay = 0.2f;
+
         private Rigidbody2D _rigidbody2D;
         private float _startingY;
         private State _state;
@@ -77,7 +87,7 @@ namespace Interactables
             _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody2D.position = new Vector2(_rigidbody2D.position.x, _startingY);
             _rigidbody2D.velocity = Vector2.zero;
-            if (_state != State.WaitTop) StartCoroutine(SlamRoutine());
+            StartCoroutine(SlamRoutine());
         }
 
         /// <summary>
@@ -87,9 +97,12 @@ namespace Interactables
         private IEnumerator SlamRoutine()
         {
             _state = State.WaitTop;
-            yield return new WaitForSeconds(timeStayUp);
+            yield return new WaitForSeconds(timeStayUp - warningSoundTime);
+            warningSound.Play();
+            yield return new WaitForSeconds(warningSoundTime);
             _rigidbody2D.velocity = new Vector2(0, -velocityDown);
             _state = State.MoveDown;
+            closingSound.PlayDelayed(closingSoundDelay);
         }
 
         /// <summary>

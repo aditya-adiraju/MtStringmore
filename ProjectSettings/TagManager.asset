@@ -54,3 +54,6 @@ TagManager:
   - name: ClothLayer
     uniqueID: 1775649197
     locked: 0
+  - name: Foreground
+    uniqueID: 433016697
+    locked: 0
