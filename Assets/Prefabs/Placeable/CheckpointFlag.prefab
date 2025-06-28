@@ -102,7 +102,9 @@ MonoBehaviour:
   anim: {fileID: 8846073679660825170}
   sprite: {fileID: 6452453256689605497}
   conversationStartNode: 
-  beginsInteractable: 0
+  respawnFacingLeft: 0
+  spawnOffset: {x: 0, y: -2}
+  hasBeenHit: 0
 --- !u!61 &9220039533559654016
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -139,7 +141,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.56, y: 5.12}
+    oldSize: {x: 3.84, y: 7.68}
     newSize: {x: 2.56, y: 5.12}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

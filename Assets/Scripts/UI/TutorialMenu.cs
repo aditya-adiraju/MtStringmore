@@ -6,15 +6,24 @@ using UnityEngine.SceneManagement;
 namespace UI
 {
     /// <summary>
-    /// Tutorial display menu behaviour.
+    ///     Tutorial display menu behaviour.
     /// </summary>
     [RequireComponent(typeof(CanvasGroup))]
     public class TutorialMenu : MonoBehaviour
     {
         private static TutorialMenu _instance;
 
+        [SerializeField] private Animator animator;
+
+        [SerializeField] [Min(0)] [Tooltip("Fade duration (sec)")]
+        private float fadeDuration = 0.5f;
+
+        private CanvasGroup _canvasGroup;
+        private Coroutine _fadeInCoroutine;
+        private Coroutine _fadeOutCoroutine;
+
         /// <summary>
-        /// Access the 'singleton' instance of this object.
+        ///     Access the 'singleton' instance of this object.
         /// </summary>
         public static TutorialMenu Instance
         {
@@ -24,15 +33,6 @@ namespace UI
                 return _instance;
             }
         }
-
-        [SerializeField] private Animator animator;
-
-        [SerializeField, Min(0), Tooltip("Fade duration (sec)")]
-        private float fadeDuration = 0.5f;
-
-        private CanvasGroup _canvasGroup;
-        private Coroutine _fadeInCoroutine;
-        private Coroutine _fadeOutCoroutine;
 
         private void Awake()
         {
@@ -46,7 +46,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Called on scene change: force hides the tutorial menu.
+        ///     Called on scene change: force hides the tutorial menu.
         /// </summary>
         /// <param name="current">Current scene</param>
         /// <param name="next">next scene</param>
@@ -57,7 +57,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Shows the tutorial with the given tutorial name (as defined in the animation controller).
+        ///     Shows the tutorial with the given tutorial name (as defined in the animation controller).
         /// </summary>
         /// <param name="tutorialName">Tutorial name as specified in the animation controller</param>
         public void ShowTutorial(string tutorialName)
@@ -80,7 +80,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Hides the currently playing tutorial.
+        ///     Hides the currently playing tutorial.
         /// </summary>
         public void HideTutorial()
         {
@@ -90,7 +90,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Fades in the UI.
+        ///     Fades in the UI.
         /// </summary>
         /// <returns>Coroutine to slowly fade in the UI</returns>
         private IEnumerator FadeIn()
@@ -105,7 +105,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Fades out the UI.
+        ///     Fades out the UI.
         /// </summary>
         /// <returns>Coroutine to slowly fade out the UI</returns>
         private IEnumerator FadeOut()

@@ -394,7 +394,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &307654971
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1048,7 +1048,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 290, y: -60}
+  m_AnchoredPosition: {x: 290, y: -72}
   m_SizeDelta: {x: 153, y: 51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &434830180
@@ -3316,7 +3316,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed12168e2b8b8e7409d7cc737a187241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingScene: IntroCutscene
   versionNumber: {fileID: 2055563768}
   levelSelectScene: LevelSelect
   loadGameButton: {fileID: 307654972}
@@ -3661,7 +3660,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: 18}
+  m_AnchoredPosition: {x: 300, y: 2}
   m_SizeDelta: {x: 125, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1578245094
@@ -3834,6 +3833,7 @@ MonoBehaviour:
   - Level4
   canvasAudioSource: {fileID: 1503641520}
   buttonClickSound: {fileID: 8300000, guid: c483efca31d821740b6a06177526dc55, type: 3}
+  level1: IntroCutscene
 --- !u!1 &1602962891
 GameObject:
   m_ObjectHideFlags: 0
@@ -3870,7 +3870,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 322, y: -120}
+  m_AnchoredPosition: {x: 322, y: -132}
   m_SizeDelta: {x: 90, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1602962893

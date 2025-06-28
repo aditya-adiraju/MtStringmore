@@ -300,12 +300,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  minSpeed: 1
+  minSpeed: 5
   maxSpeed: 35
-  accelerationTime: 2
+  unzipDelay: 1
+  unzipSpeed: 10
+  accelerationTime: 1.5
   exitVelBoost: {x: 10, y: 10}
   exitDelayTime: 0.1
-  playerOffset: {x: 0, y: -2.5}
+  playerOffset: {x: 0, y: -3}
   firstPosition: {x: 1.39, y: -0.89}
   secondPosition: {x: -18, y: -0.89}
   pathRenderer: {fileID: 7425019369357927073}

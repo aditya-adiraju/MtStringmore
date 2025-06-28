@@ -22,16 +22,18 @@ namespace Interactables
         [SerializeField]
         private string conversationStartNode;
 
-        [Tooltip("If checked, the player faces left when they respawn on this checkpoint")]
-        [SerializeField] private bool respawnFacingLeft;
+        [Tooltip("If checked, the player faces left when they respawn on this checkpoint")] [SerializeField]
+        private bool respawnFacingLeft;
+
+        [SerializeField] private Vector2 spawnOffset;
 
         // internal properties not exposed to editor
         private DialogueRunner _dialogueRunner;
         private bool _isCurrentConversation;
-        
+
         public bool hasBeenHit;
         public event Action OnCheckpointHit;
-        
+
         public void Start()
         {
             hasBeenHit = false;
@@ -53,8 +55,10 @@ namespace Interactables
             {
                 HitCheckpoint();
                 anim.SetBool(HoistKey, true);
-                GameManager.Instance.UpdateCheckpointData(transform.position, respawnFacingLeft);
+                GameManager.Instance.UpdateCheckpointData(transform.position + (Vector3)spawnOffset,
+                    respawnFacingLeft);
             }
+
             float signX = respawnFacingLeft ? -1 : 1;
             if (player.Direction * signX > 0)
             {
