@@ -825,10 +825,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3558850468605755839, guid: 18f29e785311e42f1bc05ee9ebfee51b, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3558850468605755839, guid: 18f29e785311e42f1bc05ee9ebfee51b, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
       value: 25
       objectReference: {fileID: 0}
@@ -860,10 +856,6 @@ PrefabInstance:
       propertyPath: ColorModule.gradient.maxGradient.key2.a
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8436055249126771062, guid: 18f29e785311e42f1bc05ee9ebfee51b, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f55b059c9efd14f4eb0119939a194e85, type: 2}
     - target: {fileID: 8829670180774812626, guid: 18f29e785311e42f1bc05ee9ebfee51b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.18
@@ -922,10 +914,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2905708094114413808}
     m_Modifications:
-    - target: {fileID: 1569692818080651443, guid: b985a8eae167d4a9fada619bd6e022c0, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f55b059c9efd14f4eb0119939a194e85, type: 2}
     - target: {fileID: 1965784611509964292, guid: b985a8eae167d4a9fada619bd6e022c0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.71
@@ -965,10 +953,6 @@ PrefabInstance:
     - target: {fileID: 1965784611509964292, guid: b985a8eae167d4a9fada619bd6e022c0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7331748316283310714, guid: b985a8eae167d4a9fada619bd6e022c0, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 7331748316283310714, guid: b985a8eae167d4a9fada619bd6e022c0, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
@@ -1055,10 +1039,6 @@ PrefabInstance:
     - target: {fileID: 2157820636245743861, guid: edbb591cad7df44a8ad75a6c9e07e848, type: 3}
       propertyPath: ShapeModule.radiusThickness
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2157820636245743861, guid: edbb591cad7df44a8ad75a6c9e07e848, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 2157820636245743861, guid: edbb591cad7df44a8ad75a6c9e07e848, type: 3}
       propertyPath: VelocityModule.orbitalX.scalar
@@ -1196,10 +1176,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7891765724088111676, guid: edbb591cad7df44a8ad75a6c9e07e848, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f55b059c9efd14f4eb0119939a194e85, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1218,10 +1194,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2905708094114413808}
     m_Modifications:
-    - target: {fileID: 2663265022382963322, guid: 831e825fa178441a791e966c022ff7e3, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f55b059c9efd14f4eb0119939a194e85, type: 2}
     - target: {fileID: 3060939835872980173, guid: 831e825fa178441a791e966c022ff7e3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.16
@@ -1265,10 +1237,6 @@ PrefabInstance:
     - target: {fileID: 6089676073586700467, guid: 831e825fa178441a791e966c022ff7e3, type: 3}
       propertyPath: ShapeModule.m_Scale.y
       value: 0.42
-      objectReference: {fileID: 0}
-    - target: {fileID: 6089676073586700467, guid: 831e825fa178441a791e966c022ff7e3, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6089676073586700467, guid: 831e825fa178441a791e966c022ff7e3, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar

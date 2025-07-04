@@ -11,6 +11,7 @@ namespace Parallax
         [SerializeField] private float xParallaxFactor;
         [SerializeField] private float yParallaxFactor = 0.99f;
         [SerializeField, Min(0)] private float fallbackSpriteBounds = 10;
+        [SerializeField] private bool hasSize = true;
         private const float SmoothTime = 0.01f;
         private float _bgWidth;
         private Vector3 _velocity;
@@ -18,15 +19,16 @@ namespace Parallax
         private void Awake()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            _bgWidth = spriteRenderer ? spriteRenderer.bounds.size.x : fallbackSpriteBounds;
+            _bgWidth = spriteRenderer ? spriteRenderer.bounds.size.x : fallbackSpriteBounds * transform.lossyScale.x;
         }
 
         private void OnDrawGizmosSelected()
         {
+            if (!hasSize) return;
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            _bgWidth = spriteRenderer ? spriteRenderer.bounds.size.x : fallbackSpriteBounds;
+            _bgWidth = spriteRenderer ? spriteRenderer.bounds.size.x : fallbackSpriteBounds * transform.lossyScale.x;
             Vector3 size = new(_bgWidth, spriteRenderer ? spriteRenderer.bounds.size.y : 10, 1);
-            Gizmos.DrawWireCube(transform.position, transform.TransformVector(size));
+            Gizmos.DrawWireCube(transform.position, size);
         }
 
         /// <summary>
@@ -51,6 +53,7 @@ namespace Parallax
         /// <param name="screenWidth">Orthographic camera view width</param>
         public void Reposition(Vector2 camPos, float screenWidth)
         {
+            if (!hasSize) return;
             Vector3 pos = transform.position;
             if (pos.x + _bgWidth / 2f <= camPos.x + screenWidth / 2f)
             {

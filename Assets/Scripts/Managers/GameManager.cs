@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Interactables;
 using Player;
 using Save;
@@ -87,7 +88,7 @@ namespace Managers
 
         private void Awake()
         {
-            if (_instance != null && _instance != this)
+            if (_instance && _instance != this)
             {
                 Destroy(gameObject);
                 return;
@@ -99,7 +100,8 @@ namespace Managers
             if (SystemInfo.deviceType == DeviceType.Handheld)
             {
                 // TODO make maxFrameRate a setting
-                Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+                Application.targetFrameRate =
+                    Mathf.RoundToInt((float) Screen.resolutions.Max(res => res.refreshRateRatio.value));
             }
             Debug.Log("Application version: " + Application.version);
         }

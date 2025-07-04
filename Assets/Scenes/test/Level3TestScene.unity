@@ -49822,6 +49822,68 @@ Transform:
   - {fileID: 751221953}
   m_Father: {fileID: 753947846}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1925189132
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 40.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525794639821862015, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4909993582424439132, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: alwaysActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7451281123021468720, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: m_Name
+      value: GrahamCracker (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 1307412680595445304, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
 --- !u!1 &2008861686
 GameObject:
   m_ObjectHideFlags: 0
@@ -50058,3 +50120,4 @@ SceneRoots:
   - {fileID: 753947846}
   - {fileID: 1296083891}
   - {fileID: 130651596}
+  - {fileID: 1925189132}
