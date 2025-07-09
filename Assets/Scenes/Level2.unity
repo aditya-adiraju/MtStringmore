@@ -111670,11 +111670,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 742586270503421809, guid: 8b7a73a2733b56447817b14efc15d9bb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 65.100006
+      value: 114.06
       objectReference: {fileID: 0}
     - target: {fileID: 742586270503421809, guid: 8b7a73a2733b56447817b14efc15d9bb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.3
+      value: 30.66
       objectReference: {fileID: 0}
     - target: {fileID: 742586270503421809, guid: 8b7a73a2733b56447817b14efc15d9bb, type: 3}
       propertyPath: m_LocalPosition.z
@@ -111783,7 +111783,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4544653655168585683, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: m_Name
-      value: CheckpointFlag (0)
+      value: CheckpointFlag (0) (BreakBlock)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -111816,6 +111816,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialMove: breakBlock
+  tutorialText: Dash to break blocks
+  tutorialPosition: {x: 400, y: 0}
   tutorialEnd: {fileID: 435875637}
 --- !u!1001 &458754246
 PrefabInstance:
@@ -121915,7 +121917,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4544653655168585683, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: m_Name
-      value: CheckpointFlag (4)
+      value: CheckpointFlag (4) (Zipper)
       objectReference: {fileID: 0}
     - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
       propertyPath: respawnFacingLeft
@@ -121952,6 +121954,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialMove: zipper
+  tutorialText: 'Hold to zip
+
+    Release to launch'
+  tutorialPosition: {x: 360, y: 0}
   tutorialEnd: {fileID: 1584507853}
 --- !u!1001 &1277853034
 PrefabInstance:
@@ -124912,19 +124918,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 485476076255008130, guid: 8b7a73a2733b56447817b14efc15d9bb, type: 3}
       propertyPath: m_Size.x
-      value: 12
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 485476076255008130, guid: 8b7a73a2733b56447817b14efc15d9bb, type: 3}
       propertyPath: m_Size.y
-      value: 12
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 742586270503421809, guid: 8b7a73a2733b56447817b14efc15d9bb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 409.3
+      value: 401
       objectReference: {fileID: 0}
     - target: {fileID: 742586270503421809, guid: 8b7a73a2733b56447817b14efc15d9bb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 184.4
+      value: 227
       objectReference: {fileID: 0}
     - target: {fileID: 742586270503421809, guid: 8b7a73a2733b56447817b14efc15d9bb, type: 3}
       propertyPath: m_LocalPosition.z

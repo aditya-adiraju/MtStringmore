@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +13,8 @@ namespace UI
     public class TutorialMenu : MonoBehaviour
     {
         private static TutorialMenu _instance;
-
+        [SerializeField] private GameObject tutorialBox;
+        [SerializeField] private TMP_Text tutorialTextbox;
         [SerializeField] private Animator animator;
 
         [SerializeField] [Min(0)] [Tooltip("Fade duration (sec)")]
@@ -53,26 +55,34 @@ namespace UI
         private void OnSceneChanged(Scene current, Scene next)
         {
             _canvasGroup.alpha = 0;
-            animator.gameObject.SetActive(false);
+            tutorialBox.SetActive(false);
         }
 
         /// <summary>
         ///     Shows the tutorial with the given tutorial name (as defined in the animation controller).
         /// </summary>
         /// <param name="tutorialName">Tutorial name as specified in the animation controller</param>
-        public void ShowTutorial(string tutorialName)
+        /// <param name="tutorialText">Text to display for tutorial move</param>
+        /// <param name="tutorialPosition">Position to show the tutorial, relative to the center of the screen</param>
+        public void ShowTutorial(Vector2 tutorialPosition, string tutorialName, string tutorialText = "")
         {
             int tutorialNameHash = Animator.StringToHash(tutorialName);
-            animator.gameObject.SetActive(true);
+            tutorialBox.SetActive(true);
             // reading parameters requires the animator object to be active
             if (animator.parameters.All(parameter => parameter.nameHash != tutorialNameHash))
             {
                 Debug.LogError("Invalid tutorial move set " + tutorialName);
-                animator.gameObject.SetActive(false);
+                tutorialBox.SetActive(false);
                 return;
             }
 
+            tutorialBox.transform.localPosition = new Vector3(
+                tutorialPosition.x,
+                tutorialPosition.y,
+                tutorialBox.transform.position.z
+            );
             animator.SetTrigger(tutorialNameHash);
+            tutorialTextbox.text = tutorialText.Replace("\n", "\n");
 
             if (_fadeInCoroutine != null)
                 StopCoroutine(_fadeInCoroutine);
@@ -120,7 +130,7 @@ namespace UI
             }
 
             _canvasGroup.alpha = 0;
-            animator.gameObject.SetActive(false);
+            tutorialBox.SetActive(false);
         }
     }
 }
