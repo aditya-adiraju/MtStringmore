@@ -31,6 +31,9 @@ namespace Managers
         [SerializeField] private AudioClip[] collectableClips;
         [SerializeField, Tooltip("Max time between collections to continue combo (in seconds)")]
         private float collectableComboWindow = 0.6f;
+        
+        [SerializeField, Tooltip("Max time between max collections to continue combo (in seconds)")]
+        private float lastColletableComboWindow = 0.4f;
 
         private float _timeSinceLastCollect = Mathf.Infinity;
         private int _audioIndex;
@@ -100,8 +103,10 @@ namespace Managers
         public void PlayCollectableComboSound()
         {
             if (collectableClips == null || collectableClips.Length == 0) return;
-
-            if (_timeSinceLastCollect > collectableComboWindow)
+            
+            if (_timeSinceLastCollect > collectableComboWindow || 
+                (_audioIndex == collectableClips.Length - 1 &&
+                 _timeSinceLastCollect > lastColletableComboWindow))
             {
                 _audioIndex = 0;
             }
@@ -109,8 +114,9 @@ namespace Managers
             {
                 if (_audioIndex < collectableClips.Length - 1)
                     _audioIndex++;
-
             }
+            
+            
 
             _collectableAudioSource.PlayOneShot(collectableClips[_audioIndex]);
             _timeSinceLastCollect = 0f;

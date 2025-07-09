@@ -11,6 +11,7 @@ TagManager:
   - BounceArea
   - Trampoline
   - Resetter
+  - FinalCheckpoint
   layers:
   - Default
   - TransparentFX

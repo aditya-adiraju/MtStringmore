@@ -11,6 +11,8 @@ namespace UI
         [SerializeField] private Slider masterSlider;
         [SerializeField] private Slider bgmSlider;
         [SerializeField] private Slider sfxSlider;
+        [SerializeField] private Toggle timerToggle;
+        
 
         // Start is called before the first frame update
         private void Start()
@@ -18,9 +20,12 @@ namespace UI
             var savedMasterVolume = PlayerPrefs.GetFloat("Master");
             var savedBgmVolume = PlayerPrefs.GetFloat("BGM");
             var savedSfxVolume = PlayerPrefs.GetFloat("SFX");
+            int savedSpeedToggle = PlayerPrefs.GetInt("SpeedTime");
+
             masterSlider.value = savedMasterVolume;
             bgmSlider.value = savedBgmVolume;
             sfxSlider.value = savedSfxVolume;
+            timerToggle.isOn = savedSpeedToggle == 1;
 
             masterSlider.onValueChanged.AddListener(delegate
             {
@@ -29,6 +34,9 @@ namespace UI
             });
             bgmSlider.onValueChanged.AddListener(delegate { SoundManager.Instance.SetBgmVolume(bgmSlider.value); });
             sfxSlider.onValueChanged.AddListener(delegate { SoundManager.Instance.SetSfxVolume(sfxSlider.value); });
+            timerToggle.onValueChanged.AddListener(delegate { TimerManager.Instance.ToggleTimer(timerToggle.isOn); });
+   
         }
+       
     }
 }

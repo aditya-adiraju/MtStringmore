@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using Managers;
 
 namespace Save
 {
@@ -11,12 +11,22 @@ namespace Save
     public struct SaveData
     {
         public long dateTimeBinary;
-        public long timeTaken;
-        public Vector2[] candiesCollected;
-        public string sceneName;
         public bool checkpointFacesLeft;
-        public Vector2[] checkpointsReached;
         public List<string> levelsAccessed;
+
+        public LevelData level1Data;
+        public LevelData level2Data;
+        public LevelData level3Data;
+        public LevelData level4Data;
+    }
+
+    [Serializable]
+    public class LevelData
+    {
+        public int mostCandiesCollected = -1;
+        public int totalCandiesInLevel = -1;
+        public int leastDeaths = -1;
+        public string bestTime = GameManager.EmptySaveTime;
     }
 
     /// <summary>
@@ -25,9 +35,6 @@ namespace Save
     [Serializable]
     public struct SaveFileData
     {
-        public string farthestSceneReached;
-        public int farthestSceneIndexReached;
-        public long[] fastestTimes;
         public SaveData saveData;
     }
 }

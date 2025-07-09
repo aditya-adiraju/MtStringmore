@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Managers
         /// <summary>
         /// Number of checkpoints reached.
         /// </summary>
-        public List<Vector2> CheckpointsReached { get; } = new();
+        private List<Vector2> CheckpointsReached { get; } = new();
         
         /// <summary>
         /// Number of checkpoints reached.
@@ -66,14 +67,32 @@ namespace Managers
         public event Action Reset;
 
         /// <summary>
-        /// Action invoked on game data changed.
+        /// Action invoked when a level is completed.
         /// </summary>
-        public event Action GameDataChanged;
+        public event Action saveGame;
 
         /// <summary>
         /// Canvas to fade in/out when transitioning between scenes
         /// </summary>
         [SerializeField] private FadeEffects sceneTransitionCanvas;
+
+        [SerializeField] private List<string> levelNameList;
+
+        //<summary>
+        //the numbers of times Marshmallow dies in a level
+        //called by results manager and level select to display stats
+        //</summary>
+        public int thisLevelDeaths;
+        
+        //<summary>
+        //the time it took for player to beat a level
+        //called by results manager and level select to display stats
+        // in the form of hh:mm:ss
+        //</summary>
+        public string ThisLevelTime { get; set;}
+
+        public const string EmptySaveTime = "--:--:--";
+        
 
         private readonly Dictionary<Vector2, Collectable> _collectableLookup = new();
         private readonly HashSet<Vector2> _prevCheckpoints = new();
@@ -84,11 +103,25 @@ namespace Managers
         ///
         /// So we need to check that we're doing that LOL.
         /// </summary>
+        
         private bool _dontClearDataOnSceneChanged;
+
+        // <summary>
+        // saving the level data to here so it's easier to load.
+        // </summary>
+        public List<LevelData> allLevelData = new List<LevelData>();
 
         private void Awake()
         {
             if (_instance && _instance != this)
+                thisLevelDeaths = -1;
+            ThisLevelTime = EmptySaveTime;
+            // make sure list has 4 entries
+            for (int i = allLevelData.Count; i < 4; i++) {
+                allLevelData.Add(new LevelData());
+            }
+            
+            if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
@@ -114,6 +147,12 @@ namespace Managers
         private void OnDestroy()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            
+            PlayerController player = FindObjectOfType<PlayerController>();
+            if (player)
+            {
+                player.Death -= OnPlayerDeath;
+            }
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -122,16 +161,18 @@ namespace Managers
             Time.timeScale = 1f;
             if (!_dontClearDataOnSceneChanged)
             {
+                thisLevelDeaths = -1;
                 PlayerController player = FindObjectOfType<PlayerController>();
                 if (player)
                 {
+                    player.Death += OnPlayerDeath;
                     CheckPointPos = player.transform.position;
                     Debug.Log("Hopefully set checkpoint position to be player's position: " + CheckPointPos);
                 }
                 CheckpointsReached.Clear();
                 _prevCheckpoints.Clear();
                 _collectedCollectables.Clear();
-                GameDataChanged?.Invoke();
+                if (saveGame != null) saveGame.Invoke();
             }
             _collectableLookup.Clear();
             Collectable[] collectables = FindObjectsOfType<Collectable>();
@@ -149,6 +190,110 @@ namespace Managers
                 }
             }
             _dontClearDataOnSceneChanged = false;
+        }
+
+        private void OnPlayerDeath()
+        {
+            //brings the deaths from a negative sentinel value to 1
+            if (thisLevelDeaths == -1)
+            {
+                thisLevelDeaths += 2;
+            }
+            else
+            {
+                thisLevelDeaths++;
+            }
+        }
+        
+        // <summary>
+        // signals that the level is completed and the level data should be saved
+        // called by resultsManager once last checkpoint is reached
+        // </summary>
+        public void LevelCompleted()
+        {
+            SaveLevelDataToGameManager();
+            saveGame?.Invoke();
+        }
+
+        // <summary>
+        // saves all of the current game stats (thisLevelDeaths, thisLevelCandies, thisLevelTime)
+        // to the game manager level data variables
+        // </summary>
+        private void SaveLevelDataToGameManager()
+        {
+            string thisSceneName = SceneManager.GetActiveScene().name;
+            int idx = levelNameList.IndexOf(thisSceneName);
+            if (idx == -1)
+            {
+                Debug.Log("GameManager could not determine what level we are currently in");
+                return;
+            } 
+            SaveToCorrectLevelVariable(idx);
+        }
+        
+        private bool BeatsCurrentTime(string currBestTimeSpan, string newTimeSpan)
+        {
+            if (currBestTimeSpan == EmptySaveTime)
+                return true;
+            if (newTimeSpan == EmptySaveTime)
+                return false;
+
+            TimeSpan t1 = ParseCustomTime(currBestTimeSpan);
+            TimeSpan t2 = ParseCustomTime(newTimeSpan);
+
+            return t2 < t1;
+        }
+
+        private TimeSpan ParseCustomTime(string time)
+        {
+            string[] parts = time.Split(':');
+            if (parts.Length != 3)
+            {
+                Debug.LogWarning($"Invalid time format: {time}");
+                return TimeSpan.MaxValue;
+            }
+
+            if (!int.TryParse(parts[0], out var minutes) ||
+                !int.TryParse(parts[1], out var seconds) ||
+                !int.TryParse(parts[2], out var milliseconds))
+            {
+                Debug.LogWarning($"Failed to parse parts of: {time}");
+                return TimeSpan.MaxValue;
+            }
+
+            return new TimeSpan(0, 0, minutes, seconds, milliseconds);
+        }
+        
+        private void SaveToCorrectLevelVariable(int index)
+        {
+            if (index >= 0 && index < allLevelData.Count)
+            {
+                LevelData updatedLevelData = allLevelData[index];
+                // Candies
+                if (updatedLevelData.mostCandiesCollected < _collectedCollectables.Count)
+                    updatedLevelData.mostCandiesCollected = _collectedCollectables.Count;
+                updatedLevelData.totalCandiesInLevel = _collectableLookup.Count;
+                // Deaths
+                if (updatedLevelData.leastDeaths == -1 && thisLevelDeaths == -1)
+                {
+                    updatedLevelData.leastDeaths = 0;
+                }
+                else
+                {
+                    if (updatedLevelData.leastDeaths == -1 || updatedLevelData.leastDeaths > thisLevelDeaths)
+                        updatedLevelData.leastDeaths = thisLevelDeaths;
+                }
+                
+                // Time
+                if (BeatsCurrentTime(updatedLevelData.bestTime, ThisLevelTime))
+                    updatedLevelData.bestTime = ThisLevelTime;
+
+                allLevelData[index] = updatedLevelData;
+            }
+            else
+            {
+                Debug.Log("Could not save data to GameManager");
+            }
         }
 
         /// <summary>
@@ -169,7 +314,6 @@ namespace Managers
             CheckPointPos = newCheckpointLocation;
             RespawnFacingLeft = shouldFaceLeft;
             CheckpointsReached.Add(newCheckpointLocation);
-            GameDataChanged?.Invoke();
         }
 
         /// <summary>
@@ -178,22 +322,19 @@ namespace Managers
         /// <param name="saveData">Save data from file</param>
         public void UpdateFromSaveData(SaveData saveData)
         {
-            Vector2[] checkpointsReached = saveData.checkpointsReached;
             bool shouldFaceLeft = saveData.checkpointFacesLeft;
-            if (checkpointsReached.Length > 0) CheckPointPos = checkpointsReached[^1];
             RespawnFacingLeft = shouldFaceLeft;
             CheckpointsReached.Clear();
             _prevCheckpoints.Clear();
-            CheckpointsReached.AddRange(checkpointsReached);
-            foreach (Vector2 checkpointReached in checkpointsReached)
-                _prevCheckpoints.Add(checkpointReached);
             _collectedCollectables.Clear();
-            foreach (Vector2 candyCollected in saveData.candiesCollected)
-                _collectedCollectables.Add(candyCollected);
-    
             LevelsAccessed.AddRange(saveData.levelsAccessed);
+            
+            allLevelData[0] = saveData.level1Data;
+            allLevelData[1] = saveData.level2Data;
+            allLevelData[2] = saveData.level3Data;
+            allLevelData[3] = saveData.level4Data;
 
-            GameDataChanged?.Invoke();
+            saveGame?.Invoke();
             _dontClearDataOnSceneChanged = true;
         }
 
@@ -211,9 +352,9 @@ namespace Managers
         public void ResetCandyCollected()
         {
             _collectedCollectables.Clear();
-            GameDataChanged?.Invoke();
         }
 
+        // ReSharper disable Unity.PerformanceAnalysis
         /// <summary>
         /// Resets core components like player, Knitby, camera, etc to the state at
         /// the last checkpoint
@@ -224,6 +365,7 @@ namespace Managers
             sceneTransitionCanvas.InvokeFadeInAndOut();
         }
 
+        // ReSharper disable Unity.PerformanceAnalysis
         private void OnFadeIn()
         {
             Reset?.Invoke();

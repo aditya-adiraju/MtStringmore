@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using Managers;
 using Player;
@@ -17,21 +16,21 @@ namespace Save
     {
         private static readonly string SaveFileName = "data.save";
         [SerializeField] private string mainMenuScene;
-
-        private int _farthestSceneIndexReached;
-        private string _farthestSceneName;
+        
         private Thread _saveThread;
         private Vector2? _forcedNextFramePosition;
+        private GameManager _gameManager;
 
         private void Awake()
         {
-            GameManager.Instance.GameDataChanged += SaveFile;
+            _gameManager = GameManager.Instance;
+            _gameManager.saveGame += SaveFile;
             SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
         }
 
         private void OnDestroy()
         {
-            GameManager.Instance.GameDataChanged -= SaveFile;
+            _gameManager.saveGame -= SaveFile;
             SceneManager.sceneLoaded -= SceneManagerOnSceneLoaded;
         }
 
@@ -46,13 +45,7 @@ namespace Save
         private void SceneManagerOnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (scene.name == mainMenuScene) return;
-
-            if (scene.buildIndex > _farthestSceneIndexReached)
-            {
-                _farthestSceneName = scene.name;
-                _farthestSceneIndexReached = scene.buildIndex;
-            }
-
+            
             if (_forcedNextFramePosition != null)
             {
                 // TODO sendMessage is hacky and WILL BREAK
@@ -78,16 +71,17 @@ namespace Save
         {
             return new SaveFileData
             {
-                farthestSceneReached = _farthestSceneName,
-                farthestSceneIndexReached = _farthestSceneIndexReached,
                 saveData = new SaveData
                 {
-                    candiesCollected = GameManager.Instance.CollectablePositionsCollected.ToArray(),
-                    checkpointsReached = GameManager.Instance.CheckpointsReached.ToArray(),
-                    checkpointFacesLeft = GameManager.Instance.RespawnFacingLeft,
+                    checkpointFacesLeft = _gameManager.RespawnFacingLeft,
                     dateTimeBinary = DateTime.Now.ToBinary(),
-                    sceneName = sceneOverride ?? SceneManager.GetActiveScene().name,
-                    levelsAccessed = GameManager.Instance.LevelsAccessed
+                    levelsAccessed = _gameManager.LevelsAccessed,
+                    
+                    level1Data = _gameManager.allLevelData[0],
+                    level2Data = _gameManager.allLevelData[1],
+                    level3Data = _gameManager.allLevelData[2],
+                    level4Data = _gameManager.allLevelData[3]
+                    
                 }
             };
         }
@@ -114,8 +108,6 @@ namespace Save
             try
             {
                 SaveFileData saveFileData = JsonUtility.FromJson<SaveFileData>(File.ReadAllText(filePath));
-                _farthestSceneName = saveFileData.farthestSceneReached;
-                _farthestSceneIndexReached = saveFileData.farthestSceneIndexReached;
                 return saveFileData;
             }
             catch (Exception e)
@@ -131,23 +123,8 @@ namespace Save
             if (optionalData == null) return null;
 
             SaveData saveData = optionalData.Value.saveData;
-            GameManager.Instance.UpdateFromSaveData(saveData);
+            _gameManager.UpdateFromSaveData(saveData);
             return saveData;
-        }
-
-        public bool LoadExistingSave()
-        {
-            SaveData? saveData = LoadAndApplySaveData();
-            if (saveData == null) return false;
-
-            SceneManager.LoadScene(saveData.Value.sceneName);
-
-            if (saveData.Value.checkpointsReached.Length > 0)
-            {
-                _forcedNextFramePosition = saveData.Value.checkpointsReached[^1];
-            }
-
-            return true;
         }
 
         public bool PreloadSaveData()
