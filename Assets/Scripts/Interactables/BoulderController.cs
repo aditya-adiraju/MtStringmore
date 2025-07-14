@@ -1,3 +1,4 @@
+using Player;
 using UnityEngine;
 
 namespace Interactables
@@ -36,6 +37,14 @@ namespace Interactables
                 }
 
                 Destroy(gameObject);
+            }
+            else
+            {
+                PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+                if (player)
+                {
+                    player.TryKill();
+                }
             }
         }
 

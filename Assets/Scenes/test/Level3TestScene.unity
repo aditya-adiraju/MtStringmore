@@ -49874,6 +49874,10 @@ PrefabInstance:
       propertyPath: alwaysActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7160685381677348108, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
+      propertyPath: alwaysActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7451281123021468720, guid: 53b8a3df898c040e9b019dfd763da818, type: 3}
       propertyPath: m_Name
       value: GrahamCracker (1)

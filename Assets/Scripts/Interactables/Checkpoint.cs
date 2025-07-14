@@ -26,6 +26,11 @@ namespace Interactables
         private bool respawnFacingLeft;
 
         [SerializeField] private Vector2 spawnOffset;
+        
+        /// <summary>
+        /// Whether this checkpoint has a conversation.
+        /// </summary>
+        public bool HasConversation => !string.IsNullOrWhiteSpace(conversationStartNode);
 
         // internal properties not exposed to editor
         private DialogueRunner _dialogueRunner;

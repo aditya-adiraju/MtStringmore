@@ -31,7 +31,8 @@ namespace DevConsole
 
                 for (int i = 0; i < checkpoints.Length; i++)
                 {
-                    sw.WriteLine($"Checkpoint {i} ({checkpoints[i].name}): {checkpoints[i].transform.position}");
+                    string isEnd = checkpoints[i].HasConversation ? " (end)" : "";
+                    sw.WriteLine($"Checkpoint {i} ({checkpoints[i].name}): {checkpoints[i].transform.position}{isEnd}");
                 }
 
                 return;

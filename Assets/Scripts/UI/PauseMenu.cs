@@ -16,19 +16,27 @@ namespace UI
         private static PauseMenu _instance;
 
         private static bool _gameIsPaused;
+
+        /// <summary>
+        /// Whether the pause menu is forced-disabled (e.g. on end of level UI).
+        /// </summary>
+        public static bool IsPauseDisabled { get; set; }
+
         [SerializeField] private GameObject pauseMenuUI;
         [SerializeField] private Button pauseButton;
         [SerializeField] private TextMeshProUGUI versionNumber;
         [SerializeField] private string mainMenuSceneName = "MainMenu";
         private float _prevTimescale;
         private SaveDataManager _saveDataManager;
+        
+        /// <summary>
+        /// Whether we can open pause menu: i.e. not main menu and not force disabled
+        /// </summary>
+        private bool CanOpenPauseMenu => SceneManager.GetActiveScene().name != mainMenuSceneName && !IsPauseDisabled;
 
         /// <summary>
         ///     Gets the "singleton" instance of the pause menu.
         /// </summary>
-        /// <remarks>
-        ///     Maybe I should do a lifetime check?
-        /// </remarks>
         public static PauseMenu Instance
         {
             get
@@ -54,7 +62,7 @@ namespace UI
 
         private void Update()
         {
-            if (!Input.GetKeyDown(KeyCode.Escape) || SceneManager.GetActiveScene().name == mainMenuSceneName) return;
+            if (!Input.GetKeyDown(KeyCode.Escape) || !CanOpenPauseMenu) return;
             if (_gameIsPaused)
                 Resume();
             else
@@ -68,7 +76,7 @@ namespace UI
 
         private void OnApplicationPause(bool paused)
         {
-            if (!_gameIsPaused && paused && SceneManager.GetActiveScene().name != mainMenuSceneName) Pause();
+            if (!_gameIsPaused && paused && CanOpenPauseMenu) Pause();
         }
 
         private void OnSceneChanged(Scene current, Scene next)

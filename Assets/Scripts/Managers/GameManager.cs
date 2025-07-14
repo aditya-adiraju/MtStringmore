@@ -246,22 +246,11 @@ namespace Managers
 
         private TimeSpan ParseCustomTime(string time)
         {
-            string[] parts = time.Split(':');
-            if (parts.Length != 3)
-            {
-                Debug.LogWarning($"Invalid time format: {time}");
-                return TimeSpan.MaxValue;
-            }
+            if (TimeSpan.TryParseExact(time, @"mm\:ss\:ff", null, out TimeSpan t))
+                return t;
+            Debug.LogWarning($"Failed to parse parts of: {time}");
+            return TimeSpan.MaxValue;
 
-            if (!int.TryParse(parts[0], out var minutes) ||
-                !int.TryParse(parts[1], out var seconds) ||
-                !int.TryParse(parts[2], out var milliseconds))
-            {
-                Debug.LogWarning($"Failed to parse parts of: {time}");
-                return TimeSpan.MaxValue;
-            }
-
-            return new TimeSpan(0, 0, minutes, seconds, milliseconds);
         }
         
         private void SaveToCorrectLevelVariable(int index)

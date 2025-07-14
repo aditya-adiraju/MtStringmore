@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Managers;
 using Save;
 using TMPro;
@@ -38,7 +39,7 @@ namespace UI
     
         private List<string> unlockedScenes;
         private string selectedScene;
-        private readonly List<Button> levelButtons = new List<Button>();
+        private readonly List<Button> levelButtons = new();
         private GameManager _gameManager;
 
         private void Awake()
@@ -85,8 +86,20 @@ namespace UI
             }
 
             playButton.onClick.AddListener(OnPlayClicked);
+            
+            // hack: we don't actually store the latest unlocked scene and the unlockedScenes is potentially unordered
+            //       so just grab the button that's interactable
+            int autoSelectIndex = levelButtons.Count(button => button.interactable) - 1;
+            if (autoSelectIndex >= 0 && autoSelectIndex < levelButtons.Count)
+            {
+                OnLevelSelected(allLevelLoadingSceneNames[autoSelectIndex], levelButtons[autoSelectIndex], autoSelectIndex+1);
+            }
+            else
+            {
+                Debug.LogError("Yo what the hell bruh where all my b u t t o n s");
+            }
         }
-    
+
         private void PlayClickSound()
         {
             if (canvasAudioSource != null && buttonClickSound != null)

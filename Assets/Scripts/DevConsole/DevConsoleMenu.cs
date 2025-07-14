@@ -166,6 +166,7 @@ namespace DevConsole
             RegisterCommand(new ResetCommand());
             RegisterCommand(new HelpCommand(this));
             RegisterCommand(new EnableCheatsCommand(this));
+            RegisterCommand(new QualityOfLifeCommand());
             inputField.onSubmit.AddListener(OnConsoleSubmit);
             if (!FindObjectOfType<EventSystem>())
             {
@@ -186,10 +187,17 @@ namespace DevConsole
                 {
                     inputField.ActivateInputField();
                 }
+                else
+                {
+                    // trim off extra ` character upon close
+                    inputField.SetTextWithoutNotify(inputField.text[..^1]);
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.Escape) && consoleCanvas.gameObject.activeSelf)
             {
+                // trim off escape character upon close
+                inputField.SetTextWithoutNotify(inputField.text.Replace("\x001b",""));
                 consoleCanvas.gameObject.SetActive(false);
             }
 

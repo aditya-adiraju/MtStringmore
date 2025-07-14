@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using System;
 using Interactables;
 using Save;
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -75,16 +74,12 @@ namespace Managers
             UpdateTimerCount();
             SaveGame();
             EndLevel();
+            PauseMenu.IsPauseDisabled = true;
         }
 
         private void SaveGame()
         {
             _gameManager.LevelCompleted();
-        }
-
-        private void Update()
-        {
-            if (resultsPane.activeSelf && Input.GetButtonDown("Debug Reset")) return;
         }
 
         private void UpdateCollectableCount()
@@ -121,12 +116,14 @@ namespace Managers
             Time.timeScale = 1f;
             _gameManager.ResetCandyCollected();
             isResultsPageOpen = false;
+            PauseMenu.IsPauseDisabled = false;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         
         public void LoadMainMenu()
         {
             Time.timeScale = 1f;
+            PauseMenu.IsPauseDisabled = false;
             SceneManager.LoadScene("MainMenu");
         }
 
@@ -135,6 +132,7 @@ namespace Managers
             resultsPane.SetActive(false);
             isResultsPageOpen = false;
             Time.timeScale = 1f;
+            PauseMenu.IsPauseDisabled = false;
             _gameManager.ResetCandyCollected();
             finalCheckpoint.StartConversation();
         }

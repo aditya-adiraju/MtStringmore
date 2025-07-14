@@ -6,17 +6,15 @@ using UnityEngine;
 namespace Interactables
 {
     /// <summary>
-    /// Behaviour of an object that moves down, collides with a bottom object (or player), then moves up, repeatedly.
+    /// Behaviour of an object that controls two parts that move towards with each other,
+    /// collides with the player or the bottom object, then moves back, repeatedly.
     ///
     /// Kills the player if it gets crushed.
     /// </summary>
-    /// <remarks>
-    /// There's probably better ways to implement this than constantly checking for collision with the bottom collider
-    /// since I use a kinematic rigidbody, but I cba.
-    /// </remarks>
-    [RequireComponent(typeof(Rigidbody2D))]
     public class GrahamCrackerBehaviour : MonoBehaviour
     {
+        [SerializeField] private GrahamCrackerPart bottomPart;
+        [SerializeField] private GrahamCrackerPart topPart;
         [SerializeField, Min(0), Tooltip("Time in up state, seconds")]
         private float timeStayUp = 4;
 
@@ -29,9 +27,6 @@ namespace Interactables
         [SerializeField, Min(0), Tooltip("Time staying down, seconds")]
         private float timeStayDown;
 
-        [SerializeField, Tooltip("Bottom collider")]
-        private Collider2D bottomCollider;
-
         [SerializeField]
         private AudioSource warningSound;
 
@@ -42,10 +37,11 @@ namespace Interactables
         [SerializeField, Min(0), Tooltip("Time(sec) after closing starts to play closing sound")]
         private float closingSoundDelay = 0.2f;
         [SerializeField] private bool alwaysActive;
-        private Rigidbody2D _rigidbody2D;
-        private float _startingDistance;
-        private State _state;
         private bool _active;
+        private bool _bottomCollide;
+        private bool _topCollide;
+        private bool _bottomHasReset;
+        private bool _topHasReset;
 
         /// <summary>
         /// Whether the graham cracker can close.
@@ -55,16 +51,57 @@ namespace Interactables
             private get => _active;
             set
             {
-                _active = value;
+                bool newValue = value || alwaysActive;
+                if (_active == newValue) return;
+                _active = newValue;
                 if (_active) StartCoroutine(SlamRoutine());
+            }
+        }
+
+        /// <summary>
+        /// Called when a part has registered a collision with an object.
+        /// </summary>
+        /// <param name="isBottom">Whether this is the bottom part</param>
+        /// <param name="player">PlayerController attached to the object if present</param>
+        public void RegisterCollision(bool isBottom, PlayerController player)
+        {
+            if (isBottom) _bottomCollide = true;
+            else _topCollide = true;
+            if (_bottomCollide && _topCollide)
+            {
+                if (player)
+                {
+                    player.TryKill();
+                    bottomPart.StopMotion();
+                    topPart.StopMotion();
+                }
+                else
+                {
+                    StartCoroutine(RecoverCoroutine());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called to signal that the corresponding graham cracker part has reset.
+        /// </summary>
+        /// <param name="isBottom">Whether it's the bottom that's reset or the top</param>
+        public void RegisterReset(bool isBottom)
+        {
+            if (isBottom) _bottomHasReset = true;
+            else _topHasReset = true;
+
+            if (_bottomHasReset && _topHasReset)
+            {
+                StopAllCoroutines();
+                if (Active) StartCoroutine(SlamRoutine());
+                _bottomHasReset = false;
+                _topHasReset = false;
             }
         }
 
         private void Awake()
         {
-            _rigidbody2D = GetComponent<Rigidbody2D>();
-            _startingDistance = Vector2.Distance(transform.position, bottomCollider.transform.position);
-            _state = State.WaitTop;
             Active = alwaysActive;
             if (Active) StartCoroutine(SlamRoutine());
             GameManager.Instance.Reset += OnReset;
@@ -75,36 +112,16 @@ namespace Interactables
             GameManager.Instance.Reset -= OnReset;
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (_state != State.MoveDown || Vector2.Dot(other.GetContact(0).normal, _rigidbody2D.velocity) > 0) return;
-            if (other.collider.TryGetComponent(out PlayerController playerController))
-            {
-                playerController.TryKill();
-                _rigidbody2D.bodyType = RigidbodyType2D.Static;
-            } else StartCoroutine(RecoverCoroutine());
-        }
-
-        private void FixedUpdate()
-        {
-            if (_state == State.MoveDown && _rigidbody2D.IsTouching(bottomCollider))
-            {
-                StartCoroutine(RecoverCoroutine());
-            }
-        }
-
         /// <summary>
         /// Called on reset: stops coroutines and resets to be at the top.
         /// </summary>
         private void OnReset()
         {
             StopAllCoroutines();
-            _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
-            Vector2 dir = transform.position - bottomCollider.transform.position;
-            _rigidbody2D.position = (Vector2)bottomCollider.transform.position + dir.normalized * _startingDistance;
-            _rigidbody2D.velocity = Vector2.zero;
             Active = alwaysActive;
             if (Active) StartCoroutine(SlamRoutine());
+            bottomPart.OnGameReset();
+            topPart.OnGameReset();
         }
 
         /// <summary>
@@ -113,12 +130,11 @@ namespace Interactables
         /// <returns>Coroutine</returns>
         private IEnumerator SlamRoutine()
         {
-            _state = State.WaitTop;
             yield return new WaitForSeconds(timeStayUp - warningSoundTime);
             warningSound.Play();
             yield return new WaitForSeconds(warningSoundTime);
-            _rigidbody2D.velocity = velocityDown * -(Vector2)transform.up;
-            _state = State.MoveDown;
+            bottomPart.StartMotion(velocityDown);
+            topPart.StartMotion(velocityDown);
             closingSound.PlayDelayed(closingSoundDelay);
         }
 
@@ -128,44 +144,11 @@ namespace Interactables
         /// <returns>Coroutine</returns>
         private IEnumerator RecoverCoroutine()
         {
-            _state = State.WaitBottom;
-            _rigidbody2D.velocity = Vector2.zero;
+            bottomPart.StopMotion();
+            topPart.StopMotion();
             yield return new WaitForSeconds(timeStayDown);
-            _state = State.MoveUp;
-            _rigidbody2D.velocity = velocityUp * (Vector2) transform.up;
-            while (Vector2.Distance(transform.position, bottomCollider.transform.position) < _startingDistance)
-            {
-                yield return new WaitForFixedUpdate();
-            }
-
-            _rigidbody2D.velocity = Vector2.zero;
-            if (Active) StartCoroutine(SlamRoutine());
-        }
-
-        /// <summary>
-        /// Internal states.
-        /// </summary>
-        private enum State
-        {
-            /// <summary>
-            /// Currently waiting at the top.
-            /// </summary>
-            WaitTop,
-
-            /// <summary>
-            /// Currently waiting at the bottom.
-            /// </summary>
-            WaitBottom,
-
-            /// <summary>
-            /// Currently moving down.
-            /// </summary>
-            MoveDown,
-
-            /// <summary>
-            /// Currently moving up.
-            /// </summary>
-            MoveUp
+            bottomPart.MoveAway(velocityUp);
+            topPart.MoveAway(velocityUp);
         }
     }
 }
