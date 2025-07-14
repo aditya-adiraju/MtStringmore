@@ -559,8 +559,6 @@ namespace Player
                 Dashed?.Invoke();
                 _timeDashed = _time;
                 TimeDashEnded = Time.time + dashTime;
-                // for battle of the concepts: add temp dash anim
-                Instantiate(poofSmoke, transform.position, new Quaternion());
             }
             else if (PlayerState is PlayerStateEnum.Dash)
             {

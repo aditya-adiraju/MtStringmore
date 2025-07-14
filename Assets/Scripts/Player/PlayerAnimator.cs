@@ -36,9 +36,9 @@ namespace Player
         // @formatter:off
         [Header("References")]
         [SerializeField] private Animator anim;
-
-        [SerializeField] private GameObject deathSmoke;
         [SerializeField] private SpriteRenderer sprite;
+        [SerializeField] private GameObject deathSmoke;
+        [SerializeField] private ParticleSystem dashDust;
 
         // [Header("Particles")] [SerializeField] private ParticleSystem _jumpParticles;
         // [SerializeField] private ParticleSystem _launchParticles;
@@ -57,7 +57,7 @@ namespace Player
         [Header("Visual")]
         [Tooltip("Player position offset when hanging onto object (small red wire sphere gizmo)")]
         [SerializeField] private Vector2 hangOffset;
-        [SerializeField, Range(0, 1), Tooltip("Multiplier of swing angle")] private float swingDeltaMultiplier = 0.5f;
+        [SerializeField][Range(0, 1)][Tooltip("Multiplier of swing angle")] private float swingDeltaMultiplier = 0.5f;
         // @formatter:on
 
         [SerializeField] private Color[] roastColors;
@@ -157,12 +157,13 @@ namespace Player
                 transform.localEulerAngles = Vector3.zero;
                 return;
             }
-            Vector2 diff = ((Vector2)transform.position) - _swingPos.Value;
+
+            Vector2 diff = (Vector2)transform.position - _swingPos.Value;
             // yes, this is meant to be Atan2(x, y) as we want the vector perpendicular
             float angle = Mathf.Atan2(diff.x, -diff.y) * Mathf.Rad2Deg;
-            transform.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(angle, 0, 1-swingDeltaMultiplier));
+            transform.localEulerAngles = new Vector3(0, 0, Mathf.LerpAngle(angle, 0, 1 - swingDeltaMultiplier));
         }
-        
+
         private void HandleIdle()
         {
             // if paused, don't change the idle state
@@ -307,6 +308,7 @@ namespace Player
         {
             _source.clip = dashSound;
             _source.PlayOneShot(dashSound);
+            dashDust.Play();
         }
 
         private void OnSwingDifferentDirection(bool clockwise)
