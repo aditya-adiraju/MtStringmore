@@ -22,8 +22,8 @@ namespace Interactables
         [SerializeField]
         private string conversationStartNode;
 
-        [Tooltip("If checked, the player faces left when they respawn on this checkpoint")] [SerializeField]
-        private bool respawnFacingLeft;
+        [Tooltip("If checked, the player faces left when they respawn on this checkpoint")]
+        public bool respawnFacingLeft;
 
         [SerializeField] private Vector2 spawnOffset;
         
