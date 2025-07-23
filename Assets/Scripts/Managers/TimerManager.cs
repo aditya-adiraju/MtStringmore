@@ -20,7 +20,6 @@ namespace Managers
             }
         }
 
-        [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI inGameTimerText;
         [SerializeField] private GameObject resultsWindow;
         [SerializeField] private Toggle timerToggle;
@@ -34,7 +33,12 @@ namespace Managers
         private void Awake()
         {
             if (Instance != this) Destroy(gameObject);
-            ElapsedLevelTime = 0;
+            string sceneName = SceneManager.GetActiveScene().name;
+            //only reset time when in a level, not in a cutscene
+            if (!GameManager.Instance.cutsceneList.Contains(sceneName))
+            {
+                ElapsedLevelTime = 0;
+            }
             inGameTimerText.enabled = false;
         }
         
@@ -62,7 +66,6 @@ namespace Managers
             TimeSpan timeSpan = TimeSpan.FromSeconds(ElapsedLevelTime);
             ElapsedLevelTimeString = timeSpan.ToString(@"mm\:ss\:ff");
 
-            timerText.text = ElapsedLevelTimeString;
             inGameTimerText.text = ElapsedLevelTimeString;
         }
 

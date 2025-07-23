@@ -1,4 +1,6 @@
 using System.Collections;
+using JetBrains.Annotations;
+using Player;
 using UnityEngine;
 using Yarn.Unity;
 
@@ -6,32 +8,100 @@ namespace Yarn
 {
     public class CutsceneCharacter : MonoBehaviour
     {
+        [CanBeNull] private PlayerAnimator _playerAnimator;
         private Animator _animator;
+        private static readonly int YVelocityKey = Animator.StringToHash("YVelocity");
+        private static readonly int AnimSpeed = Animator.StringToHash("AnimSpeed");
+        private static readonly int WallChangedKey = Animator.StringToHash("WallChanged");
+        private static readonly int JumpKey = Animator.StringToHash("Jump");
         private SpriteRenderer _spriteRenderer;
+        private bool _isMoving;
 
         private void Awake()
         {
+            _playerAnimator = gameObject.GetComponentInChildren<PlayerAnimator>();
             _spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
             _animator = gameObject.GetComponentInChildren<Animator>();
         }
 
         // move character within cutscene
-        // yarn syntax is <<move CharacterObjectName x y speed [flip] [disable] [z]>>
-        // e.g. <<move Knitby 3 1 20 true false 1>>
+        // yarn syntax is <<move CharacterObjectName x y speed [flip] [keepAnim] [waitAnim] [z] [animSpeed]>>
+        // e.g. <<move Knitby 3 1 20>>
         [YarnCommand("move")]
         public IEnumerator MoveCoroutine(float x, float y, float speed, bool flipSprite = false,
-            bool disableAnimation = false, float z = 0)
+            bool keepAnimation = true, bool waitAnimation = false, float z = 0, float animSpeed = 1f)
         {
             _animator.enabled = true;
+            _animator.SetFloat(AnimSpeed, animSpeed);
             Vector3 position = new(x, y, z == 0 ? transform.position.z : z);
             if (flipSprite) _spriteRenderer.flipX = !_spriteRenderer.flipX;
+            _isMoving = true;
             while (transform.position != position)
             {
                 transform.position = Vector3.MoveTowards(transform.position, position, Time.deltaTime * speed);
                 yield return null;
             }
-
-            if (disableAnimation) yield return SetAnimation(false);
+            _isMoving = false;
+            yield return SetAnimation(keepAnimation, waitAnimation);
+        }
+        
+        // leap character within cutscene
+        // yarn syntax is
+        // <<leap CharacterObjectName xVel yVelInitial duration [grounded] [gravity] [flip] [keepAnim] [waitAnim]>>
+        // e.g. <<leap Knitby 3 1 20 true -66 true true true>>
+        [YarnCommand("leap")]
+        public IEnumerator LeapCoroutine(float xVel, float yVelInitial, float duration, bool grounded = false, float gravity = -66, bool flipSprite = false,
+            bool keepAnimation = true, bool waitAnimation = false)
+        {
+            _animator.enabled = true;
+            if (flipSprite) _spriteRenderer.flipX = !_spriteRenderer.flipX;
+            _isMoving = true;
+            
+            float yVel = yVelInitial;
+            
+            // apply animation changes to either marshmallow or knitby
+            if (_playerAnimator)
+            {
+                _playerAnimator.OnWallChanged(false);
+                _playerAnimator.OnJumped();
+                _playerAnimator.OnGroundedChanged(false, 0f);
+            }
+            else
+            {
+                // 1.67f for 0.5s = 0.83f as the numerator
+                _animator.SetFloat(AnimSpeed, 0.83f / duration );
+            }
+            for (float elapsedTime = 0; elapsedTime <= duration; elapsedTime += Time.deltaTime)
+            {
+                // do scuffed kinematics
+                transform.position = new Vector3(
+                    transform.position.x + Time.deltaTime * xVel,
+                    transform.position.y + yVel * Time.deltaTime + 0.5f * gravity * Mathf.Pow(Time.deltaTime, 2.0f),
+                    transform.position.z);
+                // update new yVel
+                yVel += Time.deltaTime * gravity;
+                _animator.SetFloat(YVelocityKey, yVel);
+                yield return null;
+            }
+            yield return SetAnimation(keepAnimation, waitAnimation);
+            _isMoving = false;
+            if (_playerAnimator)
+            {
+                if (grounded) _playerAnimator?.OnGroundedChanged(true, 0f);
+                else
+                {
+                    _animator.SetBool(WallChangedKey, true);
+                    _animator.ResetTrigger(JumpKey);
+                }
+            } else _animator.SetFloat(AnimSpeed, 1f); // reset changes made to knitby jump speed
+        }
+        
+        // leap_nonblock is a non-blocking version of leap with identical syntax
+        [YarnCommand("leap_nonblock")]
+        public void Leap(float xVel, float yVelInitial, float duration, bool grounded = false, float gravity = -66, 
+            bool flipSprite = false, bool keepAnimation = true, bool waitAnimation = false)
+        {
+            StartCoroutine(LeapCoroutine(xVel, yVelInitial, duration, grounded, gravity, flipSprite, keepAnimation, waitAnimation));
         }
 
         [YarnCommand("flip")]
@@ -42,10 +112,10 @@ namespace Yarn
 
         // run is a non-blocking version of move with identical syntax
         [YarnCommand("run")]
-        public void Run(float x, float y, float speed, bool flipSprite = false, bool disableAnimation = false,
-            float z = 0)
+        public void Run(float x, float y, float speed, bool flipSprite = false, bool keepAnimation = true,
+            bool waitAnimation = false, float z = 0, float animSpeed = 1f)
         {
-            StartCoroutine(MoveCoroutine(x, y, speed, flipSprite, disableAnimation, z));
+            StartCoroutine(MoveCoroutine(x, y, speed, flipSprite, keepAnimation, waitAnimation, z, animSpeed));
         }
 
         [YarnCommand("hide")]
@@ -61,14 +131,25 @@ namespace Yarn
         }
 
         [YarnCommand("set_animation")]
-        public IEnumerator SetAnimation(bool state)
+        public IEnumerator SetAnimation(bool state, bool wait)
         {
             // wait until current animation is finished
-            int finishTime = Mathf.CeilToInt(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
-            yield return new WaitWhile(() => _animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= finishTime &&
-                                             !Mathf.Approximately(
-                                                 _animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 0.0f));
+            if (wait)
+            {
+                int finishTime = Mathf.CeilToInt(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+                if (finishTime == 0) finishTime = 1;
+                yield return new WaitWhile(() =>
+                    _animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= finishTime &&
+                    _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Knitby_Idle");
+            }
+
             _animator.enabled = state;
+        }
+
+        [YarnCommand("wait_move_finish")]
+        public IEnumerator WaitMoveFinish()
+        {
+            yield return new WaitUntil(() => !_isMoving);
         }
     }
 }

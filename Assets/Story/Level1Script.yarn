@@ -9,15 +9,16 @@ setting: outside Knitby's house
 // knitby opens the door
 <<play_sound door_open false>>
 <<show KnitbyHouseDoor>>
-<<set_animation KnitbyHouseDoor true>>
+<<set_animation KnitbyHouseDoor true false>>
 <<show Knitby>>
 <<follow_object Knitby>>
 <<resize_camera 4 5>>
 <<wait 0.5>>
-<<move Knitby 4 1.2 10 false false>>
+<<move Knitby 4 1.2 10 false>>
 // tweak Knitby's Z to 0 at the end
-<<run Knitby 4 1.2 10 false false -0.1>>
+<<run Knitby 4 1.2 10 false true false -0.1>>
 Marshmallow: Hiya Knitby, how's it going?
+<<wait_move_finish Knitby>>
 Knitby: Hey, good to see you, Marshmallow! It's going well, I'm still reveling in our glorious victory on the football field the other day.   
 Marshmallow_smile: Those teddy bears didn't know what hit them! 
 Marshmallow: So... Can you teach me how to climb Mt. Stringmore? I'm going to the summit!
@@ -28,39 +29,28 @@ Marshmallow: Do you not trust me? Have I ever led you wrong?
 Knitby_frown: Marshmallow, these peaks have claimed many adventurers before you. Just because you have a chip on your shoulder—
 Marshmallow_frown: I have a <i>what</i> on my shoulder?
 Knitby_relieved: Let me rephrase. Just because you want to prove yourself doesn't mean you should recklessly endanger yourself—
-Marshmallow_frown: Well, okay then. <b>BYE!</b>
-<<run Marshmallow 45 1 20 true>>
-<<follow_object Knitby 4.5>>
-<<wait 0.35>>
-<<resize_camera 7 5>>
+Marshmallow: <i>Blah blah blah</i>, I can't hear you!
+<<follow_object Marshmallow 0 0 0.25>>
+<<run Marshmallow 26 1 20 true>>
 Knitby: Wait, where are you going in such a hurry?
+<<wait_move_finish Marshmallow>>
+// quietly move knitby backwards so that the later animation looks right
+<<run Knitby -5 1 40>>
+<<flip Marshmallow>>
 Marshmallow_smile: Up the mountain, duh!
 // knitby shouting
 Knitby: But why?
-// marshmallow is very far away now 
 Marshmallow: Because I know you can't help but follow me anyway!
 Knitby: <i>*sighs*</i> ...
-<<run Knitby 44 1 15>>
-<<wait 1>>
-<<fade_out 1>>
+<<run Knitby 24 1 17>>
 Knitby: Fine, I'm coming, wait up!
+<<wait_move_finish Knitby>>
 Marshmallow_smile: Good, try to keep up!
+<<run Knitby 49 1 15>>
+<<run Marshmallow 51 1 15 true>>
+<<fade_out 1>>
+<<wait_move_finish Marshmallow>>
 <<load_scene Level1Trial>>
-===
-
-title: JumpTutorial
----
-Knitby: Press space to jump off the ground or off of walls! Hold space to jump higher!
-===
-
-title: DashTutorial
----
-Knitby: Press space while in the air to dash! You get your dash back when you touch the ground.
-===
-
-title: SwingTutorial
----
-Knitby: Press space to attach and release from the swing!
 ===
 
 title: Level1End
@@ -68,4 +58,3 @@ title: Level1End
 <<fade_out>>
 <<load_scene_nonblock Manager SecondCutscene 0.5>>
 ===
-

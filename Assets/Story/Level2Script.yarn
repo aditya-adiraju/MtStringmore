@@ -5,8 +5,9 @@ setting: on the way up the mountain
 <<fix_coords 1 1>>
 <<resize_camera 4 2>>
 <<run Marshmallow 2 1 11>>
-<<move Knitby 0 1.04 9>>
-<<wait 1>>
+<<run Knitby 0 1.04 9>>
+<<wait_move_finish Marshmallow>>
+<<wait_move_finish Knitby>>
 Knitby: Whew, that was close! It's getting more and more dangerous up here.
 <<flip Marshmallow>>
 Marshmallow: And we're only just getting started!
@@ -30,6 +31,7 @@ Knitby_relieved: Promise me you're going to be more careful from here on out?
 <<run Marshmallow 0.5 1 10>>
 Marshmallow_faraway: C'mon Knitby, it really hasn't been that bad so far.
 Marshmallow_smile: Like, what is there to be worried about?
+<<wait_move_finish Marshmallow>>
 <<flip Knitby>>
 Knitby_frown: <i>So</i> much could go wrong. We really shouldn't have come here, this is too dangerous. What if— 
 // a determined marshmallow
@@ -57,11 +59,87 @@ Knitby_relieved: ... Okay.
 <<fade_out 1>>
 <<wait 1>>
 <<load_scene Level2>>
+===
 
+title: LoadLevel2Interstitial
+---
+<<fade_out 1>>
+<<load_scene Level2InterstitialCutscene 1>>
+===
+
+title: Level2Interstitial
+setting: a cliff
+---
+<<resize_camera 9 100>>
+<<fix_coords 74 673>>
+// start jump, then fade in
+<<leap_nonblock Marshmallow 25 18 0.37>>
+<<wait 0.05>>
+<<leap_nonblock Knitby -25 18 0.37 false -66 true true true>>
+<<fade_in 0.25>>
+<<fix_coords 74 680 1>>
+<<wait_move_finish Knitby>>
+// Knitby and Marshmallow jump up together
+<<leap_nonblock Marshmallow -25 18 0.37 false -66 true>>
+<<wait 0.05>>
+<<leap Knitby 22 18 0.425 false -66 true true true>>
+<<leap_nonblock Marshmallow 25 18 0.37 false -66 true>>
+<<wait 0.05>>
+<<leap Knitby -20 18 0.475 false -66 true true true>>
+<<leap_nonblock Marshmallow -25 18 0.37 false -66 true>>
+<<wait 0.15>>
+<<leap Knitby 20 18 0.45 false -66 true true true>>
+<<wait_move_finish Marshmallow>>
+Knitby_confused: Marshmallow, please wait up! I'm tired...
+// marshmallow jumps to safety
+<<leap_nonblock Marshmallow 25 18 0.62 true -66 true>>
+<<wait 0.1>>
+<<leap Knitby -20 18 0.475 false -66 true true true>>
+<<move Marshmallow 86 679 15>>
+<<flip Marshmallow>>
+Marshmallow_smile: Come on now, buddy, just a bit more!
+<<run Marshmallow 84 679 15>>
+Knitby_relieved: <i>*sigh*</i> Alright, here goes...
+<<play_sound wind_whoosh false>>
+<<wait_move_finish Marshmallow>>
+// knitby jumps and falls
+<<leap_nonblock Knitby 13 18 3 false -66 true>>
+<<wait 0.25>>
+Knitby_relieved: Wait, Marshmallow, <i>HELP</i>!!!
+<<resize_camera 12 8>>
+// marshmallow runs after knitby
+<<run Marshmallow 76 679 24 false true false 0 1.5>>
+<<resize_camera 7 5>>
+<<wait_move_finish Marshmallow>>
+<<fix_object Marshmallow>>
+Marshmallow_faraway: Knitby, no!!!
+<<move Marshmallow 80 679 30 true true false 0 2>>
+<<move Marshmallow 76 679 30 true true false 0>>
+<<move Marshmallow 80 679 30 true true false 0 2>>
+<<run Marshmallow 76 679 30 true true false 0>>
+Marshmallow_faraway: Oh no, this is all my fault...
+<<wait_move_finish Marshmallow>>
+<<move Marshmallow 80 679 30 true true false 0 2>>
+<<move Marshmallow 76 679 30 true true false 0>>
+<<move Marshmallow 80 679 30 true true false 0 2>>
+<<run Marshmallow 76 679 30 true true false 0>>
+Marshmallow_faraway: I really hope Knitby is alright...
+// big dramatic pause
+<<wait 2>>
+Marshmallow_frown: There's no time to waste, I have to fix this.
+Marshmallow_frown: Hang tight, Knitby, I'm coming to get you!
+<<wait_move_finish Marshmallow>>
+<<fix_object Marshmallow>>
+// marshmallow jumps down
+<<leap_nonblock Marshmallow -12 18 5>>
+<<wait 1>>
+<<fade_out>>
+<<wait 1>>
+<<trigger_checkpoint Checkpoint>>
 ===
 
 title: Level2End
 ---
-<<fade_out>>
-<<load_scene_nonblock Manager EndCutscene 0.5>>
+// TODO: load level 3 cutscene
+<<load_scene EndCutscene>>
 ===

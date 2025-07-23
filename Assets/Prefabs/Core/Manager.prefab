@@ -4447,11 +4447,15 @@ MonoBehaviour:
   sceneTransitionCanvas: {fileID: 3180213058412596211}
   levelNameList:
   - Level1Trial
-  - Level2
+  - Level2InterstitialCutscene
   - Level3
   - Level4
   thisLevelDeaths: 0
   allLevelData: []
+  cutsceneList:
+  - IntroCutscene
+  - SecondCutscene
+  - Level2InterstitialCutscene
 --- !u!82 &2257474230385962516
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4599,6 +4603,8 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: f23f3aac074ac0e4bbbce2bbb30f4fed, type: 3}
   - sceneName: Level2
     audioClip: {fileID: 8300000, guid: 243a490f23d23774bb4075fd58beec36, type: 3}
+  - sceneName: Level2InterstitialCutscene
+    audioClip: {fileID: 8300000, guid: 5931efaa5d3e04a2789344b06a204399, type: 3}
 --- !u!114 &3119184382528755020
 MonoBehaviour:
   m_ObjectHideFlags: 0

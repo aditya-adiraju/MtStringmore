@@ -170,6 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
   timeOffset: 0.1
+  idleThreshold: 0.07
   granularity: 10
   interpolationSpeed: 20
   collisionLayer:

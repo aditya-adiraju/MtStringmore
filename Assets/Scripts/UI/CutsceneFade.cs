@@ -11,15 +11,11 @@ namespace UI
         private static float _opacity;
         private static float _fadeSpeed;
 
+        [SerializeField] private float startingOpacity;
+
         private void Awake()
         {
             _image = GetComponent<Image>();
-        }
-
-        private void OnEnable()
-        {
-            // reset opacity to 0 at start of new scene
-            _opacity = 0;
         }
 
         private void LateUpdate()
@@ -27,6 +23,13 @@ namespace UI
             // apply fade
             float newAlpha = Mathf.MoveTowards(_image.color.a, _opacity, Time.unscaledDeltaTime * _fadeSpeed);
             _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, newAlpha);
+        }
+
+        private void OnEnable()
+        {
+            // reset opacity at start of new scene
+            _opacity = startingOpacity;
+            _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, startingOpacity);
         }
 
         [YarnCommand("fade_out")]

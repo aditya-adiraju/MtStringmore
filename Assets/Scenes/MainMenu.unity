@@ -122,17 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &4259103 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3629461888155120383, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
-  m_PrefabInstance: {fileID: 675141042}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &14082999
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,7 +509,7 @@ MonoBehaviour:
   masterSlider: {fileID: 995008616}
   bgmSlider: {fileID: 54188057}
   sfxSlider: {fileID: 1781584532}
-  timerToggle: {fileID: 4259103}
+  timerToggle: {fileID: 0}
 --- !u!1 &388277171
 GameObject:
   m_ObjectHideFlags: 0
@@ -1282,7 +1271,7 @@ GameObject:
   - component: {fileID: 628251942}
   - component: {fileID: 628251941}
   m_Layer: 5
-  m_Name: TimeText (to-do)
+  m_Name: TimeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1427,26 +1416,6 @@ PrefabInstance:
     - target: {fileID: 5101892580008084914, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
       propertyPath: lastColletableComboWindow
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5130713523581019797, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
-      propertyPath: levelNameList.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5130713523581019797, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
-      propertyPath: levelNameList.Array.data[0]
-      value: Level1Trial
-      objectReference: {fileID: 0}
-    - target: {fileID: 5130713523581019797, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
-      propertyPath: levelNameList.Array.data[1]
-      value: Level2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5130713523581019797, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
-      propertyPath: levelNameList.Array.data[2]
-      value: Level3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5130713523581019797, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
-      propertyPath: levelNameList.Array.data[3]
-      value: Level4
       objectReference: {fileID: 0}
     - target: {fileID: 5675118328201374811, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
       propertyPath: m_LocalPosition.x

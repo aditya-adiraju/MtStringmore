@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using System;
+using Managers;
 using UI;
 using UnityEngine;
 using Util;
@@ -168,8 +169,8 @@ namespace Player
         {
             // if paused, don't change the idle state
             if (Time.deltaTime == 0) return;
-            // update idle state to whether position changed 
-            anim.SetBool(IdleKey, Mathf.Approximately(Vector3.Distance(_lastPosition, transform.position), 0));
+            // update idle state to whether position changed within set threshold
+            anim.SetBool(IdleKey, Math.Abs(Vector3.Distance(_lastPosition, transform.position)) < 1e-4);
             _lastPosition = transform.position;
         }
 
@@ -189,7 +190,7 @@ namespace Player
         ///     If hitting wall, set wall changed to true and reset jump trigger because not jumping when holding onto wall
         /// </summary>
         /// <param name="wallChanged">True if hitting wall, false otherwise</param>
-        private void OnWallChanged(bool wallChanged)
+        internal void OnWallChanged(bool wallChanged)
         {
             anim.SetBool(WallChangedKey, wallChanged);
             if (wallChanged)
@@ -211,7 +212,7 @@ namespace Player
         ///     Set jump trigger
         ///     If jumping, no longer hitting ground, so reset grounded
         /// </summary>
-        private void OnJumped()
+        internal void OnJumped()
         {
             anim.SetTrigger(JumpKey);
             anim.SetBool(GroundedKey, false);
@@ -235,7 +236,7 @@ namespace Player
         /// </summary>
         /// <param name="grounded">True if hitting ground, false otherwise</param>
         /// <param name="impact">Y velocity upon hitting ground</param>
-        private void OnGroundedChanged(bool grounded, float impact)
+        internal void OnGroundedChanged(bool grounded, float impact)
         {
             _grounded = grounded;
 

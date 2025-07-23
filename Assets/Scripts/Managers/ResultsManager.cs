@@ -16,7 +16,8 @@ namespace Managers
         
         [SerializeField] private TextMeshProUGUI levelHeaderText;
 
-        [SerializeField] private TextMeshProUGUI collectableResultsText, deathsText;
+        [SerializeField] private TextMeshProUGUI collectableResultsText, deathsText, timerText;
+
         
         private int maxCount;
         
@@ -101,6 +102,8 @@ namespace Managers
         {
             string time = TimerManager.ElapsedLevelTimeString;
             _gameManager.ThisLevelTime = time;
+            timerText.text = time;
+            Debug.Log("Current GameManagerTimer: " + time);
         }
 
         private void EndLevel()

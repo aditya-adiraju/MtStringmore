@@ -980,6 +980,7 @@ MonoBehaviour:
   levelHeaderText: {fileID: 2333283121882461431}
   collectableResultsText: {fileID: 7615747715308610474}
   deathsText: {fileID: 6680832005780494842}
+  timerText: {fileID: 185908790033053836}
 --- !u!1 &4689274418804491040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1570,7 +1571,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d4be20ed61369e4e989a9243a6a6898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 185908790033053836}
   inGameTimerText: {fileID: 4348322071547548248}
   resultsWindow: {fileID: 5041319373685722033}
   timerToggle: {fileID: 0}

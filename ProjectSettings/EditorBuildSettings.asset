@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Level2.unity
     guid: 2cc39ebefa6a4440f86f6c98c01e4fbf
   - enabled: 1
+    path: Assets/Scenes/Level2InterstitialCutscene.unity
+    guid: f24d812427e694d5ca28b9488a4e68a5
+  - enabled: 1
     path: Assets/Scenes/EndCutscene.unity
     guid: 3f221be9ef82595489cf0c61015d4c09
   m_configObjects: {}
