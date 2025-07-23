@@ -46,9 +46,7 @@ namespace Player
         // [SerializeField] private ParticleSystem _moveParticles;
         // [SerializeField] private ParticleSystem _landParticles;
 
-        [Header("Audio Clips")] [SerializeField]
-        private AudioClip runSound;
-
+        [Header("Audio Clips")]
         [SerializeField] private AudioClip[] jumpSound;
         [SerializeField] private AudioClip dashSound;
         [SerializeField] private AudioClip landSound;

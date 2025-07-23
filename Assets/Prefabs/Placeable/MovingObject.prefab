@@ -311,6 +311,9 @@ MonoBehaviour:
   firstPosition: {x: 1.39, y: -0.89}
   secondPosition: {x: -18, y: -0.89}
   pathRenderer: {fileID: 7425019369357927073}
+  perfectReleaseThreshold: 0.75
+  perfectReleaseClip: {fileID: 8300000, guid: bfc404a2a7ca7af4b857304aa6b97f8a, type: 3}
+  badReleaseClip: {fileID: 8300000, guid: 31d2b177859b318499e77744ba392b82, type: 3}
 --- !u!50 &4405664681451709143
 Rigidbody2D:
   serializedVersion: 4

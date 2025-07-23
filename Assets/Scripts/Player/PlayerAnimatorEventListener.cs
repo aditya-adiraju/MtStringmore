@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using UnityEngine;
+using Util;
 
 namespace Player
 {
@@ -12,7 +13,11 @@ namespace Player
     public class PlayerAnimatorEventListener : MonoBehaviour
     {
         private AudioSource _audioSource;
-    
+        /// <summary>
+        /// Audio clips that can be played by an animator event.
+        /// </summary>
+        [SerializeField] private AudioClip[] audioClips;
+
         private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
@@ -29,6 +34,21 @@ namespace Player
         public void PlaySound(AudioClip clip)
         {
             _audioSource.clip = clip;
+            _audioSource.Play();
+        }
+
+        /// <summary>
+        /// Plays a random audio clip from a list configured in <see cref="audioClips"/>.
+        /// </summary>
+        /// <remarks>
+        /// Called implicitly by an animator event.
+        /// </remarks>
+        [UsedImplicitly]
+        public void PlayRandomSound()
+        {
+            if (audioClips.Length == 0)
+                Debug.LogError("No audio clips to select from.");
+            _audioSource.clip = RandomUtil.SelectRandom(audioClips);
             _audioSource.Play();
         }
     }

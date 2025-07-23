@@ -176,8 +176,7 @@ MonoBehaviour:
   yBounceForce: 50
   xBounceForce: -15
   bounceSounds:
-  - {fileID: 8300000, guid: d702169a66c8bcb4c9e64d0459b7948c, type: 3}
-  - {fileID: 8300000, guid: 19638f7b724e4a84fbf2a493a687f02b, type: 3}
+  - {fileID: 8300000, guid: 502af13ba9a096148bfdaf9d1a8b152b, type: 3}
 --- !u!95 &-3303350482682159041
 Animator:
   serializedVersion: 5

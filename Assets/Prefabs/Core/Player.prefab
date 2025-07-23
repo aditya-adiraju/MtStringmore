@@ -146,14 +146,13 @@ MonoBehaviour:
   sprite: {fileID: 6233932863109230516}
   deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
   dashDust: {fileID: 4418433718732415330}
-  runSound: {fileID: 8300000, guid: 6e356ef902be4f840b367f41e707de86, type: 3}
   jumpSound:
   - {fileID: 8300000, guid: 8abbc66e3f16bff488ce21cc82ac1745, type: 3}
   - {fileID: 8300000, guid: 1b204d783914ee546b6a7f8231255ba2, type: 3}
   - {fileID: 8300000, guid: 181ba71da646aaf4f93b5f384785ce56, type: 3}
   - {fileID: 8300000, guid: 26eb9aa74b4fe8d4882f29398cba0fac, type: 3}
   dashSound: {fileID: 8300000, guid: 8651851e0ad36d34da97e4c6c4edcbd4, type: 3}
-  landSound: {fileID: 8300000, guid: 632e2ef2dd1e97b439f2aa7375153a25, type: 3}
+  landSound: {fileID: 8300000, guid: 286b14d44088e5948a3c55cad8a2654d, type: 3}
   wallSlideSound: {fileID: 8300000, guid: bda851337f1a3ad4db1a535fcfca588c, type: 3}
   deathSounds:
   - {fileID: 8300000, guid: c81b8a0512e132e4cbdff16ff3c341e9, type: 3}
@@ -295,7 +294,7 @@ MonoBehaviour:
   deathTime: 1
   poofSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
   swingAttach: {fileID: 8300000, guid: c34be067950c0494cb0a29b36dd18775, type: 3}
-  swingDetach: {fileID: 8300000, guid: 49c94429e2afa5d41a5fed0d85b1b478, type: 3}
+  swingDetach: {fileID: 8300000, guid: 0dd879e5bef9ef04180cf3026536d289, type: 3}
   swingChangeDirection:
   - {fileID: 8300000, guid: 54a3b1ab149f48f46b01250e6221ad40, type: 3}
   - {fileID: 8300000, guid: 78f48d0db42925547ba8ce7fd2ad7418, type: 3}
@@ -600,6 +599,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81a9063543c448829812c3105d770c94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClips:
+  - {fileID: 8300000, guid: d36f3a17116bbe24abece67ca2973704, type: 3}
+  - {fileID: 8300000, guid: 0cf1f79012190db4c98d5d21210aa3ce, type: 3}
+  - {fileID: 8300000, guid: 4518fe45801184b4c9c403f3930a1da6, type: 3}
+  - {fileID: 8300000, guid: 4bdde142dcc81014ebaa6f5a3b14f24b, type: 3}
 --- !u!82 &1370679523021240661
 AudioSource:
   m_ObjectHideFlags: 0
