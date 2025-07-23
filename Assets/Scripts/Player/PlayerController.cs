@@ -431,7 +431,11 @@ namespace Player
             bool ceilingHit = CapsuleCastCollision(Vector2.up, collisionDistance);
             bool leftWallHit = CapsuleCastCollision(Vector2.left, collisionDistance);
             bool rightWallHit = CapsuleCastCollision(Vector2.right, collisionDistance);
-            _closeToWall = CapsuleCastCollision(_velocity, wallCloseDistance);
+            RaycastHit2D wallCloseHit = CapsuleCastCollision(_velocity, wallCloseDistance);
+            if (wallCloseHit && wallCloseHit.transform.CompareTag("LetterBlock"))
+                _closeToWall = false;
+            else
+                _closeToWall = wallCloseHit;
 
             if (groundCast) _groundNormal = groundCast.normal;
             CurrentGroundY = groundCast ? groundCast.point.y : null;

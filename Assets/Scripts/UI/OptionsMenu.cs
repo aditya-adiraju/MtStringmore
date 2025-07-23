@@ -1,4 +1,5 @@
 using Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -12,7 +13,7 @@ namespace UI
         [SerializeField] private Slider bgmSlider;
         [SerializeField] private Slider sfxSlider;
         [SerializeField] private Toggle timerToggle;
-        
+        [SerializeField] private TextMeshProUGUI versionNumber;
 
         // Start is called before the first frame update
         private void Start()
@@ -36,6 +37,7 @@ namespace UI
             sfxSlider.onValueChanged.AddListener(delegate { SoundManager.Instance.SetSfxVolume(sfxSlider.value); });
             timerToggle.onValueChanged.AddListener(delegate { TimerManager.Instance.ToggleTimer(timerToggle.isOn); });
    
+            versionNumber.text = Application.version;
         }
        
     }
