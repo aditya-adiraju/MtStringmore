@@ -104,16 +104,16 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.33333334
-    functionName: PlaySound
+    functionName: PlayRandomSound
     data: 
-    objectReferenceParameter: {fileID: 8300000, guid: bae47ebace4de714d95ba92e8a3c2152, type: 3}
+    objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.8333333
-    functionName: PlaySound
+    functionName: PlayRandomSound
     data: 
-    objectReferenceParameter: {fileID: 8300000, guid: c4029b33cbf1c614ba5fc9e7767b157a, type: 3}
+    objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

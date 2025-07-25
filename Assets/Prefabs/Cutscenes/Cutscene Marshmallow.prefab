@@ -43,8 +43,7 @@ AudioSource:
   m_GameObject: {fileID: 687209003304850376}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -144,17 +143,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 6379059411910678817}
-  deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810,
-    type: 3}
-  dashDust: {fileID: 0}
   sprite: {fileID: 6233932863109230516}
+  deathSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
+  dashDust: {fileID: 0}
   jumpSound:
   - {fileID: 8300000, guid: 8abbc66e3f16bff488ce21cc82ac1745, type: 3}
   - {fileID: 8300000, guid: 1b204d783914ee546b6a7f8231255ba2, type: 3}
   - {fileID: 8300000, guid: 181ba71da646aaf4f93b5f384785ce56, type: 3}
   - {fileID: 8300000, guid: 26eb9aa74b4fe8d4882f29398cba0fac, type: 3}
   dashSound: {fileID: 8300000, guid: 8651851e0ad36d34da97e4c6c4edcbd4, type: 3}
-  landSound: {fileID: 8300000, guid: 632e2ef2dd1e97b439f2aa7375153a25, type: 3}
+  landSound: {fileID: 8300000, guid: 286b14d44088e5948a3c55cad8a2654d, type: 3}
   wallSlideSound: {fileID: 8300000, guid: 7840a60655380b045a800a67dd581a66, type: 3}
   deathSounds:
   - {fileID: 8300000, guid: c81b8a0512e132e4cbdff16ff3c341e9, type: 3}
@@ -251,10 +249,9 @@ MonoBehaviour:
   runParticleVelocityThreshold: 0.1
   ropeRenderer: {fileID: 8739561083334380143}
   deathTime: 2
-  poofSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810,
-    type: 3}
-  swingAttach: {fileID: 0}
-  swingDetach: {fileID: 0}
+  poofSmoke: {fileID: 3003327103453879542, guid: e52706b0a1958aa4fa0aa6a37ce53810, type: 3}
+  swingAttach: {fileID: 8300000, guid: c34be067950c0494cb0a29b36dd18775, type: 3}
+  swingDetach: {fileID: 8300000, guid: 0dd879e5bef9ef04180cf3026536d289, type: 3}
   swingChangeDirection: []
   shakeDuration: 0
   shakeIntensity: 0
@@ -344,8 +341,7 @@ AudioSource:
   m_GameObject: {fileID: 4217790213014453210}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -582,8 +578,7 @@ AudioSource:
   m_GameObject: {fileID: 4714043931189080348}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
