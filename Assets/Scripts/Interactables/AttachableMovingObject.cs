@@ -276,6 +276,7 @@ namespace Interactables
             StopMotion();
             if (_unzippedMotion != null) StopCoroutine(_unzippedMotion);
             _unzippedMotion = StartCoroutine(UnzipCoroutine());
+            player.CurrentInteractableArea = null;
         }
     
         /// <summary>

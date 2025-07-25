@@ -259,7 +259,7 @@ MonoBehaviour:
   collisionLayer:
     serializedVersion: 2
     m_Bits: 256
-  collisionDistance: 0.1
+  collisionDistance: 0.2
   wallCloseDistance: 2
   maxGroundSpeed: 22
   groundAcceleration: 30
@@ -277,6 +277,7 @@ MonoBehaviour:
   dashTime: 0.2
   dashSpeed: 30
   endDashSpeed: 30
+  dashEndTolerance: 0.25
   wallJumpAngle: 1.05
   wallJumpPower: 36
   wallSlideSpeed: 15

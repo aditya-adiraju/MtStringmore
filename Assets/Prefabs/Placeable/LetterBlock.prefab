@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3223535448160816699
+--- !u!1 &2783582653016652479
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,45 +8,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 940841577963507911}
-  - component: {fileID: 7133435896857715925}
-  - component: {fileID: 6407936164459630662}
-  - component: {fileID: 3250976360280083530}
-  - component: {fileID: 7907048460438451200}
-  - component: {fileID: 8572504270484553445}
-  - component: {fileID: 2305959855338661898}
-  m_Layer: 8
-  m_Name: LetterBlock
-  m_TagString: LetterBlock
+  - component: {fileID: 4577790714877114323}
+  - component: {fileID: 3462317122686778128}
+  m_Layer: 9
+  m_Name: Collider
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &940841577963507911
+--- !u!4 &4577790714877114323
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3223535448160816699}
+  m_GameObject: {fileID: 2783582653016652479}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3, y: 2.75, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5687521384689638078}
-  - {fileID: 7032118463976165985}
-  - {fileID: 818084457875278558}
-  m_Father: {fileID: 0}
+  m_Children: []
+  m_Father: {fileID: 940841577963507911}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &7133435896857715925
+--- !u!61 &3462317122686778128
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3223535448160816699}
+  m_GameObject: {fileID: 2783582653016652479}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -75,16 +67,56 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.16, y: 2.16}
-    newSize: {x: 9.729167, y: 9.625}
-    adaptiveTilingThreshold: 0.5
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 2.2, y: 2.2}
   m_EdgeRadius: 0
+--- !u!1 &3223535448160816699
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 940841577963507911}
+  - component: {fileID: 6407936164459630662}
+  - component: {fileID: 3250976360280083530}
+  - component: {fileID: 7907048460438451200}
+  - component: {fileID: 8572504270484553445}
+  - component: {fileID: 2305959855338661898}
+  m_Layer: 8
+  m_Name: LetterBlock
+  m_TagString: LetterBlock
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &940841577963507911
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223535448160816699}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3, y: 2.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4577790714877114323}
+  - {fileID: 5687521384689638078}
+  - {fileID: 7032118463976165985}
+  - {fileID: 818084457875278558}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &6407936164459630662
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -163,7 +195,7 @@ MonoBehaviour:
   xShake: 1
   yShake: 1
   destructibleObject: 1
-  dashEndTolerance: 1
+  solidCollider: {fileID: 3462317122686778128}
 --- !u!212 &7907048460438451200
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -247,7 +279,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb, type: 2}
   m_audioClip: {fileID: 8300000, guid: 80ad62ea936d53e4894ba77fd55f9fd0, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 0
   Mute: 0

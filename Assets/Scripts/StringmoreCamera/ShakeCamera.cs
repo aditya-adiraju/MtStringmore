@@ -31,13 +31,12 @@ namespace StringmoreCamera
         {
             // Prioritize destructible objects in the event that two shakes happen simultaneously 
             if(_activeBreakingShake != null)
-            {
-                StopCoroutine(_activeDashShake);
                 StopCoroutine(_activeBreakingShake);
-            }
+            if (_activeDashShake != null)
+                StopCoroutine(_activeDashShake);
             
             // Start new shake
-            var coroutine = StartCoroutine(ShakeRoutine(shakeDuration, shakeIntensity, xShake, yShake));
+            Coroutine coroutine = StartCoroutine(ShakeRoutine(shakeDuration, shakeIntensity, xShake, yShake));
             if (breakable)
             {
                 _activeBreakingShake = coroutine;

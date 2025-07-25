@@ -2,13 +2,13 @@ using System.Collections;
 using Managers;
 using UnityEngine;
 
-namespace Interactables
+namespace Interactables.LetterBlock
 {
     /// <summary>
     /// Choose letter block color, handle shake and break animation
     /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
-    public class LetterBlock : MonoBehaviour
+    public class LetterBlockVisual : MonoBehaviour
     {
         [SerializeField] private GameObject letter;
         [SerializeField] private GameObject particles;

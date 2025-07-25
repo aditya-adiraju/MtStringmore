@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Interactables;
@@ -46,6 +47,7 @@ namespace Player
         [SerializeField] private float dashTime;
         [SerializeField] private float dashSpeed;
         [SerializeField] private float endDashSpeed;
+        [SerializeField, Min(0), Tooltip("allow noclip (sec) even after dash ends")] private float dashEndTolerance = 1;
         [Header("Wall")] 
         [SerializeField] private float wallJumpAngle;
         [SerializeField] private float wallJumpPower;
@@ -112,7 +114,12 @@ namespace Player
         /// <summary>
         /// Time when the most recent dash would have ended (may be a time in the future).
         /// </summary>
-        public float TimeDashEnded { get; private set; }
+        public float TimeDashEnded { get; private set; } = float.MinValue;
+
+        /// <summary>
+        /// Public getter for dash end tolerance.
+        /// </summary>
+        public float DashEndTolerance => dashEndTolerance;
 
         /// <summary>
         /// Fires when the player becomes grounded or leaves the ground.
@@ -207,6 +214,7 @@ namespace Player
         private bool _swingStarted;
         private bool _wasSwingClockwise;
         private ShakeCamera _shake;
+        private Coroutine _dashNoclipHax;
         #endregion
 
         #region Unity Event Handlers
@@ -239,6 +247,7 @@ namespace Player
 
             _buttonNotPressedPreviousFrame = true;
             Direction = startDirection;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("LetterBlock"), false);
             GameManager.Instance.Reset += OnReset;
         }
 
@@ -387,6 +396,7 @@ namespace Player
             }
 
             PlayerState = PlayerStateEnum.Air;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("LetterBlock"), false);
             TimeDashEnded = Time.time;
         }
 
@@ -463,6 +473,12 @@ namespace Player
 
             if (PlayerState != PlayerStateEnum.Run && groundHit)
             {
+                if (PlayerState == PlayerStateEnum.Dash)
+                {
+                    if (_dashNoclipHax != null) StopCoroutine(_dashNoclipHax);
+                    _dashNoclipHax = StartCoroutine(DashNoClipHaxRoutine());
+                    TimeDashEnded = Time.time;
+                }
                 PlayerState = PlayerStateEnum.Run;
                 _canDoubleJump = true;
                 _canDash = true;
@@ -551,6 +567,18 @@ namespace Player
             }
         }
 
+        /// <summary>
+        /// Coroutine to enable physics collision after a delay with letter blocks.
+        /// </summary>
+        /// <returns>Coroutine</returns>
+        private IEnumerator DashNoClipHaxRoutine()
+        {
+            yield return new WaitForSeconds(dashEndTolerance);
+            if (_dashNoclipHax == null) yield break;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("LetterBlock"), false);
+            _dashNoclipHax = null;
+        }
+
         private void HandleDash()
         {
             if (PlayerState is PlayerStateEnum.Air && IsButtonUsed() && _canDash && !_closeToWall)
@@ -561,6 +589,12 @@ namespace Player
                 PlayerState = PlayerStateEnum.Dash;
                 _shake?.Shake(shakeDuration, shakeIntensity, xShake, yShake,destructibleObject);
                 Dashed?.Invoke();
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("LetterBlock"), true);
+                if (_dashNoclipHax != null)
+                {
+                    StopCoroutine(_dashNoclipHax);
+                    _dashNoclipHax = null;
+                }
                 _timeDashed = _time;
                 TimeDashEnded = Time.time + dashTime;
             }
@@ -573,6 +607,8 @@ namespace Player
                 if (_time - _timeDashed >= dashTime)
                 {
                     PlayerState = PlayerStateEnum.Air;
+                    if (_dashNoclipHax != null) StopCoroutine(_dashNoclipHax);
+                    _dashNoclipHax = StartCoroutine(DashNoClipHaxRoutine());
                     _velocity.x = endDashSpeed * Direction;
                     TimeDashEnded = Time.time;
                 }
@@ -853,6 +889,7 @@ namespace Player
             ropeRenderer.enabled = false;
             PlayerState = PlayerStateEnum.Run;
             _velocity = Vector2.zero;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("LetterBlock"), false);
         }
     }
 }

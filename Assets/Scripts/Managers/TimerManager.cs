@@ -51,9 +51,9 @@ namespace Managers
         
         private void Update()
         { 
-            int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            string sceneName = SceneManager.GetActiveScene().name;
             
-            if (resultsWindow.activeSelf || sceneIndex == 0 || sceneIndex % 2 != 0)
+            if (resultsWindow.activeSelf || GameManager.Instance.cutsceneList.Contains(sceneName))
             {
                 inGameTimerText.enabled = false;
                 return;
