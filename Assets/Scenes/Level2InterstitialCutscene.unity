@@ -96602,6 +96602,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3100995665657460736, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3100995665657460736, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -96615,6 +96619,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3143290202201094660, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3143290202201094660, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3143290202201094660, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
@@ -96671,6 +96679,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5665343196658869916, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5665343196658869916, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5665343196658869916, guid: 3c94b1314f832f84ca7de56231cf1b3a, type: 3}
@@ -96870,18 +96882,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1828552501}
     m_Modifications:
-    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
-      propertyPath: respawnFacingLeft
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
-      propertyPath: conversationStartNode
-      value: Level2End
-      objectReference: {fileID: 0}
     - target: {fileID: 1324156711375271402, guid: 6516e5d0fcba84e26b43a0adcb8fb193, type: 3}
       propertyPath: m_LocalPosition.x
       value: 98.1
@@ -96929,6 +96929,18 @@ PrefabInstance:
     - target: {fileID: 4544653655168585683, guid: 6516e5d0fcba84e26b43a0adcb8fb193, type: 3}
       propertyPath: m_TagString
       value: FinalCheckpoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
+      propertyPath: respawnFacingLeft
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
+      propertyPath: conversationStartNode
+      value: Level2End
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
@@ -96994,6 +97006,34 @@ PrefabInstance:
     - target: {fileID: 750404783519447654, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
       propertyPath: m_Name
       value: CutsceneManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495736755695802734, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
+      propertyPath: onSceneInterrupt.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495736755695802734, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
+      propertyPath: onSceneInterrupt.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495736755695802734, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
+      propertyPath: onSceneInterrupt.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1759429192}
+    - target: {fileID: 1495736755695802734, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
+      propertyPath: onSceneInterrupt.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495736755695802734, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
+      propertyPath: onSceneInterrupt.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TriggerCheckpoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495736755695802734, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
+      propertyPath: onSceneInterrupt.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Interactables.CutsceneCheckpoint, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495736755695802734, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
+      propertyPath: onSceneInterrupt.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8964655812362898365, guid: b6fec259806fe4fe2a04e1886d452243, type: 3}
       propertyPath: m_LocalPosition.x

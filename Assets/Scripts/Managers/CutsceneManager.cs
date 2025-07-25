@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Yarn.Unity;
 
@@ -11,6 +12,7 @@ namespace Managers
     {
         private static AudioSource _source;
         [SerializeField] private string nextScene;
+        [SerializeField] private UnityEvent onSceneInterrupt;
 
         private void Awake()
         {
@@ -26,7 +28,16 @@ namespace Managers
         [YarnCommand("next_scene")]
         public void NextScene()
         {
-            if (nextScene != "") SceneManager.LoadScene(nextScene);
+            if (nextScene != "")
+            {
+                SceneManager.LoadScene(nextScene);
+            }
+            else
+            {
+                DialogueRunner dialogueRunner = FindObjectOfType<DialogueRunner>();
+                dialogueRunner.Stop();
+            }
+            onSceneInterrupt.Invoke();
         }
 
         [YarnCommand("play_sound")]
