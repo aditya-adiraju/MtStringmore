@@ -23,7 +23,6 @@ namespace Interactables
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _rigidbody2D = GetComponent<Rigidbody2D>();
-            GetComponent<Collider2D>();
             _crackerBehaviour = GetComponentInParent<GrahamCrackerBehaviour>();
             _isBottom = _spriteRenderer.flipY; // yes, this may cause problems
             _initialPosition = _rigidbody2D.position;
@@ -33,7 +32,17 @@ namespace Interactables
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (!_isMovingToKill || Vector2.Dot(collision.GetContact(0).normal, _rigidbody2D.velocity) > 0) return;
-            _crackerBehaviour.RegisterCollision(_isBottom, collision.collider.GetComponent<PlayerController>());
+            Collider2D other = collision.collider;
+            _crackerBehaviour.RegisterCollision(_isBottom, other.GetComponent<PlayerController>(),
+                other.GetComponent<GrahamCrackerPart>());
+        }
+
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+            if (!_isMovingToKill) return;
+            Collider2D other = collision.collider;
+            _crackerBehaviour.DeregisterCollision(_isBottom, other.GetComponent<PlayerController>(),
+                other.GetComponent<GrahamCrackerPart>());
         }
 
         /// <summary>
@@ -68,6 +77,15 @@ namespace Interactables
             _isMovingToKill = false;
             StartCoroutine(QueryForInitialPosition(_rigidbody2D.position));
         }
+
+        /// <summary>
+        /// Shakes in place to warn that cracker is about to shut.
+        /// </summary>
+        /// <param name="duration">Duration of the shake.</param>
+        /// <param name="shakeDelay">Delay between shakes.</param>
+        /// <param name="distance">Furthest distance from original position when shaking.</param>
+        public void HandleShake(float duration, float shakeDelay, float distance) =>
+            StartCoroutine(RandomUtil.RandomJitterRoutine(transform, duration, shakeDelay, distance, _initialPosition));
 
         /// <summary>
         /// Coroutine to check whether we've reached the initial position after we've started moving away,

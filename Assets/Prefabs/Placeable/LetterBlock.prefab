@@ -265,7 +265,7 @@ MonoBehaviour:
   childRenderers:
   - {fileID: 5443037520854214380}
   blockBreakDelay: 0.25
-  delayBetweenShakes: 0.002
+  delayBetweenShakes: 0.01
   distance: 0.5
 --- !u!82 &2305959855338661898
 AudioSource:

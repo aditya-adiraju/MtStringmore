@@ -13,6 +13,8 @@ namespace Interactables
     /// </summary>
     public class GrahamCrackerBehaviour : MonoBehaviour
     {
+        [Header("General settings")]
+        
         [SerializeField] private GrahamCrackerPart bottomPart;
         [SerializeField] private GrahamCrackerPart topPart;
         [SerializeField, Min(0), Tooltip("Time in up state, seconds")]
@@ -26,17 +28,30 @@ namespace Interactables
 
         [SerializeField, Min(0), Tooltip("Time staying down, seconds")]
         private float timeStayDown;
-
+        
+        [SerializeField] private bool alwaysActive;
+        
+        [Header("Shake behaviour")]
+        
+        [SerializeField, Min(0), Tooltip("Time (sec) prior to closing when cracker should start shaking")]
+        private float shakeTime = 1;
+        
+        [SerializeField, Tooltip("Delay between shakes"), Range(0f, 0.1f)] 
+        private float shakeDelay = 0.01f;
+        
+        [SerializeField, Tooltip("Furthest distance from original position when shaking"), Range(0f, 2f)]
+        private float shakeDistance = 0.2f;
+        
         [SerializeField]
-        private AudioSource warningSound;
-
-        [SerializeField, Min(0), Tooltip("Time (sec) prior to closing to play warning")]
-        private float warningSoundTime = 1;
+        private AudioSource shakeSound;
+        
+        
+        [Header("Closing behaviour")]
         [SerializeField]
         private AudioSource closingSound;
         [SerializeField, Min(0), Tooltip("Time(sec) after closing starts to play closing sound")]
         private float closingSoundDelay = 0.2f;
-        [SerializeField] private bool alwaysActive;
+        
         private bool _active;
         private bool _bottomCollide;
         private bool _topCollide;
@@ -63,8 +78,11 @@ namespace Interactables
         /// </summary>
         /// <param name="isBottom">Whether this is the bottom part</param>
         /// <param name="player">PlayerController attached to the object if present</param>
-        public void RegisterCollision(bool isBottom, PlayerController player)
+        /// <param name="part">Part of the Graham Cracker we're colliding with if present</param>
+        public void RegisterCollision(bool isBottom, PlayerController player, GrahamCrackerPart part)
         {
+            // sometimes it collides with terrain, ignore that
+            if (!player && !part) return;
             if (isBottom) _bottomCollide = true;
             else _topCollide = true;
             if (_bottomCollide && _topCollide)
@@ -80,6 +98,20 @@ namespace Interactables
                     StartCoroutine(RecoverCoroutine());
                 }
             }
+        }
+
+        /// <summary>
+        /// Called when a part has deregistered a collision with an object.
+        /// </summary>
+        /// <param name="isBottom">Whether this is the bottom part</param>
+        /// <param name="player">PlayerController attached to the object if present</param>
+        /// <param name="part">Part of the Graham Cracker we're NOT colliding with if present</param>
+        public void DeregisterCollision(bool isBottom, PlayerController player, GrahamCrackerPart part)
+        {
+            // sometimes it collides with terrain, ignore that
+            if (!player && !part) return;
+            if (isBottom) _bottomCollide = false;
+            else _topCollide = false;
         }
 
         /// <summary>
@@ -120,6 +152,10 @@ namespace Interactables
             StopAllCoroutines();
             Active = alwaysActive;
             if (Active) StartCoroutine(SlamRoutine());
+            _bottomCollide = false;
+            _topCollide = false;
+            _bottomHasReset = false;
+            _topHasReset = false;
             bottomPart.OnGameReset();
             topPart.OnGameReset();
         }
@@ -130,9 +166,13 @@ namespace Interactables
         /// <returns>Coroutine</returns>
         private IEnumerator SlamRoutine()
         {
-            yield return new WaitForSeconds(timeStayUp - warningSoundTime);
-            warningSound.Play();
-            yield return new WaitForSeconds(warningSoundTime);
+            _bottomCollide = false;
+            _topCollide = false;
+            yield return new WaitForSeconds(timeStayUp - shakeTime);
+            shakeSound.Play();
+            bottomPart.HandleShake(shakeTime, shakeDelay, shakeDistance);
+            topPart.HandleShake(shakeTime, shakeDelay, shakeDistance);
+            yield return new WaitForSeconds(shakeTime);
             bottomPart.StartMotion(velocityDown);
             topPart.StartMotion(velocityDown);
             closingSound.PlayDelayed(closingSoundDelay);
