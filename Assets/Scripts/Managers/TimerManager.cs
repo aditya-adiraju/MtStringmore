@@ -33,9 +33,8 @@ namespace Managers
         private void Awake()
         {
             if (Instance != this) Destroy(gameObject);
-            string sceneName = SceneManager.GetActiveScene().name;
             //only reset time when in a level, not in a cutscene
-            if (!GameManager.Instance.cutsceneList.Contains(sceneName))
+            if (!GameManager.Instance.IsInCutsceneOrMainMenu())
             {
                 ElapsedLevelTime = 0;
             }
@@ -51,9 +50,7 @@ namespace Managers
         
         private void Update()
         { 
-            string sceneName = SceneManager.GetActiveScene().name;
-            
-            if (resultsWindow.activeSelf || GameManager.Instance.cutsceneList.Contains(sceneName))
+            if (resultsWindow.activeSelf || GameManager.Instance.IsInCutsceneOrMainMenu())
             {
                 inGameTimerText.enabled = false;
                 return;

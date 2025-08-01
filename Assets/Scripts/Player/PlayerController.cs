@@ -319,9 +319,9 @@ namespace Player
                 return;
 
             CheckCollisions();
-            HandleWallJump();
             HandleSwing();
             HandleInteractables();
+            HandleWallJump();
             HandleJump();
             if (doubleJumpEnabled) HandleDoubleJump();
             HandleEarlyRelease();

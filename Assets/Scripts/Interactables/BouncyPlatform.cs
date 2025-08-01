@@ -8,9 +8,11 @@ namespace Interactables
     /// Class represents a bouncy platform that is a 2D collider
     /// </summary>
     [DisallowMultipleComponent, RequireComponent(typeof(Collider2D), typeof(Animator), typeof(AudioSource))]
-    public class BouncyPlatform : MonoBehaviour, IPlayerVelocityEffector
+    public class BouncyPlatform : AbstractPlayerInteractable
     {
-        private static readonly int BounceHash = Animator.StringToHash("Bounce");
+        private static readonly int BOUNCE_HASH = Animator.StringToHash("Bounce");
+        private static readonly int STEP_HASH = Animator.StringToHash("Step");
+        private static readonly int STEP_OFF_HASH = Animator.StringToHash("Step Off");
 
         #region Serialized Private Fields
 
@@ -20,43 +22,60 @@ namespace Interactables
         [Header("Sounds")] [SerializeField] private AudioClip[] bounceSounds;
 
         #endregion
-
-        private PlayerController _player;
-        private Collision2D _bounceArea;
+        
         private Animator _animator;
         private AudioSource _audioSource;
-
-        /// <inheritdoc />
-        public Vector2 ApplyVelocity(Vector2 velocity)
-        {
-            return new Vector2(xBounceForce, yBounceForce);
-        }
+        private bool _launched;
 
         private void Awake()
         {
             _animator = GetComponent<Animator>();
             _audioSource = GetComponent<AudioSource>();
         }
-
-        private void OnTriggerEnter2D(Collider2D other)
+        
+        /// <inheritdoc />
+        public override void OnPlayerEnter(PlayerController player)
         {
-            if (!other.gameObject.TryGetComponent(out _player)) return;
-            _player.AddPlayerVelocityEffector(this, true);
-            _player.CanDash = true;
-            _player.ForceCancelEarlyRelease();
-            if (_player.PlayerState == PlayerController.PlayerStateEnum.Dash)
+            _animator.SetTrigger(STEP_HASH);
+            _launched = false;
+        }
+
+        /// <inheritdoc />
+        public override void OnPlayerExit(PlayerController player)
+        {
+            if (!_launched)
             {
-                _player.ForceCancelDash();
+                _animator.SetTrigger(STEP_OFF_HASH);
             }
-            _animator.SetTrigger(BounceHash);
+            
+            if (player.CurrentInteractableArea == this)
+            {
+                player.StopInteraction(this);
+            }
+            player.CurrentInteractableArea = null;
+        }
+
+        public override Vector2 ApplyVelocity(Vector2 velocity)
+        {
+            return new Vector2(xBounceForce, yBounceForce);
+        }
+
+        public override void StartInteract(PlayerController player)
+        {
+            player.CanDash = true;
+            player.ForceCancelEarlyRelease();
+            player.AddPlayerVelocityEffector(this, true);
+            player.StopInteraction(this);
+            player.CurrentInteractableArea = null;
+            
+            _animator.SetTrigger(BOUNCE_HASH);
+            _launched = true;
             _audioSource.clip = RandomUtil.SelectRandom(bounceSounds);
             _audioSource.Play();
         }
-    
-        private void OnTriggerExit2D(Collider2D other)
+
+        public override void EndInteract(PlayerController player)
         {
-            if (!other.TryGetComponent(out PlayerController _)) return;
-            _animator.ResetTrigger(BounceHash);
         }
     }
 }

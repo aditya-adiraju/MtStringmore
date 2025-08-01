@@ -111,14 +111,6 @@ namespace Managers
         // </summary>
         public List<LevelData> allLevelData = new List<LevelData>();
         
-        // <summary>
-        // We are resetting all stats (collectables etc.) each time we load scene
-        // We need make sure we are not clearing stats when we are loading the results after a cutscene
-        // Therefore we need a list of all cutscenes that show results after the cutscene
-        // Results Manager also uses this to avoid issues
-        // <summary>
-        [SerializeField] public List<string> cutsceneList;
-        
         private void Awake()
         {
             ThisLevelTime = EmptySaveTime;
@@ -165,7 +157,7 @@ namespace Managers
         {
             sceneTransitionCanvas.InvokeFadeOut();
             Time.timeScale = 1f;
-            _dontClearDataOnSceneChanged = cutsceneList.Contains(scene.name);
+            _dontClearDataOnSceneChanged = IsInCutsceneOrMainMenu();
 
             if (!_dontClearDataOnSceneChanged)
             {
@@ -378,6 +370,14 @@ namespace Managers
         {
             Reset?.Invoke();
             sceneTransitionCanvas.FadeIn -= OnFadeIn;
+        }
+
+        /// <summary>
+        /// Returns true if the currently loaded scene is a cutscene or the main menu.
+        /// </summary>
+        public bool IsInCutsceneOrMainMenu()
+        {
+            return FindAnyObjectByType<CutsceneManager>() || SceneManager.GetActiveScene().name == "MainMenu";
         }
 
         [YarnCommand("load_scene_nonblock")]

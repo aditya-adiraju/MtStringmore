@@ -2710,6 +2710,7 @@ MonoBehaviour:
   - SecondCutscene
   - Level2InterstitialCutscene
   - EndCutscene
+  - MainMenu
 --- !u!82 &2257474230385962516
 AudioSource:
   m_ObjectHideFlags: 0
