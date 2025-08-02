@@ -9,122 +9,61 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    /// <summary>
+    /// Level select menu logic.
+    /// </summary>
     public class LevelSelectMenu : MonoBehaviour
     {
-        [SerializeField] GameObject buttonPrefab;
-        [SerializeField] Transform buttonContainer;
-        [SerializeField] Button playButton;
-
-        [SerializeField] Sprite unlockedSprite;
-        [SerializeField] Sprite lockedSprite;
+        [SerializeField] private LevelSelectButton buttonPrefab;
+        [SerializeField] private Transform buttonContainer;
+        [SerializeField] private Button playButton;
 
         [SerializeField] private List<Sprite> levelCandyImages;
-
-        //<summary>
-        //The names of the scenes that need to be loaded (i.e. introcutscene, secondcutscene, etc.)
-        //</summary>
-        [SerializeField] List<string> allLevelLoadingSceneNames;
-        
-        //<summary>
-        //The names of the level scenes (i.e. Level1Trial, Level2, etc.)
-        //</summary>
-        [SerializeField] private List<string> allLevelSceneNames;
-    
-        [SerializeField] private AudioSource canvasAudioSource;
-        [SerializeField] private AudioClip buttonClickSound;
-        [SerializeField] private string level1 = "IntroCutscene";
 
         [SerializeField] private TextMeshProUGUI levelText, timeText, deathText, candyText;
         [SerializeField] private Image candyImage;
     
-        private List<string> unlockedScenes;
-        private string selectedScene;
-        private readonly List<Button> levelButtons = new();
-        private GameManager _gameManager;
-
-        private void Awake()
-        {
-            _gameManager = GameManager.Instance;
-        }
+        private string _selectedScene;
+        private LevelSelectButton _selectedButton;
+        private int _debugButtonPressed;
 
         private void Start()
         {
-            LazyLoad();
-            unlockedScenes = _gameManager.LevelsAccessed;
+            // Ensures GameManager load save data before loading level select menu
+            FindObjectOfType<SaveDataManager>()?.PreloadSaveData();
+            List<string> unlockedScenes = GameManager.Instance.LevelsAccessed;
             playButton.interactable = false;
-            unlockedScenes.Add(level1);
-
-            foreach (string sceneName in allLevelLoadingSceneNames)
+            unlockedScenes.Add(SceneListManager.Instance.Level1IntroSceneName);
+            string[] levelLoadingScenes = SceneListManager.Instance.LevelLoadScenes.ToArray();
+            LevelSelectButton farthestUnlockedButton = null;
+            for (int i = 0; i < levelLoadingScenes.Length; i++)
             {
-                GameObject btnObj = Instantiate(buttonPrefab, buttonContainer);
-                Button button = btnObj.GetComponent<Button>();
-                TMP_Text label = btnObj.GetComponentInChildren<TMP_Text>();
-                Image background = btnObj.GetComponent<Image>();
-
-                bool isUnlocked = unlockedScenes.Contains(sceneName);
-                int levelNumber = allLevelLoadingSceneNames.IndexOf(sceneName) + 1;
-                
-                if (isUnlocked)
-                {
-                    label.text = levelNumber.ToString();
-                    background.sprite = unlockedSprite;
-                    button.interactable = true;
-
-                    button.onClick.AddListener(() =>
-                    {
-                        PlayClickSound();
-                        OnLevelSelected(sceneName, button, levelNumber);
-                    });            }
-                else
-                {
-                    label.text = "";
-                    background.sprite = lockedSprite;
-                    button.interactable = false;
-                }
-
-                levelButtons.Add(button);
+                LevelSelectButton btnObj = Instantiate(buttonPrefab, buttonContainer);
+                bool isUnlocked = unlockedScenes.Contains(levelLoadingScenes[i]);
+                if (isUnlocked) farthestUnlockedButton = btnObj;
+                btnObj.Initialize(i+1, isUnlocked);
             }
 
             playButton.onClick.AddListener(OnPlayClicked);
-            
-            // hack: we don't actually store the latest unlocked scene and the unlockedScenes is potentially unordered
-            //       so just grab the button that's interactable
-            int autoSelectIndex = levelButtons.Count(button => button.interactable) - 1;
-            if (autoSelectIndex >= 0 && autoSelectIndex < levelButtons.Count)
-            {
-                OnLevelSelected(allLevelLoadingSceneNames[autoSelectIndex], levelButtons[autoSelectIndex], autoSelectIndex+1);
-            }
-            else
-            {
-                Debug.LogError("Yo what the hell bruh where all my b u t t o n s");
-            }
+            Debug.Assert(farthestUnlockedButton, "Yo what the hell bruh where all my b u t t o n s");
+            OnLevelSelected(farthestUnlockedButton.LevelNumber, farthestUnlockedButton);
         }
 
-        private void PlayClickSound()
+        /// <summary>
+        /// Called on a level select button click: selects the level.
+        /// </summary>
+        /// <param name="levelNumber">Level number (1 indexed)</param>
+        /// <param name="button">Button clicked</param>
+        public void OnLevelSelected(int levelNumber, LevelSelectButton button)
         {
-            if (canvasAudioSource != null && buttonClickSound != null)
-            {
-                canvasAudioSource.PlayOneShot(buttonClickSound);
-            }
-        }
-
-        // <summary>
-        // Ensures GameManager load save data before loading level select menu
-        // </summary>
-        private void LazyLoad()
-        {
-            FindObjectOfType<SaveDataManager>()?.PreloadSaveData();
-        }
-
-        private void OnLevelSelected(string sceneName, Button clickedButton, int levelNumber)
-        {
-            selectedScene = sceneName;
+            string sceneName = SceneListManager.Instance.LevelLoadScenes[levelNumber - 1];
+            _selectedScene = sceneName;
             playButton.interactable = true;
             
             //change the text of the level stats
             levelText.text = "Level " + levelNumber;
 
-            LevelData selectedLevel = _gameManager.allLevelData[levelNumber - 1];
+            LevelData selectedLevel = GameManager.Instance.allLevelData[levelNumber - 1];
             
             // Candy
             if (selectedLevel.totalCandiesInLevel < 0)
@@ -144,31 +83,37 @@ namespace UI
             candyImage.sprite = levelCandyImages[levelNumber - 1];
             candyImage.enabled = true;
             
-            for (int i = 0; i < levelButtons.Count; i++)
-            {
-                Image bg = levelButtons[i].GetComponent<Image>();
-                string thisScene = allLevelLoadingSceneNames[i];
-                bool isUnlocked = unlockedScenes.Contains(thisScene);
-
-                bg.sprite = isUnlocked ? unlockedSprite : lockedSprite;
-            
-                Color color = bg.color;
-                color.a = 1f;
-                bg.color = color;
-            }
-            Image selectedImage = clickedButton.GetComponent<Image>();
-            Color selectedColor = selectedImage.color;
-            selectedColor.a = 0.75f; 
-            selectedImage.color = selectedColor;
+            if (_selectedButton) _selectedButton.MarkUnselected();
+            _selectedButton = button;
+            button.MarkSelected();
         }
-        
+
+        /// <summary>
+        /// Debug button pressed.
+        /// </summary>
+        public void DebugButtonPressed()
+        {
+            _debugButtonPressed++;
+            if (_debugButtonPressed > 10)
+            {
+                int childCount = buttonContainer.childCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    LevelSelectButton btn = buttonContainer.GetChild(i).GetComponent<LevelSelectButton>();
+                    btn.Initialize(i + 1, true);
+                }
+                transform.Find("SecretDebugOption").GetChild(0).gameObject.SetActive(true);
+            }
+        }
+
+        /// <summary>
+        /// Called on play button clicked.
+        /// </summary>
         private void OnPlayClicked()
         {
-            if (!string.IsNullOrEmpty(selectedScene))
-            {
-                Debug.Log("Loading selected level: " + selectedScene);
-                SceneManager.LoadScene(selectedScene);
-            }
+            if (string.IsNullOrWhiteSpace(_selectedScene)) return;
+            Debug.Log("Loading selected level: " + _selectedScene);
+            SceneManager.LoadScene(_selectedScene);
         }
     }
 }

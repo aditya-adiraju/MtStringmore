@@ -1,3 +1,4 @@
+using Managers;
 using UnityEngine;
 
 namespace StringmoreCamera
@@ -10,18 +11,46 @@ namespace StringmoreCamera
     [RequireComponent(typeof(BoxCollider2D))]
     public class FixCameraTrigger : MonoBehaviour
     {
+        [SerializeField] private bool disableWithInteractables;
         [SerializeField] private Vector2 targetOffset;
         public FixCameraType fixTypeX = FixCameraType.RequireEqual;
         public FixCameraType fixTypeY = FixCameraType.RequireEqual;
 
         private Vector2 _bound;
         private FollowCamera _cam;
+        private BoxCollider2D _box;
 
         private void Awake()
         {
             _cam = GameObject.FindWithTag("MainCamera").GetComponent<FollowCamera>();
             Vector2 boxOffset = GetComponent<BoxCollider2D>().offset;
             _bound = (Vector2)transform.position + boxOffset + targetOffset;
+            _box = GetComponent<BoxCollider2D>();
+        }
+
+        private void Start()
+        {
+            if (disableWithInteractables)
+            {
+                _box.enabled = GameManager.Instance.AreInteractablesEnabled;
+                GameManager.Instance.OnInteractablesEnabledChanged += OnInteractablesEnabledChanged;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (disableWithInteractables)
+            {
+                GameManager.Instance.OnInteractablesEnabledChanged -= OnInteractablesEnabledChanged;
+            }
+        }
+
+        /// <summary>
+        /// Called when the interactables are enabled/disabled.
+        /// </summary>
+        private void OnInteractablesEnabledChanged()
+        {
+            _box.enabled = GameManager.Instance.AreInteractablesEnabled;
         }
 
         /// <summary>
@@ -84,6 +113,7 @@ namespace StringmoreCamera
                 Vector3 cameraBounds = new(cam.orthographicSize * cam.aspect * 2, cam.orthographicSize * 2, 1);
                 Gizmos.DrawWireCube(_bound, cameraBounds);
             }
+
             Gizmos.color = Color.green;
             if (fixTypeX is FixCameraType.AllowGreater or FixCameraType.None)
             {

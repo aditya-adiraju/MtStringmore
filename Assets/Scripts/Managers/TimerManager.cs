@@ -1,8 +1,8 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Yarn.Unity;
 
 namespace Managers
 {
@@ -23,7 +23,8 @@ namespace Managers
         [SerializeField] private TextMeshProUGUI inGameTimerText;
         [SerializeField] private GameObject resultsWindow;
         [SerializeField] private Toggle timerToggle;
-        
+
+        private static bool _isEnabled = true;
         public static float ElapsedLevelTime { get; set; }
         public static string ElapsedLevelTimeString {get; private set;}
 
@@ -34,7 +35,7 @@ namespace Managers
         {
             if (Instance != this) Destroy(gameObject);
             //only reset time when in a level, not in a cutscene
-            if (!GameManager.Instance.IsInCutsceneOrMainMenu())
+            if (!SceneListManager.Instance.InCutscene)
             {
                 ElapsedLevelTime = 0;
             }
@@ -50,7 +51,8 @@ namespace Managers
         
         private void Update()
         { 
-            if (resultsWindow.activeSelf || GameManager.Instance.IsInCutsceneOrMainMenu())
+            if (!_isEnabled) return;
+            if (resultsWindow.activeSelf || SceneListManager.Instance.InCutscene)
             {
                 inGameTimerText.enabled = false;
                 return;
@@ -64,6 +66,12 @@ namespace Managers
             ElapsedLevelTimeString = timeSpan.ToString(@"mm\:ss\:ff");
 
             inGameTimerText.text = ElapsedLevelTimeString;
+        }
+
+        [YarnCommand("timer_state")]
+        public static void SetTimerState(bool value)
+        {
+            _isEnabled = value;
         }
 
         public void OnToggle()

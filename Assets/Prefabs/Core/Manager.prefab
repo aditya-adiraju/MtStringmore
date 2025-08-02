@@ -521,7 +521,6 @@ MonoBehaviour:
   pauseMenuUI: {fileID: 6144825111345491365}
   pauseButton: {fileID: 6185933882739521032}
   versionNumber: {fileID: 6741925151092754121}
-  mainMenuSceneName: MainMenu
 --- !u!1 &1497054616340856916
 GameObject:
   m_ObjectHideFlags: 0
@@ -2653,6 +2652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5675118328201374811}
   - component: {fileID: 5130713523581019797}
+  - component: {fileID: 2167404556298769624}
   - component: {fileID: 2257474230385962516}
   - component: {fileID: 5101892580008084914}
   - component: {fileID: 7492377907174578259}
@@ -2698,14 +2698,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneTransitionCanvas: {fileID: 3180213058412596211}
-  levelNameList:
-  - Level1Trial
-  - Level2InterstitialCutscene
-  - Level3
-  - Level4
   thisLevelDeaths: 0
   allLevelData: []
-  cutsceneList:
+--- !u!114 &2167404556298769624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7818288281639424406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c17c5eefd004975aaa60ee431636034, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuSceneName: MainMenu
+  levels:
+  - preLevelCutscene: IntroCutscene
+    levelName: Level1Trial
+    postLevelCutscene: 
+  - preLevelCutscene: SecondCutscene
+    levelName: Level2
+    postLevelCutscene: Level2InterstitialCutscene
+  - preLevelCutscene: 
+    levelName: Level3
+    postLevelCutscene: 
+  - preLevelCutscene: 
+    levelName: Level4
+    postLevelCutscene: EndCutscene
+  levelNameList:
+  - Level1Trial
+  - Level2
+  - Level3
+  - Level4
+  cutsceneNameList:
   - IntroCutscene
   - SecondCutscene
   - Level2InterstitialCutscene
@@ -2886,7 +2912,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f69c078820794990850290a503d3378c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuScene: MainMenu
 --- !u!1 &8782046399898052886
 GameObject:
   m_ObjectHideFlags: 0

@@ -248,7 +248,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 25, y: 20}
+  m_Size: {x: 30, y: 20}
   m_EdgeRadius: 0
 --- !u!114 &3121617370572961049
 MonoBehaviour:
@@ -602,7 +602,8 @@ AudioSource:
   m_GameObject: {fileID: 3986647190489802333}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb, type: 2}
+  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 3a3bf7b7f17e86d4b826fca618f09da2, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -831,17 +832,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bottomPart: {fileID: 7828473269823386911}
   topPart: {fileID: 6629650060142591562}
-  timeStayUp: 1
-  velocityDown: 10
+  timeStayUp: 0
+  velocityDown: 5
   velocityUp: 5
-  timeStayDown: 0
+  timeStayDown: 1
+  warningSoundTime: 0
+  closingSound: {fileID: 3571595061132870987}
+  closingSoundDelay: 0
   alwaysActive: 0
   shakeTime: 1
   shakeDelay: 0.01
   shakeDistance: 0.2
   shakeSound: {fileID: 217117979800497627}
-  closingSound: {fileID: 3571595061132870987}
-  closingSoundDelay: 0
 --- !u!1 &8600188875434197424
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,7 +885,8 @@ AudioSource:
   m_GameObject: {fileID: 8600188875434197424}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb, type: 2}
+  OutputAudioMixerGroup: {fileID: 7445090876735969629, guid: e6b9335b6d268ba46aa2ead17d902bfb,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: e2df1a87cb4eb6646bd5a2ca7d582ff8, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1

@@ -1,15 +1,57 @@
-﻿title: Level3Cutscene
-setting: a cliff
+﻿title: KnitbyReunion
+setting: at the bottom of a hole
 ---
+<<timer_state false>>
+<<fade_out 3>>
+<<wait 0.5>>
+<<set_interactables_enabled true>>
+<<cutscene_state CustomLevel3Logic true>>
+<<fix_coords 100 -200>>
+<<fade_in 3>>
+Marshmallow: <i>KNITBYYYY!!!!</i>
+// walk deeper into cave, sees knitby on edge of screen 
+Marshmallow: There you are, I thought you were... Well...
+// shivering knitby
+Knitby: ...
+// marshmallow slowly walks in like hey buddy are you okay
+Marshmallow: Knitby?
+Knitby_confused: Is that...
+// turns around and runs away and faces the corner
+Knitby_relieved: No, it can't be. I must've lost my mind, I'm seeing things now.
+// clearly still in disbelief
+Marshmallow: Knitby, where are you going? It's me. <i>Marshmallow</i>.
+// i want a Knitby_cry avatar or something
+Knitby: Marshmallow? It can't be. Is that really you?
+Marshmallow_smiling: The one and only.
+Knitby: But—But—But—I really thought you would just keep going anyway. I was convinced you'd abandon me down here all alone in the dark. 
+Marshmallow_smile: I promised I'd come back for you, didn't I?
+Knitby_frown: How do you look so <i>chipper</i>, I could've been stuck <i>FOREVER</i>, Marshmallow! DON'T YOU GET IT?
+Marshmallow_faraway: Hey—
+Knitby_frown: I <i>TOLD</i> you this would happen, and you didn't <i>LISTEN</i> to me, and now we're at the bottom of a cave surrounded by danger and—
+Knitby_relieved: I thought I would be trapped here forever. I—
+Marshmallow_faraway: ...
+<<wait 2>>
+Knitby_relieved: Thanks for coming back for me, Marshmallow. It really means a lot that you saved me.
+Marshmallow_faraway: Sorry for putting you through danger, Knitby.
+Marshmallow_faraway: ... Are we still friends?
 <<wait 1>>
-Marshmallow: How am I going to get down there... 
-// stares up at a swing, unusable
-Marshmallow: Oh. This might be more difficult than I thought.
-<<load_scene_nonblock Manager EndCutscene 0.5>>
-// <<load_scene Level3>>
+Knitby_relieved: ...
+Knitby: Yes. But you've got to stop recklessly charging ahead lie this, because when you do, you're not the only one you endanger.
+Marshmallow: Yeah. I've learned my lesson, and I'm... sorry you had to get hurt along the way.
+Knitby_relieved: ... I forgive you.
+<<wait 2>>
+// hot chocolate lava rumble sound
+Knitby: ... We should probably consider leaving now.
+Marshmallow: Yeah, let's do it.
+<<fade_out 3>>
+<<wait 0.5>>
+<<cutscene_state CustomLevel3Logic false>>
+<<start_second_half CustomLevel3Logic>>
+<<fade_in>>
+<<timer_state true>>
 ===
 
 title: Level3End
 ---
-<<load_scene Level4>>
+<<load_scene EndCutscene>>
 ===

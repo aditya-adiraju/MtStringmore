@@ -96930,20 +96930,7 @@ PrefabInstance:
       propertyPath: m_TagString
       value: FinalCheckpoint
       objectReference: {fileID: 0}
-    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
-      propertyPath: respawnFacingLeft
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
-      propertyPath: conversationStartNode
-      value: Level2End
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8572367019768239859, guid: d896cfaf134fcf742b43b825c3882308, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -96976,7 +96963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4f134b98831f254aafdfa0dff56eaa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextLevel: EndCutscene
+  nextLevel: Level3
 --- !u!114 &1759429192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96990,10 +96977,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
+  toQuoteReactDO_NOT_USE_OR_ELSE_YOU_WILL_BE_FIRED: 0
   sprite: {fileID: 0}
   conversationStartNode: Level2End
   respawnFacingLeft: 0
   spawnOffset: {x: 0, y: -2}
+  onCheckpointReached:
+    m_PersistentCalls:
+      m_Calls: []
   hasBeenHit: 0
 --- !u!1001 &1774488444
 PrefabInstance:

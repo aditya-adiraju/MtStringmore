@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Threading.Tasks;
+using Level3;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -28,14 +29,27 @@ namespace Managers
         [YarnCommand("next_scene")]
         public void NextScene()
         {
-            if (nextScene != "")
+            if (!string.IsNullOrWhiteSpace(nextScene))
             {
                 SceneManager.LoadScene(nextScene);
             }
             else
             {
-                DialogueRunner dialogueRunner = FindObjectOfType<DialogueRunner>();
+                DialogueRunner dialogueRunner = FindAnyObjectByType<DialogueRunner>();
                 dialogueRunner.Stop();
+                // not sure there's a way to trigger events in yarn if we're killing it sooo guess we manually trigger
+                // all of them
+                // this is a very good system
+                if (SceneListManager.Instance.LevelNumber == 3)
+                {
+                    Level3Logic level3Logic = FindAnyObjectByType<Level3Logic>();
+                    if (level3Logic)
+                    {
+                        level3Logic.SetCutsceneState(false);
+                        level3Logic.ReachSecondHalf();
+                        TimerManager.SetTimerState(true);
+                    }
+                }
             }
             onSceneInterrupt.Invoke();
         }

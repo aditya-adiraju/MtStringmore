@@ -1,12 +1,14 @@
-using System;
 using Player;
 using UnityEngine;
 
 namespace Interactables
 {
+    /// <summary>
+    /// Class to show an object to turn around when the player's going the wrong way.
+    /// </summary>
     public class TurnAroundClueHandler : MonoBehaviour
     {
-        private bool _respawnFacingLeft;
+        private Checkpoint _checkpoint;
         private GameObject _turnBackText;
         private bool _playerInTrigger;
         private PlayerController _player;
@@ -14,25 +16,24 @@ namespace Interactables
         
         private void Awake()
         {
-            Checkpoint checkpoint = GetComponentInParent<Checkpoint>();
-            _respawnFacingLeft = checkpoint.respawnFacingLeft;
-            _checkpointCollider = checkpoint.GetComponent<Collider2D>();
+            _checkpoint = GetComponentInParent<Checkpoint>();
+            _checkpointCollider = _checkpoint.GetComponent<Collider2D>();
             _turnBackText = transform.GetChild(0).gameObject;
             _playerInTrigger = false;
             _player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!_playerInTrigger) return;
             
-            if (_respawnFacingLeft)
+            if (_checkpoint.respawnFacingLeft)
             {
-                _turnBackText.SetActive(_player.Direction > 0 && _player.transform.position.x < transform.position.x + _checkpointCollider.bounds.size.x / 2);
+                _turnBackText.SetActive(_player.Direction > 0 && _player.transform.position.x < _checkpointCollider.bounds.max.x);
             }
             else
             {
-                _turnBackText.SetActive(_player.Direction < 0 && _player.transform.position.x > transform.position.x - _checkpointCollider.bounds.size.x / 2);
+                _turnBackText.SetActive(_player.Direction < 0 && _player.transform.position.x > _checkpointCollider.bounds.min.x);
             }
         }
 

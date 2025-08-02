@@ -42,6 +42,21 @@ namespace Interactables
             GameManager.Instance.Reset += OnReset;
         }
 
+        private void OnDestroy()
+        {
+            GameManager.Instance.Reset -= OnReset;
+        }
+
+        private void OnEnable()
+        {
+            if (activateOnStart) StartMotion();
+        }
+
+        private void OnDisable()
+        {
+            _rigidbody2D.velocity = Vector2.zero;
+        }
+
         /// <summary>
         /// Starts motion.
         /// </summary>
@@ -88,7 +103,7 @@ namespace Interactables
         {
             _rigidbody2D.position = _startPosition;
             _reachedEnd = false;
-            if (activateOnStart)
+            if (activateOnStart && enabled)
             {
                 Vector2 direction = endPosition - _startPosition;
                 _rigidbody2D.velocity = direction.normalized * velocity;

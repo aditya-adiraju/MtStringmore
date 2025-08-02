@@ -37,7 +37,7 @@ namespace Managers
         {
             if (finalCheckpoint)
             {
-                finalCheckpoint.OnCheckpointHit -= HandleFinalCheckpointHit;
+                finalCheckpoint.onCheckpointReached.RemoveListener(HandleFinalCheckpointHit);
                 finalCheckpoint = null;
             }
             
@@ -45,12 +45,12 @@ namespace Managers
             if (checkpointObj)
             {
                 finalCheckpoint = checkpointObj.GetComponent<Checkpoint>();
-                if (finalCheckpoint != null) finalCheckpoint.OnCheckpointHit += HandleFinalCheckpointHit;
+                if (finalCheckpoint != null) finalCheckpoint.onCheckpointReached.AddListener(HandleFinalCheckpointHit);
             }
             else finalCheckpoint = null;
             
             maxCount = FindObjectsOfType<Collectable>().Length;
-            levelHeaderText.text = "Level " + SceneManager.GetActiveScene().buildIndex / 2 + " Complete!";
+            levelHeaderText.text = $"Level {SceneListManager.Instance.LevelNumber} Complete!";
             resultsPane.SetActive(false);
             isResultsPageOpen = false;
             _saveDataManager = FindObjectOfType<SaveDataManager>();
@@ -64,7 +64,7 @@ namespace Managers
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            if (finalCheckpoint != null) finalCheckpoint.OnCheckpointHit -= HandleFinalCheckpointHit;
+            if (finalCheckpoint != null) finalCheckpoint.onCheckpointReached.RemoveListener(HandleFinalCheckpointHit);
         }
 
         private void HandleFinalCheckpointHit()
@@ -127,7 +127,7 @@ namespace Managers
         {
             Time.timeScale = 1f;
             PauseMenu.IsPauseDisabled = false;
-            SceneManager.LoadScene("MainMenu");
+            SceneListManager.Instance.LoadMainMenu();
         }
 
         public void LoadNextLevel()

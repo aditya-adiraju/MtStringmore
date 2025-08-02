@@ -30,6 +30,11 @@ namespace Interactables
             GameManager.Instance.Reset += OnReset;
         }
 
+        private void OnDestroy()
+        {
+            GameManager.Instance.Reset -= OnReset;
+        }
+
         /// <summary>
         /// Kills the player on (non-trigger) collision enter (if the object is a player).
         /// </summary>

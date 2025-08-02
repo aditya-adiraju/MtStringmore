@@ -99,6 +99,7 @@ namespace Interactables
 
         private PlayerController _player;
         private AudioSource _audioSource;
+        private SpriteRenderer _tabRenderer;
 
         /// <inheritdoc />
         public override bool IgnoreGravity => true;
@@ -295,6 +296,7 @@ namespace Interactables
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _audioSource = GetComponent<AudioSource>();
+            _tabRenderer = GetComponent<SpriteRenderer>();
             GameManager.Instance.Reset += OnReset;
         }
 
@@ -352,6 +354,15 @@ namespace Interactables
             Gizmos.DrawLine(firstPosition, secondPosition);
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(secondPosition, 1);
+        }
+
+        /// <summary>
+        /// Set the visibility of the attachable tab.
+        /// Does not affect the path renderer (we want to keep it visible in the first half of level 3).
+        /// </summary>
+        public void SetTabVisible(bool visible)
+        {
+            _tabRenderer.enabled = visible;
         }
 
         private class BonusEndImpulseEffector : IPlayerVelocityEffector

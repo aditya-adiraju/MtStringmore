@@ -1,7 +1,7 @@
-using System;
 using Managers;
 using Player;
 using UnityEngine;
+using UnityEngine.Events;
 using Yarn.Unity;
 
 namespace Interactables
@@ -17,6 +17,9 @@ namespace Interactables
         [Header("References")] [SerializeField]
         protected Animator anim;
 
+        [SerializeField, Tooltip("Starts conversations on hit bypassing testing and final checkpoint checks")]
+        private bool toQuoteReactDO_NOT_USE_OR_ELSE_YOU_WILL_BE_FIRED;
+
         [SerializeField] private SpriteRenderer sprite;
 
         [Tooltip("Node that starts from this checkpoint. Set to \"\" to not trigger dialog from checkpoint.")]
@@ -27,6 +30,7 @@ namespace Interactables
         public bool respawnFacingLeft;
 
         [SerializeField] private Vector2 spawnOffset;
+        public UnityEvent onCheckpointReached;
         
         /// <summary>
         /// Whether this checkpoint has a conversation.
@@ -39,7 +43,6 @@ namespace Interactables
         protected bool IsCurrentConversation;
 
         public bool hasBeenHit;
-        public event Action OnCheckpointHit;
 
         public void Start()
         {
@@ -49,11 +52,18 @@ namespace Interactables
             if (DialogRunner) DialogRunner.onDialogueComplete.AddListener(EndConversation);
         }
 
+        /// <summary>
+        /// Called on checkpoint hit.
+        /// </summary>
         protected void HitCheckpoint()
         {
             if (hasBeenHit) return;
             hasBeenHit = true;
-            OnCheckpointHit?.Invoke();
+            onCheckpointReached.Invoke();
+            if (toQuoteReactDO_NOT_USE_OR_ELSE_YOU_WILL_BE_FIRED)
+            {
+                StartConversation();
+            }
         }
 
         /// <inheritdoc cref="AbstractPlayerInteractable.OnPlayerEnter"/>
@@ -76,16 +86,33 @@ namespace Interactables
             }
         }
 
+        /// <summary>
+        /// Flips the checkpoint respawn and resets it.
+        /// </summary>
+        public void FlipAndResetCheckpoint()
+        {
+            respawnFacingLeft = !respawnFacingLeft;
+            anim.SetBool(HoistKey, false);
+            hasBeenHit = false;
+        }
+
+        /// <summary>
+        /// Starts the conversation at <see cref="conversationStartNode"/> unless it's blank.
+        /// </summary>
         public virtual void StartConversation()
         {
-            if (conversationStartNode == "") return;
+            if (string.IsNullOrWhiteSpace(conversationStartNode)) return;
             if (IsCurrentConversation) return;
             Debug.Log("Started dialogue at checkpoint.");
             IsCurrentConversation = true;
             DialogRunner.StartDialogue(conversationStartNode);
-            Time.timeScale = 0;
+            if (!toQuoteReactDO_NOT_USE_OR_ELSE_YOU_WILL_BE_FIRED)
+                Time.timeScale = 0;
         }
 
+        /// <summary>
+        /// Ends the conversation if active.
+        /// </summary>
         private void EndConversation()
         {
             if (!IsCurrentConversation) return;

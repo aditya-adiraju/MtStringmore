@@ -1,26 +1,23 @@
-﻿title: KnitbyReunion
-setting: at the bottom of a hole
+﻿title: Level4Cutscene
 ---
-// the path caves in behind marshmallow as they go down to get knitby
-Knitby: Marshmallow! You came!
-Marshmallow: Of course I did! I promised, didn't I?
-// find a ball (clay?) in the cave and marshmallow asks if knitby wants to play football
-// kick the ball somewhere and it loosens a rock, freeing up the path forward
-
-Marshmallow: So, now that we've made it out, I have to ask. Do you want to keep going?
-Knitby: Woah, where is all this coming from, Marshmallow?
+Knitby: I see the exit! Freedom, fresh air, the stars in the night sky!
+// emerging out of the cave
+Marshmallow: So, now that we've made it out, I have to ask. 
+Marshmallow_faraway: Do you want to keep going, Knitby?
+Knitby_confused: Woah, where is all this coming from, Marshmallow?
 Marshmallow: Well, to be honest, I started this all braggadocious and <i>"I don't need anyone"</i> or whatever.
 Marshmallow: But then you fell, and I had to go it alone, and I realized just how risky this whole thing is.
-Marshmallow: I don't think I can do this without you, Knitby, so if you're out, so am I.
+Marshmallow_faraway: I don't think I can do this without you, Knitby, so if you're out, so am I.
 Knitby: Okay, it's my turn to be honest. Because the journey so far was pretty bad.
-Marshmallow: Right, I see how it is.
+Marshmallow_faraway: Right, I see how it is.
 // marshmallow begins walking down
 Knitby: But, it wasn't <i>all</i> bad.
 // marshmallow turns around, confused
-Knitby: Yes, I did fall off a cliff. Yes, I sat in the bottom of a pit for what felt like forever. And yes, I'm still scared of falling again.
+Marshmallow: Huh?
+Knitby: Yes, I did fall off a cliff. Yes, I sat in the bottom of a cave for what felt like forever. And yes, I'm still scared of falling again.
 Knitby: But you came back for me, Marshmallow. You saved me. And now that I've experienced the worst outcome possible, I'm feeling braver knowing what to expect. 
 Knitby: So I guess what I'm saying is that since we've <i>already</i> come all this way... we might as well see how's the view from the summit.
-Marshmallow: YESS!!! And EAT THE CLOUDS!!
+Marshmallow_smile: YESS!!! And EAT THE CLOUDS!!
 Knitby: I still don’t think clouds will taste like cotton candy, though.
 Marshmallow: Sounds like I have the rest of the way up to convince you then.
 // <<load_scene Level4>>

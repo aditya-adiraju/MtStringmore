@@ -25,14 +25,13 @@ namespace UI
         [SerializeField] private GameObject pauseMenuUI;
         [SerializeField] private Button pauseButton;
         [SerializeField] private TextMeshProUGUI versionNumber;
-        [SerializeField] private string mainMenuSceneName = "MainMenu";
         private float _prevTimescale;
         private SaveDataManager _saveDataManager;
         
         /// <summary>
         /// Whether we can open pause menu: i.e. not main menu and not force disabled
         /// </summary>
-        private bool CanOpenPauseMenu => SceneManager.GetActiveScene().name != mainMenuSceneName && !IsPauseDisabled;
+        private static bool CanOpenPauseMenu => !SceneListManager.Instance.InMainMenu && !IsPauseDisabled;
 
         /// <summary>
         ///     Gets the "singleton" instance of the pause menu.
@@ -81,7 +80,7 @@ namespace UI
 
         private void OnSceneChanged(Scene current, Scene next)
         {
-            pauseButton.gameObject.SetActive(next.name != mainMenuSceneName);
+            pauseButton.gameObject.SetActive(!SceneListManager.Instance.IsMainMenu(next.name)) ;
         }
 
         /// <summary>
@@ -132,7 +131,7 @@ namespace UI
             _saveDataManager?.SaveFile();
             // reset any changes made by pausing
             Resume();
-            SceneManager.LoadScene(mainMenuSceneName);
+            SceneListManager.Instance.LoadMainMenu();
         }
 
         /// <summary>

@@ -37,11 +37,6 @@ namespace Managers
         /// If true, the player faces left when they respawn
         /// </summary>
         public bool RespawnFacingLeft { get; private set; }
-    
-        /// <summary>
-        /// Number of checkpoints reached.
-        /// </summary>
-        private List<Vector2> CheckpointsReached { get; } = new();
         
         /// <summary>
         /// Number of checkpoints reached.
@@ -53,13 +48,11 @@ namespace Managers
         /// Should be reset to 0 after being displayed (e.g. after a end-of-level cutscene).
         /// </summary>
         public int NumCollectablesCollected => _collectedCollectables.Count;
-        
+
         /// <summary>
         /// Max number of known collectables.
         /// </summary>
         public int MaxCollectablesCount { get; private set; }
-
-        public IReadOnlyCollection<Vector2> CollectablePositionsCollected => _collectedCollectables;
 
         /// <summary>
         /// Action that gets invoked when level reloads, e.g. respawns
@@ -72,11 +65,30 @@ namespace Managers
         public event Action saveGame;
 
         /// <summary>
+        /// Action invoked when interactables are now enabled.
+        /// </summary>
+        public event Action OnInteractablesEnabledChanged;
+
+        /// <summary>
+        /// Whether interactables in this scene are "enabled".
+        /// If disabled, sprite is changed and they can't be used by the player.
+        /// </summary>
+        public bool AreInteractablesEnabled
+        {
+            get => _areInteractablesEnabled;
+            set
+            {
+                if (_areInteractablesEnabled == value) return;
+                _areInteractablesEnabled = value;
+                OnInteractablesEnabledChanged?.Invoke();
+            }
+            
+        }
+
+        /// <summary>
         /// Canvas to fade in/out when transitioning between scenes
         /// </summary>
         [SerializeField] private FadeEffects sceneTransitionCanvas;
-
-        [SerializeField] private List<string> levelNameList;
 
         //<summary>
         //the numbers of times Marshmallow dies in a level
@@ -103,13 +115,13 @@ namespace Managers
         ///
         /// So we need to check that we're doing that LOL.
         /// </summary>
-        
         private bool _dontClearDataOnSceneChanged;
+        private bool _areInteractablesEnabled = true;
 
         // <summary>
         // saving the level data to here so it's easier to load.
         // </summary>
-        public List<LevelData> allLevelData = new List<LevelData>();
+        public List<LevelData> allLevelData = new();
         
         private void Awake()
         {
@@ -157,7 +169,11 @@ namespace Managers
         {
             sceneTransitionCanvas.InvokeFadeOut();
             Time.timeScale = 1f;
-            _dontClearDataOnSceneChanged = IsInCutsceneOrMainMenu();
+            // We are resetting all stats (collectables etc.) each time we load scene
+            // We need make sure we are not clearing stats when we are loading the results after a cutscene
+            // Therefore we need a list of all cutscenes that show results after the cutscene
+            // Results Manager also uses this to avoid issues
+            _dontClearDataOnSceneChanged = SceneListManager.Instance.IsSceneCutscene(scene.name);
 
             if (!_dontClearDataOnSceneChanged)
             {
@@ -168,7 +184,6 @@ namespace Managers
                     CheckPointPos = player.transform.position;
                     Debug.Log("Hopefully set checkpoint position to be player's position: " + CheckPointPos);
                 }
-                CheckpointsReached.Clear();
                 _prevCheckpoints.Clear();
                 _collectedCollectables.Clear();
                 thisLevelDeaths = -1;
@@ -232,14 +247,13 @@ namespace Managers
         // </summary>
         private void SaveLevelDataToGameManager()
         {
-            string thisSceneName = SceneManager.GetActiveScene().name;
-            int idx = levelNameList.IndexOf(thisSceneName);
+            int idx = SceneListManager.Instance.LevelNumber;
             if (idx == -1)
             {
                 Debug.Log("GameManager could not determine what level we are currently in");
                 return;
             } 
-            SaveToCorrectLevelVariable(idx);
+            SaveToCorrectLevelVariable(idx-1);
         }
         
         private bool BeatsCurrentTime(string currBestTimeSpan, string newTimeSpan)
@@ -297,6 +311,14 @@ namespace Managers
         }
 
         /// <summary>
+        /// Clears all checkpoint data.
+        /// </summary>
+        public void ClearCheckpointData()
+        {
+            _prevCheckpoints.Clear();
+        }
+
+        /// <summary>
         /// Sets the checkpoint location and left facing spawn point.
         /// 
         /// Checks if we've already visited this checkpoint before setting spawn (to avoid backtracking).
@@ -313,7 +335,6 @@ namespace Managers
 
             CheckPointPos = newCheckpointLocation;
             RespawnFacingLeft = shouldFaceLeft;
-            CheckpointsReached.Add(newCheckpointLocation);
         }
 
         /// <summary>
@@ -324,7 +345,6 @@ namespace Managers
         {
             bool shouldFaceLeft = saveData.checkpointFacesLeft;
             RespawnFacingLeft = shouldFaceLeft;
-            CheckpointsReached.Clear();
             _prevCheckpoints.Clear();
             _collectedCollectables.Clear();
             LevelsAccessed.AddRange(saveData.levelsAccessed);
@@ -372,14 +392,6 @@ namespace Managers
             sceneTransitionCanvas.FadeIn -= OnFadeIn;
         }
 
-        /// <summary>
-        /// Returns true if the currently loaded scene is a cutscene or the main menu.
-        /// </summary>
-        public bool IsInCutsceneOrMainMenu()
-        {
-            return FindAnyObjectByType<CutsceneManager>() || SceneManager.GetActiveScene().name == "MainMenu";
-        }
-
         [YarnCommand("load_scene_nonblock")]
         public void InvokeLoadScene(string sceneName, float duration = 0)
         {
@@ -391,6 +403,22 @@ namespace Managers
         {
             yield return new WaitForSecondsRealtime(duration);
             SceneManager.LoadScene(sceneName);
+        }
+
+        [YarnCommand("set_interactables_enabled")]
+        public static void SetInteractablesEnabled(bool isEnabled)
+        {
+            Instance.AreInteractablesEnabled = isEnabled;
+        }
+
+        /// <summary>
+        /// This is probably a bad way to do this, whatever. Need to move the camera and Knitby too.
+        /// </summary>
+        [YarnCommand("move_player")]
+        public static void ForceMovePlayer(float x, float y)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            player.transform.position = new Vector3(x, y);
         }
     }
 }

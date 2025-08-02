@@ -15,8 +15,7 @@ namespace Save
     public class SaveDataManager : MonoBehaviour
     {
         private static readonly string SaveFileName = "data.save";
-        [SerializeField] private string mainMenuScene;
-        
+
         private Thread _saveThread;
         private Vector2? _forcedNextFramePosition;
         private GameManager _gameManager;
@@ -44,8 +43,8 @@ namespace Save
         /// </remarks>
         private void SceneManagerOnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == mainMenuScene) return;
-            
+            if (SceneListManager.Instance.IsMainMenu(scene.name)) return;
+
             if (_forcedNextFramePosition != null)
             {
                 // TODO sendMessage is hacky and WILL BREAK
@@ -76,12 +75,11 @@ namespace Save
                     checkpointFacesLeft = _gameManager.RespawnFacingLeft,
                     dateTimeBinary = DateTime.Now.ToBinary(),
                     levelsAccessed = _gameManager.LevelsAccessed,
-                    
+
                     level1Data = _gameManager.allLevelData[0],
                     level2Data = _gameManager.allLevelData[1],
                     level3Data = _gameManager.allLevelData[2],
                     level4Data = _gameManager.allLevelData[3]
-                    
                 }
             };
         }
@@ -161,7 +159,7 @@ namespace Save
         /// </remarks>
         public void SaveFile()
         {
-            if (SceneManager.GetActiveScene().name == mainMenuScene)
+            if (SceneListManager.Instance.InMainMenu)
             {
                 Debug.LogWarning("Saving to main menu scene. Hopefully we're loading from it and not loading to it.");
                 return;

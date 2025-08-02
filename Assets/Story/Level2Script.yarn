@@ -77,7 +77,7 @@ setting: a cliff
 <<wait 0.05>>
 <<leap_nonblock Knitby -25 18 0.37 false -66 true true true>>
 <<fade_in 0.25>>
-<<fix_coords 74 680 1>>
+<<fix_coords 74 678 1>>
 <<wait_move_finish Knitby>>
 // Knitby and Marshmallow jump up together
 <<leap_nonblock Marshmallow -25 18 0.37 false -66 true>>
@@ -123,12 +123,14 @@ Marshmallow_faraway: Oh no, this is all my fault...
 <<move Marshmallow 76 679 30 true true false 0>>
 <<move Marshmallow 80 679 30 true true false 0 2>>
 <<run Marshmallow 76 679 30 true true false 0>>
-Marshmallow_faraway: I really hope Knitby is alright...
+Marshmallow_faraway: What do I do...
 // big dramatic pause
-<<wait 2>>
-Marshmallow_frown: There's no time to waste, I have to fix this.
-Marshmallow_frown: Hang tight, Knitby, I'm coming to get you!
 <<wait_move_finish Marshmallow>>
+<<flip Marshmallow>>
+Marshmallow: I...
+<<wait 1>>
+<<flip Marshmallow>>
+Marshmallow_frown: No, Knitby needs my help. I'm coming, buddy!
 <<fix_object Marshmallow>>
 // marshmallow jumps down
 <<leap_nonblock Marshmallow -12 18 5>>
@@ -141,5 +143,5 @@ Marshmallow_frown: Hang tight, Knitby, I'm coming to get you!
 title: Level2End
 ---
 // TODO: load level 3 cutscene
-<<load_scene EndCutscene>>
+<<load_scene Level3>>
 ===

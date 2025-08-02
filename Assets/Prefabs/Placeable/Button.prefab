@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swingRadius: 3
+  disabledSprite: {fileID: 21300000, guid: 3332228b7b4bb47aab0e5de1fdc954fd, type: 3}
 --- !u!1 &8980845071309438840
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,6 +276,10 @@ PrefabInstance:
     - target: {fileID: 4457010819197515877, guid: 80b3bdc7f754f416992cddf41493c5cf, type: 3}
       propertyPath: fixTypeY
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4457010819197515877, guid: 80b3bdc7f754f416992cddf41493c5cf, type: 3}
+      propertyPath: disableWithInteractables
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8635263684823995519, guid: 80b3bdc7f754f416992cddf41493c5cf, type: 3}
       propertyPath: m_Name
