@@ -24,11 +24,23 @@ namespace DevConsole
         /// <inheritdoc />
         public void Run(string[] args, StringWriter sw)
         {
-            if (args.Length > 0)
+            if (args.Length > 1)
             {
                 PrintUsage(sw);
                 return;
             }
+
+            if (args.Length == 1)
+            {
+                string arg = args[0];
+                if (arg.Length != 1 || arg[0] - '0' > 1 || arg[0] - '0' < 0)
+                {
+                    PrintUsage(sw);
+                    return;
+                }
+            }
+
+            bool waitForFixedUpdate = args.Length == 1 && args[0].Trim().Equals("1");
             PlayerController player = Object.FindObjectOfType<PlayerController>();
             if (!player)
             {
@@ -50,13 +62,13 @@ namespace DevConsole
                 sw.WriteLine(IDevCommand.Color("Couldn't find camera in current scene.", "yellow"));
             }
 
-            player.StartCoroutine(Hack(checkpoint.transform.position, player, camera));
+            player.StartCoroutine(Hack(checkpoint.transform.position, player, camera, waitForFixedUpdate));
         }
 
         /// <inheritdoc />
         public void PrintUsage(StringWriter sw, string color = "red")
         {
-            sw.WriteLine(IDevCommand.Color($"Usage: {Name}", color));
+            sw.WriteLine(IDevCommand.Color($"Usage: {Name} [/1/0]", color));
         }
 
         /// <summary>
@@ -64,10 +76,12 @@ namespace DevConsole
         /// </summary>
         /// <param name="position">End checkpoint location</param>
         /// <param name="player">Player</param>
-        /// <param name="camera"></param>
+        /// <param name="camera">Camera</param>
+        /// <param name="shouldWaitForFixedUpdate">Whether to wait for fixed update</param>
         /// <returns>Coroutine</returns>
-        private static IEnumerator Hack(Vector3 position, PlayerController player, Camera camera)
+        private static IEnumerator Hack(Vector3 position, PlayerController player, Camera camera, bool shouldWaitForFixedUpdate = false)
         {
+            WaitForFixedUpdate waitForFixedUpdate = shouldWaitForFixedUpdate ? new WaitForFixedUpdate() : null;
             List<Collectable> collectables = new(Object.FindObjectsOfType<Collectable>());
             while (collectables.Count > 0)
             {
@@ -77,7 +91,7 @@ namespace DevConsole
                 if (camera)
                     camera.transform.position = collectable.transform.position;
                 collectables.Remove(collectable);
-                yield return null;
+                yield return waitForFixedUpdate;
             }
             player.transform.position = position;
             if (camera) 

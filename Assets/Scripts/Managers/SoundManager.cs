@@ -98,6 +98,14 @@ namespace Managers
         }
 
         /// <summary>
+        /// Resets the time since last collect.
+        /// </summary>
+        public void ResetTimeSinceLastCollect()
+        {
+            _timeSinceLastCollect = Mathf.Infinity;
+        }
+
+        /// <summary>
         /// Plays a collectable sound in sequence with combo logic using PlayOneShot.
         /// </summary>
         public void PlayCollectableComboSound()

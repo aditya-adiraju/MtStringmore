@@ -2726,17 +2726,6 @@ MonoBehaviour:
   - preLevelCutscene: 
     levelName: Level4
     postLevelCutscene: EndCutscene
-  levelNameList:
-  - Level1Trial
-  - Level2
-  - Level3
-  - Level4
-  cutsceneNameList:
-  - IntroCutscene
-  - SecondCutscene
-  - Level2InterstitialCutscene
-  - EndCutscene
-  - MainMenu
 --- !u!82 &2257474230385962516
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3209,15 +3198,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1620775784866583158, guid: dd796b62e71897f40b9dc32c7f7c24a4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1520.4772
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1620775784866583158, guid: dd796b62e71897f40b9dc32c7f7c24a4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 629.4004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1620775784866583158, guid: dd796b62e71897f40b9dc32c7f7c24a4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.0863606
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1620775784866583158, guid: dd796b62e71897f40b9dc32c7f7c24a4, type: 3}
       propertyPath: m_LocalRotation.w

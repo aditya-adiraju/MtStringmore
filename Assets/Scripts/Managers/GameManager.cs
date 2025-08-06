@@ -231,20 +231,19 @@ namespace Managers
             }
         }
         
-        // <summary>
-        // signals that the level is completed and the level data should be saved
-        // called by resultsManager once last checkpoint is reached
-        // </summary>
-        public void LevelCompleted()
+        /// <summary>
+        /// Saves level data - called by resultsManager once last checkpoint is reached.
+        /// </summary>
+        public void SaveGame()
         {
             SaveLevelDataToGameManager();
             saveGame?.Invoke();
         }
 
-        // <summary>
-        // saves all of the current game stats (thisLevelDeaths, thisLevelCandies, thisLevelTime)
-        // to the game manager level data variables
-        // </summary>
+        /// <summary>
+        /// saves all of the current game stats (thisLevelDeaths, thisLevelCandies, thisLevelTime)
+        /// to the game manager level data variables
+        /// </summary>
         private void SaveLevelDataToGameManager()
         {
             int idx = SceneListManager.Instance.LevelNumber;
