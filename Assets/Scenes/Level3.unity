@@ -45978,6 +45978,7 @@ MonoBehaviour:
   - {fileID: 1666217023}
   - {fileID: 747506631}
   - {fileID: 1189795136}
+  secondHalfBGM: {fileID: 8300000, guid: 2e11ca3e801d4ea45bb1b7b11b99f110, type: 3}
   secondHalfCheckpoint: {fileID: 459664544}
 --- !u!1001 &747506629
 PrefabInstance:
@@ -46394,16 +46395,20 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 715592302039424758, guid: a1b314ed5ae0641aaa5d3157e2de53d7, type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 715592302039424758, guid: a1b314ed5ae0641aaa5d3157e2de53d7, type: 3}
       propertyPath: m_BackGroundColor.b
-      value: 0.1764706
+      value: 0.121568635
       objectReference: {fileID: 0}
     - target: {fileID: 715592302039424758, guid: a1b314ed5ae0641aaa5d3157e2de53d7, type: 3}
       propertyPath: m_BackGroundColor.g
-      value: 0.11764706
+      value: 0.078431375
       objectReference: {fileID: 0}
     - target: {fileID: 715592302039424758, guid: a1b314ed5ae0641aaa5d3157e2de53d7, type: 3}
       propertyPath: m_BackGroundColor.r
-      value: 0.2
+      value: 0.18039216
       objectReference: {fileID: 0}
     - target: {fileID: 3630413941472142713, guid: a1b314ed5ae0641aaa5d3157e2de53d7, type: 3}
       propertyPath: m_LocalPosition.x

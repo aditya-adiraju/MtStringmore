@@ -14,6 +14,7 @@ namespace Level3
         [SerializeField] private UnityEvent onSecondHalfReached;
         [SerializeField] private GameObject[] gameObjects;
         [SerializeField] private GameObject[] cutsceneObjects;
+        [SerializeField] private AudioClip secondHalfBGM;
         [SerializeField] private Checkpoint secondHalfCheckpoint;
 
         private Checkpoint[] _checkpoints;
@@ -59,6 +60,8 @@ namespace Level3
             // seems checkpoint calls this before adding itself
             // makes our life easier
             GameManager.Instance.ClearCheckpointData();
+            GameManager.Instance.GetComponent<BGMManager>().PlayBGM(secondHalfBGM);
+            
             foreach (Checkpoint checkpoint in _checkpoints)
             {
                 if (checkpoint != secondHalfCheckpoint) checkpoint.FlipAndResetCheckpoint();
