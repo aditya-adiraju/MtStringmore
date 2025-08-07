@@ -14,11 +14,14 @@ namespace Managers
         private static AudioSource _source;
         [SerializeField] private string nextScene;
         [SerializeField] private UnityEvent onSceneInterrupt;
+        private TimerManager _timerManager;
 
         private void Awake()
         {
             _source = GetComponent<AudioSource>();
             _source.Play();
+            
+            _timerManager = FindObjectOfType<TimerManager>();
         }
 
         private void Update()
@@ -47,7 +50,8 @@ namespace Managers
                     {
                         level3Logic.SetCutsceneState(false);
                         level3Logic.ReachSecondHalf();
-                        TimerManager.SetTimerState(true);
+                        
+                        _timerManager.SetTimerState(true);
                     }
                 }
             }

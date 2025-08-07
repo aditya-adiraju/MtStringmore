@@ -12,7 +12,7 @@ namespace Knitby
         private void Update()
         {
             if (Time.deltaTime == 0) return;
-            anim.SetBool(IdleKey, Mathf.Approximately(Vector3.Distance(transform.position, _lastPosition), 0));
+            anim.SetBool(IdleKey, Mathf.Abs(Vector3.Distance(transform.position, _lastPosition)) < 0.05f);
             _lastPosition = transform.position;
         }
     }

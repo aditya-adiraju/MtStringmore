@@ -69,9 +69,10 @@ namespace Managers
         }
 
         [YarnCommand("timer_state")]
-        public static void SetTimerState(bool value)
+        public void SetTimerState(bool value)
         {
             _isEnabled = value;
+            inGameTimerText.enabled = value;
         }
 
         public void OnToggle()

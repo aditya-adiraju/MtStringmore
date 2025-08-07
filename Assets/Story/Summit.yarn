@@ -2,18 +2,21 @@
 setting: the summit of mt. stringmore
 ---
 Marshmallow: Hang on tight! You doing alright?
-Knitby: Never better!
+// knitby is terrified, but feigning it
+Knitby_confused: Uhhhh...
+Knitby_relieved: I'm doing excellent... I've never... been better...
 // floating up on a balloon
 // animate background to move to give balloon floaty movement vibes
 // TODO idk what conversation to put here
-Knitby: I see it coming up! The summit!
+Knitby: Hang on a minute, our journey's end is close at hand. I think that's the summit! 
 Marshmallow: Three, two, one, jump!
 // boing
 Marshmallow: Nice to be on solid ground again, huh?
-Knitby: You know it, buddy.
+Knitby: It's certainly a relief.
 <<wait 2>>
 Knitby: So, is the summit everything you hoped it would be?
-Marshmallow: Everything I hoped for and more.
+Marshmallow_smile: Everything I hoped for and more.
+// knitby smile
 Knitby: Awwww...
 // marshmallow chomps a cloud
 Marshmallow: And, you know what?
@@ -21,19 +24,22 @@ Knitby: What?
 Marshmallow: It really does taste like cotton candy!
 Knitby: No way. That's impossible.
 // knitby chomps a cloud, and marshmallow snickers
-Knitby: I have no idea what you're talking about. That tastes like dusty stale water.
-Marshmallow: Ha, got you!
+Knitby_confused: I have no idea what you're talking about. That tastes like dusty stale water.
+Marshmallow_smile: Ha, got you!
 Knitby: Okay, but surely now you will admit that clouds don't taste like cotton candy, right?
 // marshmallow chomps another cloud, visibly more hesitantly
-Marshmallow: No, it's... delicious...
+Marshmallow_faraway: No, it's... delicious...
 Knitby_confused: ... Really.
 <<wait 1>>
 Marshmallow_faraway: Okay, fine, you were right.
 Marshmallow: But it was still totally worth it to come here. I mean, look at that view!  
-// dramatic pan upwards to the sunrise
+// TODO: dramatic pan upwards to the sunrise
+// TODO: can we address the sunrise symbolically?
 // wry knitby smile
 // knitby should be a little more flat, like "ehhhh" but still positive 
-Knitby: ...I will admit that this is a nice sunrise, but nothing further.
+Knitby: ...I will admit, this is a nice sunrise.
+Marshmallow: <i>See?</i>
+Knitby: But nothing more!
 Marshmallow_smile: That's good enough for me!
 <<fade_out 1>>
 <<wait 5>>
