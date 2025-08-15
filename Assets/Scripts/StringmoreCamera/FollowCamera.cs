@@ -112,6 +112,14 @@ namespace StringmoreCamera
         {
             _fixCameraTriggers.Remove(trigger);
         }
+
+        /// <summary>
+        /// Set the Y offset of the camera above the ground.
+        /// </summary>
+        public void SetYOffset(float offset)
+        {
+            yOffset = offset;
+        }
        
         
         #endregion

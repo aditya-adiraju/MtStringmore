@@ -37,6 +37,8 @@ namespace Interactables
         /// </summary>
         public bool HasConversation => !string.IsNullOrWhiteSpace(conversationStartNode);
 
+        public override bool DisableWithInteractables => false;
+
         // internal properties not exposed to editor
         private AudioSource _audioSource;
         protected DialogueRunner DialogRunner;

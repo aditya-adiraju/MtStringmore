@@ -247,6 +247,7 @@ namespace Player
 
             _buttonNotPressedPreviousFrame = true;
             Direction = startDirection;
+            GameManager.Instance.RespawnFacingLeft = startDirection < 0.0f;
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("LetterBlock"), false);
             GameManager.Instance.Reset += OnReset;
         }
@@ -686,7 +687,8 @@ namespace Player
         /// </summary>
         private void HandleInteractables()
         {
-            if (!CurrentInteractableArea || !GameManager.Instance.AreInteractablesEnabled) return;
+            if (!CurrentInteractableArea || 
+                (CurrentInteractableArea.DisableWithInteractables && !GameManager.Instance.AreInteractablesEnabled)) return;
             bool previouslyGrounded = PlayerState == PlayerStateEnum.Run;
             if (IsButtonUsed())
             {

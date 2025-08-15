@@ -27,6 +27,8 @@ namespace Interactables
         private AudioSource _audioSource;
         private bool _launched;
 
+        public override bool DisableWithInteractables => false;
+
         private void Awake()
         {
             _animator = GetComponent<Animator>();

@@ -11,14 +11,14 @@ setting: at the bottom of a hole
 // marshmallow is scared that Knitby is totally gone
 Marshmallow_faraway: Can I find them? Am I too late, too slow? 
 <<shiver CutsceneKnitby 0.05 0.05>>
-<<run CutsceneMarshmallow 90 -197.7 12>>
+<<run CutsceneMarshmallow 93 -197.7 12>>
 <<fade_in 3>>
 Marshmallow: <i>KNITBYYYY!!!!</i>
 // walk deeper into cave, sees knitby on edge of screen
 <<wait_move_finish CutsceneMarshmallow>> 
 Marshmallow: There you are, I thought you were... Well...
 // pan over to see a shivering knitby
-<<fix_coords 100 -197.7 0.5>>
+<<fix_coords 102 -197.7 0.5>>
 <<wait 1>>
 Knitby_relieved: ...
 // marshmallow slowly walks in like hey buddy are you okay

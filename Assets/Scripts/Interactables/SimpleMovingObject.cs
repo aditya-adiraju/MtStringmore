@@ -114,5 +114,18 @@ namespace Interactables
                 _rigidbody2D.velocity = Vector2.zero;
             }
         }
+
+        /// <summary>
+        /// Sets a new start position for the object (used when OnReset is called).
+        /// If the behavior is not enabled yet, does not update the start position.
+        /// </summary>
+        public void SetStartYPosition(float newY)
+        {
+            if (enabled)
+            {
+                _startPosition.y = newY;
+            }
+        }
+
     }
 }

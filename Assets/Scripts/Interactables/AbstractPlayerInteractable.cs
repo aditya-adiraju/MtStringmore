@@ -26,6 +26,11 @@ namespace Interactables
         public virtual bool DisallowReinteraction => true;
 
         /// <summary>
+        /// Whether to disable this object when interactables are disabled in level 3.
+        /// </summary>
+        public virtual bool DisableWithInteractables => true;
+
+        /// <summary>
         /// Called on player enter.
         /// </summary>
         /// <param name="player">Player that entered</param>

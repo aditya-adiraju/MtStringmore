@@ -1,5 +1,8 @@
 ﻿using Interactables;
+using Knitby;
 using Managers;
+using Player;
+using StringmoreCamera;
 using UI;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,27 +20,37 @@ namespace Level3
         [SerializeField] private GameObject[] cutsceneObjects;
         [SerializeField] private AudioClip secondHalfBGM;
         [SerializeField] private Checkpoint secondHalfCheckpoint;
+        [SerializeField] private float SecondHalfCameraYOffset;
 
         private Checkpoint[] _checkpoints;
         private AttachableMovingObject[] _zippers;
+        private PlayerController _player;
+        private KnitbyController _knitby;
+        private FollowCamera _camera;
         private TimerManager _timerManager;
 
         private void Awake()
         {
             _checkpoints = FindObjectsByType<Checkpoint>(FindObjectsSortMode.None);
             _zippers = FindObjectsByType<AttachableMovingObject>(FindObjectsSortMode.None);
+            
+            _player = FindAnyObjectByType<PlayerController>();
+            _knitby = FindAnyObjectByType<KnitbyController>();
+            _camera = FindAnyObjectByType<FollowCamera>();
         }
 
         private void Start()
         {
             // there's no guarantee we grab the right instance in Awake so we use Start
-            GameManager.Instance.AreInteractablesEnabled = false;
+            GameManager.SetInteractablesEnabled(false);
             _timerManager = FindAnyObjectByType<TimerManager>();
             
             foreach (AttachableMovingObject zipper in _zippers)
             {
                 zipper.SetTabVisible(false);
             }
+            
+            _knitby.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -82,14 +95,26 @@ namespace Level3
             
             foreach (Checkpoint checkpoint in _checkpoints)
             {
-                if (checkpoint != secondHalfCheckpoint) checkpoint.FlipAndResetCheckpoint();
+                if (checkpoint != secondHalfCheckpoint) 
+                    checkpoint.FlipAndResetCheckpoint();
             }
+            secondHalfCheckpoint.respawnFacingLeft = true;
+            GameManager.Instance.RespawnFacingLeft = true;
+            
             onSecondHalfReached.Invoke();
             
             foreach (AttachableMovingObject zipper in _zippers)
             {
                 zipper.SetTabVisible(true);
             }
+            
+            // make player face left
+            _player.transform.position = secondHalfCheckpoint.transform.position;
+            _player.AddPlayerVelocityEffector(new SimpleVelocityEffector(_ => new Vector2(-1.0f, 1.0f)), true);
+            
+            _knitby.gameObject.SetActive(true);
+            _knitby.transform.position = secondHalfCheckpoint.transform.position;
+            _camera.SetYOffset(SecondHalfCameraYOffset);
         }
     }
 }
