@@ -49,7 +49,7 @@ Knitby_relieved: ... Okay.
 <<wait 1>>
 <<flip Knitby>>
 <<run Knitby 44 1 15>>
-<<stop_sound 4>>
+<<fade_out_bgm Manager 4>>
 <<wait 2>>
 <<hide Knitby>>
 <<hide Marshmallow>>

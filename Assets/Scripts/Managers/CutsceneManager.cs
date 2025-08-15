@@ -1,9 +1,9 @@
 using System.Collections;
-using System.Threading.Tasks;
 using Level3;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using Util;
 using Yarn.Unity;
 
 namespace Managers
@@ -14,14 +14,11 @@ namespace Managers
         private static AudioSource _source;
         [SerializeField] private string nextScene;
         [SerializeField] private UnityEvent onSceneInterrupt;
-        private TimerManager _timerManager;
 
         private void Awake()
         {
             _source = GetComponent<AudioSource>();
             _source.Play();
-            
-            _timerManager = FindObjectOfType<TimerManager>();
         }
 
         private void Update()
@@ -48,10 +45,7 @@ namespace Managers
                     Level3Logic level3Logic = FindAnyObjectByType<Level3Logic>();
                     if (level3Logic)
                     {
-                        level3Logic.SetCutsceneState(false);
-                        level3Logic.ReachSecondHalf();
-                        
-                        _timerManager.SetTimerState(true);
+                        level3Logic.SpecialSkipLogic();
                     }
                 }
             }
@@ -66,27 +60,12 @@ namespace Managers
                 yield return new WaitUntil(() => !_source.isPlaying);
         }
 
+        /// <summary>
+        /// Fades out the currently playing sound.
+        /// </summary>
+        /// <param name="fadeDuration">Fade duration, seconds</param>
+        /// <returns>Coroutine</returns>
         [YarnCommand("stop_sound")]
-        public static async void StopSound(float fadeDuration = 0)
-        {
-            if (fadeDuration == 0)
-            {
-                _source.Stop();
-                return;
-            }
-        
-            float startVolume = _source.volume;
-            float elapsedTime = 0f;
-
-            while (elapsedTime < fadeDuration)
-            {
-                elapsedTime += Time.unscaledDeltaTime;
-                _source.volume = Mathf.Lerp(startVolume, 0, elapsedTime / fadeDuration);
-                await Task.Yield(); // Non-blocking
-            }
-
-            _source.Stop();
-            _source.volume = startVolume;
-        }
+        public static IEnumerator StopSound(float fadeDuration = 0) => _source.FadeOut(fadeDuration);
     }
 }

@@ -75,6 +75,7 @@ namespace Interactables
             if (!motionUnbounded && DistanceAlongPath >= Vector2.Distance(_startPosition, endPosition))
             {
                 _reachedEnd = true;
+                _rigidbody2D.velocity = Vector2.zero;
             }
         }
 

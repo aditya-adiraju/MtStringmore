@@ -37,12 +37,12 @@ namespace Managers
         /// If true, the player faces left when they respawn
         /// </summary>
         public bool RespawnFacingLeft { get; private set; }
-        
+
         /// <summary>
         /// Number of checkpoints reached.
         /// </summary>
         public List<string> LevelsAccessed { get; } = new();
-    
+
         /// <summary>
         /// The number of collectables collected.
         /// Should be reset to 0 after being displayed (e.g. after a end-of-level cutscene).
@@ -82,61 +82,72 @@ namespace Managers
                 _areInteractablesEnabled = value;
                 OnInteractablesEnabledChanged?.Invoke();
             }
-            
         }
 
         /// <summary>
         /// Canvas to fade in/out when transitioning between scenes
         /// </summary>
         [SerializeField] private FadeEffects sceneTransitionCanvas;
-
+#if UNITY_EDITOR
+        /// <summary>
+        /// Specific <see cref="Application.targetFrameRate"/> to force.
+        /// </summary>
+        /// <remarks>
+        /// To the devs: don't EVER use this outside of #if UNITY_EDITOR or else i'll have to painfully debug your mess
+        /// at 2 am and be able to use this story for my next behavioural interview
+        /// </remarks>
+        [SerializeField, Tooltip("Specific frame rate to force (0 or-1 is uncapped)")]
+        private int forceFrameRate;
+#endif
         //<summary>
         //the numbers of times Marshmallow dies in a level
         //called by results manager and level select to display stats
         //</summary>
         public int thisLevelDeaths;
-        
+
         //<summary>
         //the time it took for player to beat a level
         //called by results manager and level select to display stats
         // in the form of hh:mm:ss
         //</summary>
-        public string ThisLevelTime { get; set;}
+        public string ThisLevelTime { get; set; }
 
         public const string EmptySaveTime = "--:--:--";
-        
+
 
         private readonly Dictionary<Vector2, Collectable> _collectableLookup = new();
         private readonly HashSet<Vector2> _prevCheckpoints = new();
         private readonly HashSet<Vector2> _collectedCollectables = new();
-    
+
         /// <summary>
         /// So it turns out that onSceneChanged happens after modifying game data on save.
         ///
         /// So we need to check that we're doing that LOL.
         /// </summary>
         private bool _dontClearDataOnSceneChanged;
+
         private bool _areInteractablesEnabled = true;
 
         // <summary>
         // saving the level data to here so it's easier to load.
         // </summary>
         public List<LevelData> allLevelData = new();
-        
+
         private void Awake()
         {
             ThisLevelTime = EmptySaveTime;
             // make sure list has 4 entries
-            for (int i = allLevelData.Count; i < 4; i++) {
+            for (int i = allLevelData.Count; i < 4; i++)
+            {
                 allLevelData.Add(new LevelData());
             }
-            
+
             if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
-        
+
             _instance = this;
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -144,8 +155,18 @@ namespace Managers
             {
                 // TODO make maxFrameRate a setting
                 Application.targetFrameRate =
-                    Mathf.RoundToInt((float) Screen.resolutions.Max(res => res.refreshRateRatio.value));
+                    Mathf.RoundToInt((float)Screen.resolutions.Max(res => res.refreshRateRatio.value));
             }
+            else
+            {
+#if UNITY_EDITOR
+                // only inform dev folks that the frame rate is being set if non-capped (i.e. not 0 or -1)
+                if (forceFrameRate > 0)
+                    Debug.LogWarning($"Forcing frame rate to be {forceFrameRate}");
+                Application.targetFrameRate = forceFrameRate;
+#endif
+            }
+
             Debug.Log("Application version: " + Application.version);
         }
 
@@ -157,7 +178,7 @@ namespace Managers
         private void OnDestroy()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            
+
             PlayerController player = FindObjectOfType<PlayerController>();
             if (player)
             {
@@ -184,14 +205,15 @@ namespace Managers
                     CheckPointPos = player.transform.position;
                     Debug.Log("Hopefully set checkpoint position to be player's position: " + CheckPointPos);
                 }
+
                 _prevCheckpoints.Clear();
                 _collectedCollectables.Clear();
                 thisLevelDeaths = -1;
                 if (saveGame != null) saveGame.Invoke();
             }
-            
+
             Collectable[] collectables = FindObjectsOfType<Collectable>();
-            
+
             if (!_dontClearDataOnSceneChanged)
             {
                 _collectableLookup.Clear();
@@ -203,6 +225,7 @@ namespace Managers
                 Debug.Log("Skipping collectable count in cutscene. Using previous value: " + MaxCollectablesCount);
                 Debug.Log("Skipping ThisLevelTime in cutscene. Using previous value: " + ThisLevelTime);
             }
+
             foreach (Collectable collectable in collectables)
             {
                 Vector2 position = collectable.transform.position;
@@ -215,6 +238,7 @@ namespace Managers
                     _collectableLookup.Add(position, collectable);
                 }
             }
+
             _dontClearDataOnSceneChanged = false;
         }
 
@@ -230,7 +254,7 @@ namespace Managers
                 thisLevelDeaths++;
             }
         }
-        
+
         /// <summary>
         /// Saves level data - called by resultsManager once last checkpoint is reached.
         /// </summary>
@@ -251,10 +275,11 @@ namespace Managers
             {
                 Debug.Log("GameManager could not determine what level we are currently in");
                 return;
-            } 
-            SaveToCorrectLevelVariable(idx-1);
+            }
+
+            SaveToCorrectLevelVariable(idx - 1);
         }
-        
+
         private bool BeatsCurrentTime(string currBestTimeSpan, string newTimeSpan)
         {
             if (currBestTimeSpan == EmptySaveTime)
@@ -274,9 +299,8 @@ namespace Managers
                 return t;
             Debug.LogWarning($"Failed to parse parts of: {time}");
             return TimeSpan.MaxValue;
-
         }
-        
+
         private void SaveToCorrectLevelVariable(int index)
         {
             if (index >= 0 && index < allLevelData.Count)
@@ -296,7 +320,7 @@ namespace Managers
                     if (updatedLevelData.leastDeaths == -1 || updatedLevelData.leastDeaths > thisLevelDeaths)
                         updatedLevelData.leastDeaths = thisLevelDeaths;
                 }
-                
+
                 // Time
                 if (BeatsCurrentTime(updatedLevelData.bestTime, ThisLevelTime))
                     updatedLevelData.bestTime = ThisLevelTime;
@@ -347,7 +371,7 @@ namespace Managers
             _prevCheckpoints.Clear();
             _collectedCollectables.Clear();
             LevelsAccessed.AddRange(saveData.levelsAccessed);
-            
+
             allLevelData[0] = saveData.level1Data;
             allLevelData[1] = saveData.level2Data;
             allLevelData[2] = saveData.level3Data;
@@ -396,7 +420,7 @@ namespace Managers
         {
             StartCoroutine(LoadScene(sceneName, duration));
         }
-    
+
         [YarnCommand("load_scene")]
         public static IEnumerator LoadScene(string sceneName, float duration = 0)
         {

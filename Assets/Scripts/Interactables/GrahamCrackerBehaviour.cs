@@ -168,11 +168,13 @@ namespace Interactables
         {
             _bottomCollide = false;
             _topCollide = false;
-            yield return new WaitForSeconds(timeStayUp - shakeTime);
+            if (timeStayUp - shakeTime > 0)
+                yield return new WaitForSeconds(timeStayUp - shakeTime);
             shakeSound.Play();
             bottomPart.HandleShake(shakeTime, shakeDelay, shakeDistance);
             topPart.HandleShake(shakeTime, shakeDelay, shakeDistance);
-            yield return new WaitForSeconds(shakeTime);
+            if (shakeTime > 0)
+                yield return new WaitForSeconds(shakeTime);
             bottomPart.StartMotion(velocityDown);
             topPart.StartMotion(velocityDown);
             closingSound.PlayDelayed(closingSoundDelay);

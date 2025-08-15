@@ -1,5 +1,6 @@
 ﻿using Interactables;
 using Managers;
+using UI;
 using UnityEngine;
 using UnityEngine.Events;
 using Yarn.Unity;
@@ -19,6 +20,7 @@ namespace Level3
 
         private Checkpoint[] _checkpoints;
         private AttachableMovingObject[] _zippers;
+        private TimerManager _timerManager;
 
         private void Awake()
         {
@@ -30,23 +32,39 @@ namespace Level3
         {
             // there's no guarantee we grab the right instance in Awake so we use Start
             GameManager.Instance.AreInteractablesEnabled = false;
+            _timerManager = FindAnyObjectByType<TimerManager>();
             
             foreach (AttachableMovingObject zipper in _zippers)
             {
                 zipper.SetTabVisible(false);
             }
         }
+
+        /// <summary>
+        /// Special skip logic since the actual cutscene skip button is hella broken.
+        /// </summary>
+        public void SpecialSkipLogic()
+        {
+            SetCutsceneState(false);
+            ReachSecondHalf();
+            CutsceneFade.FadeIn();
+            _timerManager.SetTimerState(true);
+        }
         
+        /// <summary>
+        /// Sets whether we're in a cutscene or not, toggling objects appropriately.
+        /// </summary>
+        /// <param name="inCutscene">Whether we're in a cutscene</param>
         [YarnCommand("cutscene_state")]
-        public void SetCutsceneState(bool value)
+        public void SetCutsceneState(bool inCutscene)
         {
             foreach (GameObject obj in gameObjects)
             {
-                obj.SetActive(!value);
+                obj.SetActive(!inCutscene);
             }
             foreach (GameObject obj in cutsceneObjects)
             {
-                obj.SetActive(value);
+                obj.SetActive(inCutscene);
             }
         }
 

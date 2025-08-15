@@ -9806,8 +9806,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3485dfcc9b1aaf4297aff4ff9916792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xParallaxFactor: 0.99
-  yParallaxFactor: 0.99
+  xParallaxFactor: 0.495
+  yParallaxFactor: 0.495
   fallbackSpriteBounds: 160
   hasSize: 0
 --- !u!1 &498823246206989402
@@ -9942,8 +9942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3485dfcc9b1aaf4297aff4ff9916792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xParallaxFactor: 0.5
-  yParallaxFactor: 0.999
+  xParallaxFactor: 0.25
+  yParallaxFactor: 0.4995
   fallbackSpriteBounds: 160
   hasSize: 1
 --- !u!1 &675992843450134068
@@ -15125,8 +15125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3485dfcc9b1aaf4297aff4ff9916792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xParallaxFactor: 0.99
-  yParallaxFactor: 0.99
+  xParallaxFactor: 0.495
+  yParallaxFactor: 0.495
   fallbackSpriteBounds: 160
   hasSize: 0
 --- !u!1 &2807438625937690215
@@ -15307,8 +15307,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3485dfcc9b1aaf4297aff4ff9916792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xParallaxFactor: 0.9
-  yParallaxFactor: 0.999
+  xParallaxFactor: 0.45
+  yParallaxFactor: 0.4995
   fallbackSpriteBounds: 160
   hasSize: 1
 --- !u!1 &4215520062609269712
@@ -16040,8 +16040,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3485dfcc9b1aaf4297aff4ff9916792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xParallaxFactor: 0.4
-  yParallaxFactor: 0.999
+  xParallaxFactor: 0.2
+  yParallaxFactor: 0.4995
   fallbackSpriteBounds: 160
   hasSize: 1
 --- !u!1 &9059206863226669208

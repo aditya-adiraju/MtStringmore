@@ -61,6 +61,8 @@ namespace Interactables
         /// <param name="speed">Speed (m/s)</param>
         public void StartMotion(float speed)
         {
+            StopAllCoroutines();
+            _rigidbody2D.position = _initialPosition;
             _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody2D.velocity = _dir * speed;
             _isMovingToKill = true;

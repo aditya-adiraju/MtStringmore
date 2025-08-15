@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Util;
+using Yarn.Unity;
 
 namespace Managers
 {
@@ -41,6 +44,14 @@ namespace Managers
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
+
+        /// <summary>
+        /// Fades out the Background music.
+        /// </summary>
+        /// <param name="fadeDuration">Duration of fade, seconds</param>
+        /// <returns>Coroutine</returns>
+        [YarnCommand("fade_out_bgm")]
+        public IEnumerator FadeOutBGM(float fadeDuration = 0) => _audioSource.FadeOut(fadeDuration);
 
         /// <summary>
         /// Play the given background music.

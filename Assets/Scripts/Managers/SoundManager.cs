@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using Util;
 
 namespace Managers
 {
@@ -62,11 +63,6 @@ namespace Managers
             _timeSinceLastCollect += Time.deltaTime;
         }
 
-        public static float SliderToVolume(float sliderValue)
-        {
-            return Mathf.Log10(sliderValue) * 20;
-        }
-
         /// <summary> Sets Master volume (0.0001 to 1). </summary>
         public void SetMasterVolume(float volume)
         {
@@ -77,7 +73,7 @@ namespace Managers
 
         public void SetBgmVolume(float volume)
         {
-            audioMixer.SetFloat("BGM", SliderToVolume(volume));
+            audioMixer.SetFloat("BGM", SoundUtil.SliderToVolume(volume));
             bgmSlider.value = volume;
             PlayerPrefs.SetFloat("BGM", volume);
             PlayerPrefs.Save();
@@ -85,7 +81,7 @@ namespace Managers
 
         public void SetSfxVolume(float volume)
         {
-            audioMixer.SetFloat("SFX", SliderToVolume(volume));
+            audioMixer.SetFloat("SFX", SoundUtil.SliderToVolume(volume));
             sfxSlider.value = volume;
             PlayerPrefs.SetFloat("SFX", volume);
             PlayerPrefs.Save();
@@ -94,7 +90,7 @@ namespace Managers
         public void SetMute(bool isMuted)
         {
             audioMixer.SetFloat("Master",
-                isMuted ? -80f : SliderToVolume(PlayerPrefs.GetFloat("Master", startMasterVolume)));
+                isMuted ? -80f : SoundUtil.SliderToVolume(PlayerPrefs.GetFloat("Master", startMasterVolume)));
         }
 
         /// <summary>

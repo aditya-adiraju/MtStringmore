@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using Util;
 
 namespace UI
 {
@@ -31,7 +32,7 @@ namespace UI
             masterSlider.onValueChanged.AddListener(delegate
             {
                 SoundManager.Instance.SetMasterVolume(masterSlider.value);
-                audioMixer.SetFloat("Master", SoundManager.SliderToVolume(masterSlider.value));
+                audioMixer.SetFloat("Master", SoundUtil.SliderToVolume(masterSlider.value));
             });
             bgmSlider.onValueChanged.AddListener(delegate { SoundManager.Instance.SetBgmVolume(bgmSlider.value); });
             sfxSlider.onValueChanged.AddListener(delegate { SoundManager.Instance.SetSfxVolume(sfxSlider.value); });

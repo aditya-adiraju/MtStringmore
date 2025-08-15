@@ -15,6 +15,7 @@ namespace Save
     public class SaveDataManager : MonoBehaviour
     {
         private static readonly string SaveFileName = "data.save";
+        private static readonly ReaderWriterLock FileWriteLock = new();
 
         private Thread _saveThread;
         private Vector2? _forcedNextFramePosition;
@@ -105,6 +106,7 @@ namespace Save
             if (!File.Exists(filePath)) return null;
             try
             {
+                FileWriteLock.AcquireReaderLock(1000);
                 SaveFileData saveFileData = JsonUtility.FromJson<SaveFileData>(File.ReadAllText(filePath));
                 return saveFileData;
             }
@@ -112,6 +114,16 @@ namespace Save
             {
                 Debug.LogWarning($"Couldn't read from save data: {filePath}: {e.Message}");
                 return null;
+            }
+            finally
+            {
+                try
+                {
+                    FileWriteLock.ReleaseReaderLock();
+                }
+                catch (ApplicationException)
+                {
+                }
             }
         }
 
@@ -204,12 +216,23 @@ namespace Save
                 string outputFilePath = Path.Combine(folderPath, SaveFileName);
                 try
                 {
+                    FileWriteLock.AcquireWriterLock(1000);
                     File.WriteAllText(outputFilePath, jsonData);
                     Debug.Log($"Wrote to save file: {outputFilePath}");
                 }
                 catch (Exception e)
                 {
                     Debug.LogWarning($"Failed to write out save data at {outputFilePath}: {e.Message}");
+                }
+                finally
+                {
+                    try
+                    {
+                        FileWriteLock.ReleaseWriterLock();
+                    }
+                    catch (ApplicationException)
+                    {
+                    }
                 }
             }
         }

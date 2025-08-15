@@ -46,7 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0
-  yParallaxFactor: 0.99
+  yParallaxFactor: 0.495
+  fallbackSpriteBounds: 10
+  hasSize: 1
 --- !u!212 &1158875742953172487
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -145,7 +147,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0
-  yParallaxFactor: 0.99
+  yParallaxFactor: 0.495
+  fallbackSpriteBounds: 10
+  hasSize: 1
 --- !u!212 &6935877386692378909
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -244,7 +248,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0
-  yParallaxFactor: 0.99
+  yParallaxFactor: 0.495
+  fallbackSpriteBounds: 10
+  hasSize: 1
 --- !u!212 &6772377340732964736
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -343,7 +349,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0
-  yParallaxFactor: 0.99
+  yParallaxFactor: 0.495
+  fallbackSpriteBounds: 10
+  hasSize: 1
 --- !u!212 &8397965711921865428
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -442,7 +450,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xParallaxFactor: 0
-  yParallaxFactor: 0.99
+  yParallaxFactor: 0.495
+  fallbackSpriteBounds: 10
+  hasSize: 1
 --- !u!212 &7930747845102593490
 SpriteRenderer:
   m_ObjectHideFlags: 0
