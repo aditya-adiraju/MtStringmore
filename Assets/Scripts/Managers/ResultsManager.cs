@@ -1,4 +1,3 @@
-using Interactables;
 using Save;
 using UI;
 using UnityEngine;
@@ -8,42 +7,36 @@ namespace Managers
 {
     public class ResultsManager : MonoBehaviour
     {
-        [SerializeField] private Checkpoint finalCheckpoint;
+        public static bool isResultsPageOpen;
 
         [Header("Results Page")]
         [SerializeField]
         private ResultsWindow resultsWindow;
         
-        private SaveDataManager _saveDataManager;
         private GameManager _gameManager;
-
-        public static bool isResultsPageOpen;
+        private LastCheckpoint _lastCheckpoint;
 
         private void Start()
         {
-            _saveDataManager = FindObjectOfType<SaveDataManager>();
             _gameManager = GameManager.Instance;
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (finalCheckpoint)
+            if (_lastCheckpoint)
             {
-                finalCheckpoint.onCheckpointReached.RemoveListener(HandleFinalCheckpointHit);
-                finalCheckpoint = null;
+                _lastCheckpoint.AttachedCheckpoint.onCheckpointReached.RemoveListener(HandleFinalCheckpointHit);
+                _lastCheckpoint = null;
             }
-            
-            GameObject checkpointObj = GameObject.FindWithTag("FinalCheckpoint");
-            if (checkpointObj)
+
+            _lastCheckpoint = FindAnyObjectByType<LastCheckpoint>();
+            if (_lastCheckpoint)
             {
-                finalCheckpoint = checkpointObj.GetComponent<Checkpoint>();
-                if (finalCheckpoint != null) finalCheckpoint.onCheckpointReached.AddListener(HandleFinalCheckpointHit);
+                _lastCheckpoint.AttachedCheckpoint.onCheckpointReached.AddListener(HandleFinalCheckpointHit);
             }
-            else finalCheckpoint = null;
             
             resultsWindow.gameObject.SetActive(false);
             isResultsPageOpen = false;
-            _saveDataManager = FindObjectOfType<SaveDataManager>();
         }
 
         private void OnEnable()
@@ -54,19 +47,20 @@ namespace Managers
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            if (finalCheckpoint != null) finalCheckpoint.onCheckpointReached.RemoveListener(HandleFinalCheckpointHit);
+            if (_lastCheckpoint) _lastCheckpoint.AttachedCheckpoint.onCheckpointReached.RemoveListener(HandleFinalCheckpointHit);
         }
 
         private void HandleFinalCheckpointHit()
         {
             Time.timeScale = 0;
-            FindObjectOfType<LastCheckpoint>()?.UpdateLevelAccess();
-            _gameManager.ThisLevelTime = TimerManager.ElapsedLevelTimeString;
+            if (_lastCheckpoint) _lastCheckpoint.UpdateLevelAccess();
+            _gameManager.ThisLevelTime = TimerManager.ElapsedLevelTime;
             _gameManager.SaveGame();
             resultsWindow.gameObject.SetActive(true);
             resultsWindow.UpdateDisplay();
             isResultsPageOpen = true;
-            _saveDataManager.SaveFile();
+            FindAnyObjectByType<OnSceneButtons>().SetRestartButtonState(false);
+            SaveDataManager.SaveFile();
             PauseMenu.IsPauseDisabled = true;
         }
 
@@ -93,7 +87,7 @@ namespace Managers
             Time.timeScale = 1f;
             PauseMenu.IsPauseDisabled = false;
             _gameManager.ResetCandyCollected();
-            finalCheckpoint.StartConversation();
+            _lastCheckpoint.AttachedCheckpoint.StartConversation();
         }
     }
 }

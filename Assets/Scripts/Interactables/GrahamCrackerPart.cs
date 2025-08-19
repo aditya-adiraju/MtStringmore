@@ -8,10 +8,10 @@ namespace Interactables
     /// <summary>
     /// Represents a single moving part of the graham cracker.
     /// </summary>
-    [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
+    [RequireComponent(typeof(Rigidbody2D))]
     public class GrahamCrackerPart : MonoBehaviour
     {
-        private SpriteRenderer _spriteRenderer;
+        [SerializeField] private SpriteRenderer visual;
         private Rigidbody2D _rigidbody2D;
         private bool _isBottom;
         private Vector2 _dir;
@@ -21,10 +21,9 @@ namespace Interactables
 
         private void Awake()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
             _rigidbody2D = GetComponent<Rigidbody2D>();
             _crackerBehaviour = GetComponentInParent<GrahamCrackerBehaviour>();
-            _isBottom = _spriteRenderer.flipY; // yes, this may cause problems
+            _isBottom = visual.flipY; // yes, this may cause problems
             _initialPosition = _rigidbody2D.position;
             _dir = (_isBottom ? 1 : -1) * transform.up;
         }
@@ -87,7 +86,7 @@ namespace Interactables
         /// <param name="shakeDelay">Delay between shakes.</param>
         /// <param name="distance">Furthest distance from original position when shaking.</param>
         public void HandleShake(float duration, float shakeDelay, float distance) =>
-            StartCoroutine(RandomUtil.RandomJitterRoutine(transform, duration, shakeDelay, distance, _initialPosition));
+            StartCoroutine(RandomUtil.RandomJitterRoutine(visual.transform, duration, shakeDelay, distance, _initialPosition));
 
         /// <summary>
         /// Coroutine to check whether we've reached the initial position after we've started moving away,

@@ -37,14 +37,15 @@ namespace Interactables
         /// </summary>
         public bool HasConversation => !string.IsNullOrWhiteSpace(conversationStartNode);
 
-        public override bool DisableWithInteractables => false;
+        /// <inheritdoc />
+        public override bool CanInteract => true;
 
         // internal properties not exposed to editor
         private AudioSource _audioSource;
         protected DialogueRunner DialogRunner;
         protected bool IsCurrentConversation;
 
-        public bool hasBeenHit;
+        private bool hasBeenHit;
 
         public void Start()
         {

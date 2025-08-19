@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Managers;
 
 namespace Save
 {
@@ -11,8 +9,7 @@ namespace Save
     public struct SaveData
     {
         public long dateTimeBinary;
-        public bool checkpointFacesLeft;
-        public List<string> levelsAccessed;
+        public string[] levelsAccessed;
 
         public LevelData level1Data;
         public LevelData level2Data;
@@ -26,7 +23,7 @@ namespace Save
         public int mostCandiesCollected = -1;
         public int totalCandiesInLevel = -1;
         public int leastDeaths = -1;
-        public string bestTime = GameManager.EmptySaveTime;
+        public float bestTime = float.NaN;
     }
 
     /// <summary>

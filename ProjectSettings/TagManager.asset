@@ -6,12 +6,6 @@ TagManager:
   tags:
   - SwingArea
   - Death
-  - ParallaxBackground
-  - Knitby
-  - BounceArea
-  - Trampoline
-  - Resetter
-  - FinalCheckpoint
   - LetterBlock
   layers:
   - Default

@@ -1,4 +1,5 @@
 ﻿using Interactables;
+using Save;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,6 +21,15 @@ namespace Editor
                 collectable.RandomizeSprite();
                 collectable.RandomizeRotation();
             }
+        }
+
+        /// <summary>
+        /// Deletes save data for testing.
+        /// </summary>
+        [MenuItem("Assets/Delete Save Data")]
+        private static void DeleteSaveData()
+        {
+            SaveDataManager.DeleteSaveData();
         }
     }
 }

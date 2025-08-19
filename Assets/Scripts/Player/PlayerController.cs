@@ -687,8 +687,7 @@ namespace Player
         /// </summary>
         private void HandleInteractables()
         {
-            if (!CurrentInteractableArea || 
-                (CurrentInteractableArea.DisableWithInteractables && !GameManager.Instance.AreInteractablesEnabled)) return;
+            if (!CurrentInteractableArea || !CurrentInteractableArea.CanInteract) return;
             bool previouslyGrounded = PlayerState == PlayerStateEnum.Run;
             if (IsButtonUsed())
             {

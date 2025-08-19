@@ -998,7 +998,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 287060e895bd480cbe1839d515616e5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finalCheckpoint: {fileID: 0}
   resultsWindow: {fileID: 6823790342341326098}
 --- !u!1 &4689274418804491040
 GameObject:
@@ -1214,7 +1213,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

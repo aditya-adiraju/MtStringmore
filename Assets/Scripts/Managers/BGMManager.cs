@@ -23,15 +23,14 @@ namespace Managers
 
         private Dictionary<string, AudioClip> sceneToClip;
         private AudioSource _audioSource;
-        private string _currScene;
 
         private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
             SceneManager.sceneLoaded += OnSceneLoaded;
             InitializeDictionary();
-            _currScene = SceneManager.GetActiveScene().name;
-            AudioClip nextClip = GetNextAudioClip(_currScene, _audioSource.clip);
+            string currScene = SceneManager.GetActiveScene().name;
+            AudioClip nextClip = GetNextAudioClip(currScene, _audioSource.clip);
             PlayBGM(nextClip);
         }
 

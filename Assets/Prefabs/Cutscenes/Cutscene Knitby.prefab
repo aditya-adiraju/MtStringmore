@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 3855123222508685545}
   m_Layer: 7
   m_Name: Cutscene Knitby
-  m_TagString: Knitby
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

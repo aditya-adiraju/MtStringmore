@@ -1,4 +1,5 @@
-﻿using Player;
+﻿using Managers;
+using Player;
 using UnityEngine;
 
 namespace Interactables
@@ -26,9 +27,9 @@ namespace Interactables
         public virtual bool DisallowReinteraction => true;
 
         /// <summary>
-        /// Whether to disable this object when interactables are disabled in level 3.
+        /// Whether interacting is enabled.
         /// </summary>
-        public virtual bool DisableWithInteractables => true;
+        public virtual bool CanInteract => GameManager.Instance.AreInteractablesEnabled;
 
         /// <summary>
         /// Called on player enter.

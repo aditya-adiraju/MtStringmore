@@ -104,6 +104,9 @@ namespace Interactables
         /// <inheritdoc />
         public override bool IgnoreGravity => true;
 
+        /// <inheritdoc />
+        public override bool CanInteract => base.CanInteract && _rigidbody.position != secondPosition;
+
         /// <summary>
         /// Returns the time of the last keyframe.
         /// </summary>

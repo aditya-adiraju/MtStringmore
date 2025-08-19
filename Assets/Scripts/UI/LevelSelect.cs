@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Managers;
@@ -22,7 +23,8 @@ namespace UI
 
         [SerializeField] private TextMeshProUGUI levelText, timeText, deathText, candyText;
         [SerializeField] private Image candyImage;
-    
+
+        private const string EmptySaveTime = "--:--:--";
         private string _selectedScene;
         private LevelSelectButton _selectedButton;
         private int _debugButtonPressed;
@@ -30,8 +32,8 @@ namespace UI
         private void Start()
         {
             // Ensures GameManager load save data before loading level select menu
-            FindObjectOfType<SaveDataManager>()?.PreloadSaveData();
-            List<string> unlockedScenes = GameManager.Instance.LevelsAccessed;
+            GameManager.Instance.UpdateFromSaveData();
+            HashSet<string> unlockedScenes = new(GameManager.Instance.LevelsAccessed);
             playButton.interactable = false;
             unlockedScenes.Add(SceneListManager.Instance.Level1IntroSceneName);
             string[] levelLoadingScenes = SceneListManager.Instance.LevelLoadScenes.ToArray();
@@ -41,7 +43,7 @@ namespace UI
                 LevelSelectButton btnObj = Instantiate(buttonPrefab, buttonContainer);
                 bool isUnlocked = unlockedScenes.Contains(levelLoadingScenes[i]);
                 if (isUnlocked) farthestUnlockedButton = btnObj;
-                btnObj.Initialize(i+1, isUnlocked);
+                btnObj.Initialize(i + 1, isUnlocked);
             }
 
             playButton.onClick.AddListener(OnPlayClicked);
@@ -59,12 +61,12 @@ namespace UI
             string sceneName = SceneListManager.Instance.LevelLoadScenes[levelNumber - 1];
             _selectedScene = sceneName;
             playButton.interactable = true;
-            
+
             //change the text of the level stats
             levelText.text = "Level " + levelNumber;
 
-            LevelData selectedLevel = GameManager.Instance.allLevelData[levelNumber - 1];
-            
+            LevelData selectedLevel = GameManager.Instance.AllLevelData[levelNumber - 1];
+
             // Candy
             if (selectedLevel.totalCandiesInLevel < 0)
                 candyText.text = "N/A";
@@ -76,13 +78,14 @@ namespace UI
             deathText.text = selectedLevel.leastDeaths == -1 ? "N/A" : selectedLevel.leastDeaths.ToString();
 
             // Time
-            timeText.text = string.IsNullOrEmpty(selectedLevel.bestTime) ? 
-                GameManager.EmptySaveTime : selectedLevel.bestTime;
-            
+            timeText.text = float.IsNaN(selectedLevel.bestTime)
+                ? EmptySaveTime
+                : TimeSpan.FromSeconds(selectedLevel.bestTime).ToString(@"mm\:ss\:ff");
+
             //CandyImage
             candyImage.sprite = levelCandyImages[levelNumber - 1];
             candyImage.enabled = true;
-            
+
             if (_selectedButton) _selectedButton.MarkUnselected();
             _selectedButton = button;
             button.MarkSelected();
@@ -91,6 +94,7 @@ namespace UI
         /// <summary>
         /// Debug button pressed.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void DebugButtonPressed()
         {
             _debugButtonPressed++;
@@ -102,6 +106,7 @@ namespace UI
                     LevelSelectButton btn = buttonContainer.GetChild(i).GetComponent<LevelSelectButton>();
                     btn.Initialize(i + 1, true);
                 }
+
                 transform.Find("SecretDebugOption").GetChild(0).gameObject.SetActive(true);
             }
         }

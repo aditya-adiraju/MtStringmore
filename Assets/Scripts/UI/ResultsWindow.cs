@@ -23,7 +23,7 @@ namespace UI
             collectableResultsText.RunCountUpForCollectible(GameManager.Instance.NumCollectablesCollected,
                 GameManager.Instance.MaxCollectablesCount);
             
-            int deaths = GameManager.Instance.thisLevelDeaths;
+            int deaths = GameManager.Instance.ThisLevelDeaths;
             //if uninstantiated and still null value
             if (deaths == -1)
             {

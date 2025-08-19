@@ -999,7 +999,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_TargetDisplay: 0
 --- !u!114 &3777585508448776310
 MonoBehaviour:
@@ -2505,7 +2505,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!114 &2475805050935313671
 MonoBehaviour:
@@ -3319,7 +3319,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseButton: {fileID: 6332210469991775687}
   restartButton: {fileID: 3068779762669816813}
-  mainMenuSceneName: MainMenu
 --- !u!1 &6719631413472696613
 GameObject:
   m_ObjectHideFlags: 0
@@ -3637,7 +3636,6 @@ GameObject:
   - component: {fileID: 5101892580008084914}
   - component: {fileID: 7492377907174578259}
   - component: {fileID: 3119184382528755020}
-  - component: {fileID: 8822614558980979940}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3680,8 +3678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneTransitionCanvas: {fileID: 3180213058412596211}
-  thisLevelDeaths: 0
-  allLevelData: []
+  forceFrameRate: 0
 --- !u!114 &2167404556298769624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3873,18 +3870,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneReplayPreview: {fileID: 0}
   showPreview: 1
---- !u!114 &8822614558980979940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7818288281639424406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f69c078820794990850290a503d3378c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8259307329472230985
 GameObject:
   m_ObjectHideFlags: 0
@@ -3947,7 +3932,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!114 &4216781661418160321
 MonoBehaviour:
@@ -3980,7 +3965,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   confirmationCanvas: {fileID: 5131719572720147400}
   pauseMenu: {fileID: 3382108036845381783}
-  mainMenuScene: MainMenu
 --- !u!114 &1898475085155500029
 MonoBehaviour:
   m_ObjectHideFlags: 0

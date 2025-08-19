@@ -19,15 +19,23 @@ namespace UI
         {
             SceneManager.activeSceneChanged -= OnSceneChanged;
         }
+
+        /// <summary>
+        /// Sets whether the restart button is active and enabled.
+        /// </summary>
+        /// <param name="active">Whether the restart button should be active</param>
+        public void SetRestartButtonState(bool active)
+        {
+            restartButton.gameObject.SetActive(active);
+        }
     
         private void OnSceneChanged(Scene current, Scene next)
         {
-            string thisScene = SceneManager.GetActiveScene().name;
-            bool isMainMenu = SceneListManager.Instance.IsMainMenu(thisScene);
-            bool isCutscene = SceneListManager.Instance.IsSceneCutscene(thisScene);
+            bool isMainMenu = SceneListManager.Instance.InMainMenu;
+            bool isCutscene = SceneListManager.Instance.InCutscene;
 
             pauseButton.gameObject.SetActive(!isMainMenu);
-            restartButton.gameObject.SetActive(!isMainMenu && !isCutscene);
+            SetRestartButtonState(!isMainMenu && !isCutscene);
         }
     }
 }
