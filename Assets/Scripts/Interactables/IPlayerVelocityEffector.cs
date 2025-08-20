@@ -21,6 +21,16 @@ namespace Interactables
         bool IgnoreOtherEffectors => true;
 
         /// <summary>
+        /// Useful if effector will slow or speed up player walk speed
+        /// </summary>
+        bool EffectPlayerWalkSpeed => false;
+
+        /// <summary>
+        /// Useful if effector should allow the player to dash
+        /// </summary>
+        bool AllowPlayerDashing => false;
+
+        /// <summary>
         /// Gets the desired velocity of the player after applying velocity effects.
         /// </summary>
         /// <param name="velocity">Original player velocity</param>
