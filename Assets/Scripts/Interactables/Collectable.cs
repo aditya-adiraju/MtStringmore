@@ -1,4 +1,5 @@
 using Managers;
+using Player;
 using UnityEngine;
 using Util;
 
@@ -14,11 +15,44 @@ namespace Interactables
         
         private SpriteRenderer _spriteRenderer;
         private Collider2D _collider;
+        private GameManager _gameManager;
+        private bool _isCollected;
         
         private void Awake()
         {
             _collider = GetComponent<Collider2D>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
+            _gameManager = GameManager.Instance;
+            _isCollected = false;
+            _gameManager.Reset += OnReset;
+        }
+
+        private void OnDestroy()
+        {
+            _gameManager.Reset -= OnReset;
+        }
+
+        private void OnReset()
+        {
+            if (_isCollected) GreyOut();
+        }
+
+        private void Collect()
+        {
+            // TODO: play a visual/particle effect before destroying
+            if (!_isCollected) GameManager.Instance.CollectCollectable(this);
+            SoundManager.Instance.PlayCollectableComboSound();
+            _isCollected = true;
+            _spriteRenderer.enabled = false;
+            _collider.enabled = false;
+        }
+        
+        private void GreyOut()
+        {
+            _spriteRenderer.enabled = true;
+            _spriteRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.3f);
+            _collider.enabled = true;
+            Debug.Log("Collectable Greyed Out");
         }
 
         private void OnValidate()
@@ -30,11 +64,7 @@ namespace Interactables
         {
             if (other.CompareTag("Player"))
             {
-                GameManager.Instance.CollectCollectable(this);
-                // TODO: play a visual/particle effect before destroying
-                SoundManager.Instance.PlayCollectableComboSound();
-                _spriteRenderer.enabled = false;
-                _collider.enabled = false;
+                Collect();
             }
         }
 
