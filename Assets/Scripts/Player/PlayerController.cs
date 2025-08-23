@@ -696,9 +696,9 @@ namespace Player
         /// </summary>
         private void HandleInteractables()
         {
-            if (!CurrentInteractableArea || !CurrentInteractableArea.CanInteract) return;
+            if (!CurrentInteractableArea) return;
             bool previouslyGrounded = PlayerState == PlayerStateEnum.Run;
-            if (IsButtonUsed())
+            if (CurrentInteractableArea.CanInteract && IsButtonUsed())
             {
                 // IsButtonUsed can be true multiple frames so don't re-call StartInteract jic
                 if (PlayerState == PlayerStateEnum.OnObject) return;

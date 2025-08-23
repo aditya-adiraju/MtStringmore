@@ -218,11 +218,6 @@ namespace Interactables
         /// <inheritdoc />
         public override void OnPlayerEnter(PlayerController player)
         {
-            if (_rigidbody.position == secondPosition)
-            {
-                // disallow re-attaching if reached
-                player.CurrentInteractableArea = null;
-            }
         }
 
         /// <inheritdoc />

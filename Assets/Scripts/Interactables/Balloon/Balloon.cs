@@ -6,9 +6,12 @@ using Player;
 using UnityEngine;
 using Util;
 
-namespace Interactables
+namespace Interactables.Balloon
 {
-    [RequireComponent(typeof(Rigidbody2D))]
+    /// <summary>
+    /// Balloon interactable.
+    /// </summary>
+    [RequireComponent(typeof(Rigidbody2D), typeof(LineRenderer))]
     public class Balloon : AbstractPlayerInteractable
     {
         [SerializeField, Tooltip("Acceleration curve over time, in [0, 1]")]
@@ -29,7 +32,7 @@ namespace Interactables
         [SerializeField, Min(0), Tooltip("Additional velocity boost on exit")]
         private Vector2 exitVelBoost = new(10, 10);
 
-        [SerializeField, Tooltip("Distance to ensure player does not clip into ground")]
+        [SerializeField, Tooltip("Distance to ensure player does not clip into ground"), Min(0)]
         private float attachRayDistance = 0.1f;
 
         [SerializeField, Tooltip("Access to groundLayer to check attach requirements")]
@@ -52,27 +55,28 @@ namespace Interactables
 
         [SerializeField] private AudioClip[] attachSounds;
 
-        [SerializeField, Tooltip("Allowed error of player to balloon before respawning")]
-        private float positionTolerance = 0.1f;
-
-        [SerializeField, Tooltip("Variable for how long the boost lasts after jumping off")]
+        [SerializeField, Tooltip("Variable for how long the boost lasts after jumping off"), Min(0)]
         private float boostTimer;
 
-        private Coroutine _activeMotion;
+        [SerializeField, Min(0), Tooltip("Distance to end before warning plays")]
+        private float warningDistance = 25;
 
-        //Retrieves balloon's rigidbody on awake
-        private Rigidbody2D _rigidbody;
-        private PlayerController _player;
+        [SerializeField, Min(0), Tooltip("Slow initial movement upwards")]
+        private float initialSpeed = 1;
+
+        [SerializeField, Min(0), Tooltip("Time before reset if you're a goof and miss it somehow")]
+        private float missWindow = 5;
 
         /// <inheritdoc />
         public override bool IgnoreGravity => true;
-        
+
         /// <inheritdoc />
         public override bool IgnoreOtherEffectors => false;
 
         /// <inheritdoc />
-        public override bool CanInteract => base.CanInteract && CanAttachAtPosition(_rigidbody.position + offset);
-
+        public override bool CanInteract => base.CanInteract && CanAttachAtPosition(_rigidbody.position + offset)
+                                                             && _rigidbody.position != secondPosition
+                                                             && balloonVisual.IsDisplaying;
         /// <summary>
         /// Returns the time of the last keyframe.
         /// </summary>
@@ -96,155 +100,30 @@ namespace Interactables
         /// Since people may or may not adjust the position in the editor while moving,
         /// this computes the vector projection along the actual path in case someone changes the direction while running.
         /// </remarks>
-        private float DistanceAlongPath
-        {
-            get
-            {
-                Vector2 direction = secondPosition - firstPosition;
-                Vector2 travelled = _rigidbody.position - firstPosition;
-                return Vector2.Dot(direction, travelled) / direction.magnitude;
-            }
-        }
+        private float DistanceAlongPath =>
+            VectorUtil.DistanceAlongPath(firstPosition, secondPosition, _rigidbody.position);
 
-        /// <summary>
-        /// Evaluates the velocity at a specific time since motion start.
-        /// </summary>
-        /// <param name="time">Time since motion start</param>
-        /// <returns>Velocity at time</returns>
-        private float EvaluateAt(float time)
-        {
-            return Mathf.Lerp(minSpeed, maxSpeed, accelerationCurve.Evaluate(LastKeyframeTime * time / accelerationTime));
-        }
+        private Coroutine _activeMotion;
+        private Coroutine _resetCoroutine;
 
-
-        /// <summary>
-        /// Coroutine to move the object according to the motion curve.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator MotionCoroutine()
-        {
-            // i can't guarantee that the end user *won't* change the positions during runtime
-            // so I have to check *literally every frame*.
-            float time = 0;
-            for (Vector2 diff = secondPosition - firstPosition;
-                 DistanceAlongPath <= diff.magnitude;
-                 diff = secondPosition - firstPosition)
-            {
-                yield return new WaitForFixedUpdate();
-                // yes, I could use possibly use FixedJoint2D, but I suspect that PlayerController may cause problems
-
-                // respawn logic, if balloon reaches second position w/o player, then respawn balloon in start position
-                if (Vector2.Distance(_rigidbody.position, secondPosition) < positionTolerance && !_player.HasPlayerVelocityEffector(this))
-                {
-                    RespawnBalloon();
-                    yield break;
-                }
-
-                _rigidbody.velocity = EvaluateAt(time) * diff.normalized;
-                time += Time.fixedDeltaTime;
-            }
-
-            _rigidbody.position = secondPosition;
-            _rigidbody.velocity = Vector2.zero;
-        }
-
-        /// <summary>
-        /// Starts moving.
-        /// </summary>
-        private void StartMotion()
-        {
-            _activeMotion ??= StartCoroutine(MotionCoroutine());
-        }
-
-        /// <summary>
-        /// Stops moving.
-        /// </summary>
-        private void StopMotion()
-        {
-            if (_activeMotion != null) StopCoroutine(_activeMotion);
-            _activeMotion = null;
-            _rigidbody.velocity = Vector2.zero;
-        }
-
-        /// <inheritdoc />
-        public override void OnPlayerEnter(PlayerController player)
-        {
-            if (_rigidbody.position == secondPosition)
-            {
-                // disallow re-attaching if reached
-                player.CurrentInteractableArea = null;
-            }
-        }
-
-        /// <inheritdoc />
-        public override void OnPlayerExit(PlayerController player)
-        {
-            if (Vector2.Distance(_rigidbody.position, secondPosition) < positionTolerance) RespawnBalloon();
-        }
-
-        /// <inheritdoc />
-        public override Vector2 ApplyVelocity(Vector2 velocity)
-        {
-            return _rigidbody.velocity;
-        }
-
-        /// <summary>
-        /// Ensures character will not clip into the ground when attaching to balloon.
-        /// </summary>
-        /// <inheritdoc />
-        public override void StartInteract(PlayerController player)
-        {
-            _player = player;
-            attachAudioSource.clip = RandomUtil.SelectRandom(attachSounds);
-            attachAudioSource.Play();
-            windAudioSource.Play();
-            Vector2 targetPosition = _rigidbody.position + offset;
-            if (CanAttachAtPosition(targetPosition))
-            {
-                player.transform.position = targetPosition;
-                _player.AddPlayerVelocityEffector(this);
-                StartMotion();
-            }
-            else
-            {
-                Debug.Log("Cannot attach, distance to ground too small");
-            }
-        }
-
-        private bool CanAttachAtPosition(Vector2 targetPosition)
-        {
-            RaycastHit2D hit = Physics2D.Raycast(targetPosition, Vector2.down, attachRayDistance, groundLayerMask);
-
-            // If the ray hits ground and it's too close, do not attach
-            return hit.collider == null;
-        }
-
-
-        /// <inheritdoc />
-        public override void EndInteract(PlayerController player)
-        {
-            _player.RemovePlayerVelocityEffector(this);
-            Vector2 boostDirection = _rigidbody.velocity.normalized;
-            if (boostDirection == Vector2.zero) // Fallback in case balloon is stationary
-                boostDirection = Vector2.up; // Default to an upward boost
-            _player.AddPlayerVelocityEffector(new BonusEndImpulseEffector(_player, boostDirection, exitVelBoost), true);
-            windAudioSource.Stop();
-        }
+        private Rigidbody2D _rigidbody;
+        private LineRenderer _lineRenderer;
+        private BalloonFunnyVisual _balloonFunnyVisual;
+        private BalloonVisual balloonVisual;
+        private PlayerController _player;
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
-        }
-        
-        private void OnEnable()
-        {
+            _lineRenderer = GetComponent<LineRenderer>();
+            balloonVisual = GetComponentInChildren<BalloonVisual>(true);
+            _balloonFunnyVisual = GetComponentInChildren<BalloonFunnyVisual>(true);
             GameManager.Instance.Reset += RespawnBalloon;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
-            if (GameManager.Instance != null)
-                GameManager.Instance.Reset -= RespawnBalloon;
+            GameManager.Instance.Reset -= RespawnBalloon;
         }
 
         private void OnValidate()
@@ -278,20 +157,187 @@ namespace Interactables
             {
                 List<RaycastHit2D> hits = new();
                 body.position = firstPosition;
-                body.Cast((secondPosition - firstPosition).normalized, hits, (secondPosition - firstPosition).magnitude);
+                body.Cast((secondPosition - firstPosition).normalized, hits,
+                    (secondPosition - firstPosition).magnitude);
                 foreach (RaycastHit2D hit in hits)
                 {
+                    // no one f--king reads warnings so i'm disabling this
+                    //
                     // some wack things may happen if the player collides with something while moving
-                    Debug.LogWarning("Object may be in motion path: " + hit.transform.gameObject.name);
+                    //
+                    // of course, no one cares and instead blames the devs for not reading the console
+                    //
+                    // so no point in having this here
+                    // Debug.LogWarning("Object may be in motion path: " + hit.transform.gameObject.name);
                 }
             }
         }
 
+        /// <summary>
+        /// Evaluates the velocity at a specific time since motion start.
+        /// </summary>
+        /// <param name="time">Time since motion start</param>
+        /// <returns>Velocity at time</returns>
+        private float EvaluateAt(float time)
+        {
+            return Mathf.Lerp(minSpeed, maxSpeed,
+                accelerationCurve.Evaluate(LastKeyframeTime * time / accelerationTime));
+        }
+
+
+        /// <summary>
+        /// Coroutine to move the object according to the motion curve.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator MotionCoroutine()
+        {
+            // i can't guarantee that the end user *won't* change the positions during runtime
+            // so I have to check *literally every frame*.
+            float time = 0;
+            for (Vector2 diff = secondPosition - firstPosition;
+                 DistanceAlongPath <= diff.magnitude;
+                 diff = secondPosition - firstPosition)
+            {
+                yield return new WaitForFixedUpdate();
+                if (!balloonVisual.WarningPlaying && (diff.magnitude - DistanceAlongPath) < warningDistance)
+                {
+                    balloonVisual.StartWarning();
+                }
+
+                _rigidbody.velocity = EvaluateAt(time) * diff.normalized;
+                time += Time.fixedDeltaTime;
+            }
+
+            _rigidbody.position = secondPosition;
+            _rigidbody.velocity = Vector2.zero;
+            _player.StopInteraction(this);
+        }
+
+        /// <summary>
+        /// Starts moving.
+        /// </summary>
+        private void StartMotion()
+        {
+            _activeMotion ??= StartCoroutine(MotionCoroutine());
+        }
+
+        /// <summary>
+        /// Stops moving.
+        /// </summary>
+        private void StopMotion()
+        {
+            if (_activeMotion != null) StopCoroutine(_activeMotion);
+            _activeMotion = null;
+            _rigidbody.velocity = Vector2.zero;
+        }
+
+        /// <inheritdoc />
+        public override void OnPlayerEnter(PlayerController player)
+        {
+        }
+
+        /// <inheritdoc />
+        public override void OnPlayerExit(PlayerController player)
+        {
+        }
+
+        /// <inheritdoc />
+        public override Vector2 ApplyVelocity(Vector2 velocity)
+        {
+            return _rigidbody.velocity;
+        }
+
+        /// <summary>
+        /// Ensures character will not clip into the ground when attaching to balloon.
+        /// </summary>
+        /// <inheritdoc />
+        public override void StartInteract(PlayerController player)
+        {
+            _player = player;
+            if (_resetCoroutine != null) StopCoroutine(_resetCoroutine);
+            _resetCoroutine = null;
+            attachAudioSource.clip = RandomUtil.SelectRandom(attachSounds);
+            attachAudioSource.Play();
+            windAudioSource.Play();
+            Vector2 targetPosition = _rigidbody.position + offset;
+            player.transform.position = targetPosition;
+            _lineRenderer.enabled = true;
+            _lineRenderer.SetPosition(1, transform.InverseTransformPoint(targetPosition));
+            _player.AddPlayerVelocityEffector(this);
+            StartMotion();
+        }
+
+        private bool CanAttachAtPosition(Vector2 targetPosition)
+        {
+            // If the ray hits ground and it's too close, do not attach
+            return !Physics2D.Raycast(targetPosition, Vector2.down, attachRayDistance, groundLayerMask);
+        }
+
+
+        /// <inheritdoc />
+        public override void EndInteract(PlayerController player)
+        {
+            _player = player;
+            _player.RemovePlayerVelocityEffector(this);
+            if (_player.CurrentInteractableArea == this) _player.CurrentInteractableArea = null;
+            StopMotion();
+            Vector2 boostDirection = _rigidbody.velocity.normalized;
+            balloonVisual.Pop();
+            if (boostDirection == Vector2.zero) // Fallback in case balloon is stationary
+                boostDirection = Vector2.up; // Default to an upward boost
+            _player.AddPlayerVelocityEffector(new BonusEndImpulseEffector(_player, boostDirection, exitVelBoost), true);
+            windAudioSource.Stop();
+            _lineRenderer.enabled = false;
+            _balloonFunnyVisual.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// Respawns the balloon at the first position.
+        /// </summary>
         private void RespawnBalloon()
         {
             _rigidbody.position = firstPosition;
+            transform.position = firstPosition;
+            if (_resetCoroutine != null) StopCoroutine(_resetCoroutine);
+            _resetCoroutine = null;
             StopMotion();
-            Debug.Log("Balloon has respawned at the first position.");
+            balloonVisual.ResetToStart();
+        }
+
+        /// <summary>
+        /// Called when the ending visual is finished — respawns the balloon.
+        /// </summary>
+        public void OnEndingVisualFinish()
+        {
+            RespawnBalloon();
+        }
+
+        /// <summary>
+        /// Called when player enters the zone when inflation can begin.
+        /// </summary>
+        public void OnPlayerEnterInflationZone()
+        {
+            balloonVisual.CanInflate = true;
+            _rigidbody.velocity = (secondPosition - firstPosition).normalized * initialSpeed;
+            _resetCoroutine ??= StartCoroutine(GoofDetectionCoroutine());
+        }
+
+        /// <summary>
+        /// Called when player leaves the zone — assumed to miss the balloon.
+        /// </summary>
+        public void OnPlayerExitInflationZone()
+        {
+            balloonVisual.CanInflate = false;
+        }
+
+        /// <summary>
+        /// Checks if the player is a goof and respawns the balloon if they missed
+        /// </summary>
+        /// <returns>coroutine</returns>
+        private IEnumerator GoofDetectionCoroutine()
+        {
+            yield return new WaitForSeconds(missWindow);
+            if (_player?.CurrentInteractableArea != this) RespawnBalloon();
         }
 
         private void OnDrawGizmosSelected()
@@ -299,10 +345,19 @@ namespace Interactables
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(firstPosition, 1);
             Gizmos.DrawLine(firstPosition, secondPosition);
+            Vector2 dir = secondPosition - firstPosition;
+            Vector2 warningPoint = dir.magnitude > warningDistance ? 
+                dir.normalized * (dir.magnitude - warningDistance) + firstPosition :
+                firstPosition;
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(warningPoint, 1);
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(secondPosition, 1);
         }
 
+        /// <summary>
+        /// Player velocity effector at the very end.
+        /// </summary>
         private class BonusEndImpulseEffector : IPlayerVelocityEffector
         {
             private readonly PlayerController _player;
