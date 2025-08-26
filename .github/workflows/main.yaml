@@ -85,7 +85,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}
-          path: build/${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}
+          path: build/${{ matrix.targetPlatform }}
 
     
   releaseGame:
