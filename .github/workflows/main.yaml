@@ -37,8 +37,9 @@ jobs:
           if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
           else
-            VERSION="${GITHUB_SHA::7}"   # short SHA
+            VERSION=$(git rev-parse --short "$GITHUB_SHA")   # short SHA
           fi
+          echo "VERSION=$VERSION"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
   buildForAllSupportedPlatforms:
@@ -82,8 +83,8 @@ jobs:
       - name: Upload build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}"
-          path: build/"${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}"
+          name: ${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}
+          path: build/${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}
 
 
     
