@@ -108,7 +108,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v5
         with:
-        path: artifacts
+          path: artifacts
 
       - name: Publish Build on Github Repo
         uses: softprops/action-gh-release@v2
