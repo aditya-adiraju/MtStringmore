@@ -1,0 +1,147 @@
+﻿name: Build Game and Release
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: | 
+          Target environment
+            - Staging = Build Artifacts only (default)
+            - Production = Build Artifacts, Add to releases, and push to Itch
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - 'staging'
+          - 'production'
+
+      buildName:
+        description: 'The name of the final build (default: MtStringmore)'
+        default: 'MtStringmore'
+
+      version:
+        description: 'Version of the build (default: githash). (ex: "v0.3", include the v)'
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  prepareEnvironment:
+    name: Prepare Environment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+  buildForAllSupportedPlatforms:
+    name: Build for ${{ matrix.targetPlatform }}
+    needs: prepareEnvironment
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - Android # Build an Android .apk standalone app.
+          - WebGL # WebGL
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+        
+      - name: Decide VERSION (input or commit SHA)
+        id: setver
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION=$(git rev-parse --short "$GITHUB_SHA")   # short SHA
+          fi
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - if: matrix.targetPlatform == 'Android'
+        uses: jlumbroso/free-disk-space@v1.3.1
+
+      - name: Cache Libraries (to speed up builds!)
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+
+      - name: "Build for ${{ matrix.targetPlatform }}"
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildName: ${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}
+
+      - run: ls -lR build
+
+      - name: Upload build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}
+          path: build/${{ matrix.targetPlatform }}
+
+    
+  releaseGame:
+    if: inputs.environment == 'Production'
+    needs: buildForAllSupportedPlatforms
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decide VERSION (input or commit SHA)
+        id: setver
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION=$(git rev-parse --short "$GITHUB_SHA")   # short SHA
+          fi
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Create and push tag
+        run: |
+          v="${{ env.VERSION }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$v" -m "Release $v"
+          git push origin "$v"
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: artifacts
+
+      - run: |
+          ls -lR artifacts
+          cd artifacts
+          find -maxdepth 1 -type d -exec zip -r {}.zip {} \;
+          cd ..
+          ls -lR artifacts
+
+      - name: Publish Build on Github Repo
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          files: |
+            artifacts/${{ inputs.buildName }}Android${{ env.VERSION }}.zip
+            artifacts/${{ inputs.buildName }}WebGL${{ env.VERSION }}.zip
+          
+      - name: Push to Itch
+        uses: yeslayla/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: html 
+          ITCH_GAME: mt-stringmore
+          ITCH_USER: permafrosted 
+          PACKAGE: artifacts/${{ inputs.buildName }}WebGL${{ env.VERSION }}
