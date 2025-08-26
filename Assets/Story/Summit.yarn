@@ -1,56 +1,64 @@
 ﻿title: SummitCutscene
 setting: the summit of mt. stringmore
 ---
+<<animator_set_bool Marshmallow Hang true>>
+<<fix_coords 0 1.5>>
+<<shiver Knitby 0.05 0.05>>
+<<wait 0.3>>
+<<fade_in>>
 Marshmallow: Hang on tight! You doing alright?
-// knitby is terrified, but feigning it
-Knitby_confused: Uhhhh...
 Knitby_relieved: I'm doing excellent... I've never... been better...
-// floating up on a balloon
+// floating up on a balloon while Knitby shivers
 // animate background to move to give balloon floaty movement vibes
-// TODO idk what conversation to put here
-Knitby: Hang on a minute, our journey's end is close at hand. I think that's the summit! 
+<<wait 3>>
+Marshmallow: Oh look! I think that's the summit!!
+<<wait 1>>
 Marshmallow: Three, two, one, jump!
-// boing
-Marshmallow: Nice to be on solid ground again, huh?
-Knitby: It's certainly a relief.
+<<trigger_checkpoint BalloonCheckpoint>>
+<<trigger_checkpoint CloudCheckpoint>>
+<<stop_shiver Knitby>>
+<<animator_set_bool Marshmallow Hang false>>
+<<leap_nonblock Marshmallow 12 9 0.85 true>>
+<<leap_nonblock Knitby 10 9 0.85 true>>
+<<fix_coords 10 -15 0.7>>
 <<wait 2>>
-Knitby: So, is the summit everything you hoped it would be?
-Marshmallow_smile: Everything I hoped for and more.
-// knitby smile
-Knitby: Awwww...
-// marshmallow chomps a cloud
-Marshmallow: And, you know what?
-Knitby: What?
-Marshmallow: It really does taste like cotton candy!
-Knitby: No way. That's impossible.
+<<flip Marshmallow>>
+Marshmallow_smile: Nice to be on solid ground again, huh?
+Knitby: It's certainly a relief.
+<<wait 1>>
+Knitby: ...We can touch the clouds from here. That's actually incredible.
+// Marshmallow excitedly jumps to get A Cloud
+Knitby: Here goes nothing...
+Marshmallow: Oh my god! The clouds really do taste like cotton candy!
+Knitby: No chance. That's impossible.
 // knitby chomps a cloud, and marshmallow snickers
 Knitby_confused: I have no idea what you're talking about. That tastes like dusty stale water.
 Marshmallow_smile: Ha, got you!
 Knitby: Okay, but surely now you will admit that clouds don't taste like cotton candy, right?
 // marshmallow chomps another cloud, visibly more hesitantly
-Marshmallow_faraway: No, it's... delicious...
+Marshmallow_frown: No, it's... delicious...
 Knitby_confused: ... Really.
 <<wait 1>>
-Marshmallow_faraway: Okay, fine, you were right.
-Marshmallow: But it was still totally worth it to come here. I mean, look at that view!  
-// TODO: dramatic pan upwards to the sunrise
-// TODO: can we address the sunrise symbolically?
-// wry knitby smile
-// knitby should be a little more flat, like "ehhhh" but still positive 
-Knitby: ...I will admit, this is a nice sunrise.
-Marshmallow: <i>See?</i>
-Knitby: But nothing more!
-Marshmallow_smile: That's good enough for me!
-<<fade_out 1>>
+Marshmallow_frown: Okay, fine, you were right.
+// walks around in circles in a fast pace
+Marshmallow_frown: I can't believe they don't taste like cotton candy...
+Knitby: It's okay, I'm sure they'll be happy to hold your tears.
+Marshmallow_faraway: You're so mean...
+Knitby: Hey, you don't want to miss the sunrise.
+Marshmallow: What sunrise? The sun rises every day! That's not what I came here for!
+Knitby: Just watch.
+// pan camera to view
+Marshmallow: Whoa...
+Marshmallow: It's so pretty.
 <<wait 5>>
-Knitby: So... how do we get down from here?
+Knitby: We are the only two fellows alive who have seen this breathtaking view.
+Marshmallow: Yeah...
+Marshmallow: Thank you for coming on this hike with me, Knitby.
+Knitby: You truly strung me along.
+Knitby: ...In a good way.
+Marshmallow_smile: Yay!
+<<fade_out 1>>
+<<wait 2>>
+Knitby: So... How do we get down from here?
 Marshmallow: Uhhh... Good question...
-// end of level
-<<trigger_checkpoint Checkpoint>>
-
-===
-
-title: Level4End
----
-//<<load_scene Credits>>
 ===
