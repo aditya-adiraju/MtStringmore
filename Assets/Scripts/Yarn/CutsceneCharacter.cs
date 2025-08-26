@@ -145,6 +145,30 @@ namespace Yarn
             _spriteRenderer.enabled = true;
         }
 
+        /// <summary>
+        /// Sets a trigger parameter in the character's animator controller.
+        /// </summary>
+        /// <param name="key">Key for the parameter to be set.</param>
+        [YarnCommand("animator_set_trigger")]
+        public void AnimatorSetBool(string key) => _animator.SetTrigger(Animator.StringToHash(key));
+        
+        /// <summary>
+        /// Sets a boolean parameter in the character's animator controller.
+        /// </summary>
+        /// <param name="key">Key for the parameter to be set.</param>
+        /// <param name="value">True or false.</param>
+        [YarnCommand("animator_set_bool")]
+        public void AnimatorSetBool(string key, bool value) => _animator.SetBool(Animator.StringToHash(key), value);
+        
+        /// <summary>
+        /// Sets a float parameter in the character's animator controller.
+        /// </summary>
+        /// <param name="key">Key for the parameter to be set.</param>
+        /// <param name="value">Float value.</param>
+        [YarnCommand("animator_set_float")]
+        public void AnimatorSetBool(string key, float value) => 
+            _animator.SetFloat(Animator.StringToHash(key), value);
+        
         [YarnCommand("set_animation")]
         public IEnumerator SetAnimation(bool state, bool wait)
         {

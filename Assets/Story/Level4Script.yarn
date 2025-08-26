@@ -23,3 +23,9 @@ Marshmallow: Sounds like I have the rest of the way up to convince you then.
 // <<load_scene Level4>>
 
 ===
+
+title: Level4End
+---
+<<fade_out 1>>
+<<load_scene Cutscene6>>
+===
