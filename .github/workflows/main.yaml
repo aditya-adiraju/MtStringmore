@@ -31,17 +31,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Decide VERSION (input or commit SHA)
-        id: setver
-        run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            VERSION="${{ inputs.version }}"
-          else
-            VERSION=$(git rev-parse --short "$GITHUB_SHA")   # short SHA
-          fi
-          echo "VERSION=$VERSION"
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
-
   buildForAllSupportedPlatforms:
     name: Build for ${{ matrix.targetPlatform }}
     needs: prepareEnvironment
@@ -59,6 +48,16 @@ jobs:
           fetch-depth: 0
           lfs: true
         
+      - name: Decide VERSION (input or commit SHA)
+        id: setver
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION=$(git rev-parse --short "$GITHUB_SHA")   # short SHA
+          fi
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Cache Libraries (to speed up builds!)
         uses: actions/cache@v3
@@ -78,7 +77,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildName: "${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}"
+          buildName: ${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}
 
       - name: Upload build Artifacts
         uses: actions/upload-artifact@v4
@@ -96,6 +95,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Decide VERSION (input or commit SHA)
+        id: setver
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION=$(git rev-parse --short "$GITHUB_SHA")   # short SHA
+          fi
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Create and push tag
         run: |
