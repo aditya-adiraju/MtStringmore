@@ -127,7 +127,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION }}
-          files: artifacts/*
+          files: |
+            artifacts/${{ inputs.buildName }}Android${{ env.VERSION }}*
+            artifacts/${{ inputs.buildName }}WebGL${{ env.VERSION }}*
           
       - name: Push to Itch
         uses: yeslayla/butler-publish-itchio-action@master
