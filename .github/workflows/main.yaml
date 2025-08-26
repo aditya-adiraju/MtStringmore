@@ -79,6 +79,8 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildName: ${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}
 
+      - run: ls -lR build
+
       - name: Upload build Artifacts
         uses: actions/upload-artifact@v4
         with:
