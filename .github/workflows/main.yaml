@@ -1,5 +1,28 @@
-name: Build Game and Artifacts
-on: workflow_dispatch
+﻿name: Build Game and Release
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: | 
+          Target environment
+            - Staging = Build Artifacts only (default)
+            - Production = Build Artifacts, Add to releases, and push to Itch
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - 'staging'
+          - 'production'
+
+      buildName:
+        description: 'The name of the final build (default: MtStringmore)'
+        default: 'MtStringmore'
+
+      version:
+        description: 'Version of the build (default: githash). (ex: "v0.3", include the v)'
+        required: false
+        default: ${{ github.sha }}
+        type: string
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -10,27 +33,52 @@ jobs:
       matrix:
         targetPlatform:
           - Android # Build an Android .apk standalone app.
-          - WebGL # WebGL.
+          - WebGL # WebGL
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           lfs: true
-      - uses: actions/cache@v3
+
+      - name: Cache Libraries (to speed up builds!)
+        uses: actions/cache@v3
         with:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
+
       - if: matrix.targetPlatform == 'Android'
         uses: jlumbroso/free-disk-space@v1.3.1
-      - uses: game-ci/unity-builder@v4
+
+      - name: "Build for ${{ matrix.targetPlatform }}"
+        uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-      - uses: actions/upload-artifact@v4
+          buildName: "${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ inputs.version }}"
+
+      - name: Upload build Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          name: Build-${{ matrix.targetPlatform }}
-          path: build/${{ matrix.targetPlatform }}
+          name: "${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ inputs.version }}"
+          path: build/"${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ inputs.version }}"
+
+
+    
+  releaseGame:
+    if: inputs.environment == 'Production'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v5
+      with:
+        path: artifacts
+
+    - name: Publish Build on Github Repo
+      uses: softprops/action-gh-release@v2
+      with:
+        files: artifacts/*
