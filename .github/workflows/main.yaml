@@ -122,6 +122,7 @@ jobs:
         with:
           path: artifacts
 
+      - run: ls -lR artifacts
       - name: Publish Build on Github Repo
         uses: softprops/action-gh-release@v2
         with:
@@ -134,5 +135,5 @@ jobs:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
           CHANNEL: html 
           ITCH_GAME: mt-stringmore
-          ITCH_USER: adenc123
+          ITCH_USER: permafrosted 
           PACKAGE: artifacts/${{ inputs.buildName }}WebGL${{ env.VERSION }}
