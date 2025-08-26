@@ -21,12 +21,29 @@ on:
       version:
         description: 'Version of the build (default: githash). (ex: "v0.3", include the v)'
         required: false
-        default: ${{ env.GITHUB_SHA }}
+        default: ""
         type: string
 
 jobs:
+  prepareEnvironment:
+    name: Prepare Environment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decide VERSION (input or commit SHA)
+        id: setver
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_SHA::7}"   # short SHA
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
   buildForAllSupportedPlatforms:
     name: Build for ${{ matrix.targetPlatform }}
+    needs: prepareEnvironment
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -60,18 +77,19 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildName: "${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ inputs.version }}"
+          buildName: "${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}"
 
       - name: Upload build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ inputs.version }}"
-          path: build/"${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ inputs.version }}"
+          name: "${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}"
+          path: build/"${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}"
 
 
     
   releaseGame:
     if: inputs.environment == 'Production'
+    needs: buildForAllSupportedPlatforms
     runs-on: ubuntu-latest
     steps:
     - name: Download Build Artifacts
