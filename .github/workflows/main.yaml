@@ -92,22 +92,35 @@ jobs:
     needs: buildForAllSupportedPlatforms
     runs-on: ubuntu-latest
     steps:
-    - name: Download Build Artifacts
-      uses: actions/download-artifact@v5
-      with:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create and push tag
+        run: |
+          v="${{ env.VERSION }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$v" -m "Release $v"
+          git push origin "$v"
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v5
+        with:
         path: artifacts
 
-          # - name: Publish Build on Github Repo
-          #   uses: softprops/action-gh-release@v2
-          #   with:
-          #     tag_name: ${{ env.VERSION }}
-          #     files: artifacts/*
-
-    - name: Push to Itch
-      uses: yeslayla/butler-publish-itchio-action@master
-      env:
-        BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-        CHANNEL: html 
-        ITCH_GAME: mt-stringmore
-        ITCH_USER: adenc123
-        PACKAGE: artifacts/${{ inputs.buildName }}WebGL${{ env.VERSION }}
+      - name: Publish Build on Github Repo
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          files: artifacts/*
+          
+      - name: Push to Itch
+        uses: yeslayla/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: html 
+          ITCH_GAME: mt-stringmore
+          ITCH_USER: adenc123
+          PACKAGE: artifacts/${{ inputs.buildName }}WebGL${{ env.VERSION }}
