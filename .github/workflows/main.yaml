@@ -78,14 +78,13 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildName: "${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}"
+          buildName: "${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}"
 
       - name: Upload build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}
-          path: build/${{ inputs.buildName }}-${{ matrix.targetPlatform }}-${{ env.VERSION }}
-
+          name: ${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}
+          path: build/${{ inputs.buildName }}${{ matrix.targetPlatform }}${{ env.VERSION }}
 
     
   releaseGame:
@@ -101,4 +100,5 @@ jobs:
     - name: Publish Build on Github Repo
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: ${{ env.VERSION }}
         files: artifacts/*
