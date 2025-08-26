@@ -122,14 +122,16 @@ jobs:
         with:
           path: artifacts
 
-      - run: ls -lR artifacts
+      - run: |
+          ls -lR artifacts
+          find -maxdepth 1 -type d -exec zip -r {}.zip {} \;
+
       - name: Publish Build on Github Repo
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION }}
           files: |
-            artifacts/${{ inputs.buildName }}Android${{ env.VERSION }}*
-            artifacts/${{ inputs.buildName }}WebGL${{ env.VERSION }}*
+            artifacts/*.zip
           
       - name: Push to Itch
         uses: yeslayla/butler-publish-itchio-action@master
