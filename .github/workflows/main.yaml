@@ -21,7 +21,7 @@ on:
       version:
         description: 'Version of the build (default: githash). (ex: "v0.3", include the v)'
         required: false
-        default: ${{ github.sha }}
+        default: ${{ env.GITHUB_SHA }}
         type: string
 
 jobs:
@@ -40,6 +40,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+        
 
       - name: Cache Libraries (to speed up builds!)
         uses: actions/cache@v3
